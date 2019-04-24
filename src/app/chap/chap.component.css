@@ -1,0 +1,78 @@
+.ui.header .book-name, .ui.header .book-zhname {
+  display: inline-block;
+}
+
+.ui.header .book-zhname {
+  margin-left: 1em;
+}
+
+.chap-zhname.pre-wrap {
+  margin-top: 0.5em;
+}
+
+.sticky.header {
+  background-color: white;
+  border: 1px solid silver;
+  border-radius: 5px;
+  padding: 5px;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.sticky.header .operations {
+  padding: .3em;
+  border-bottom: 1px dashed silver;
+}
+
+.sticky.header .operations:last-child {
+  border-bottom: none !important;
+}
+
+.ui[class*="right floated"].header {
+  margin: 0 0 .5em 0;
+}
+
+.operations, .operations .ui.header {
+  font-weight: normal;
+  font-size: 0.8em;
+  margin-left: 1.2em;
+}
+
+.annotations .ui.buttons {
+  margin-right: 0.5rem;
+}
+
+.item.paragraph {
+  margin: 0;
+}
+
+.ui.statistic.para-no {
+  min-width: 1.8em;
+  padding-top: 0.6em;
+}
+
+.ui.statistic.para-no .value {
+  text-align: right;
+  font-size: 1.1rem !important;
+}
+
+.paragraph .para-no {
+  cursor: pointer;
+}
+
+#dictPopup {
+  min-width: 300px;
+  max-width: 600px;
+}
+
+#notePopup.ui.form .field {
+  margin-bottom: 0.5em;
+}
+
+#notePopup textarea.note-textarea {
+  height: 150px;
+  width: 250px;
+  padding: 0.3em 0.5em
+}

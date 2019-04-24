@@ -1,0 +1,20 @@
+.book-title {
+  /* font-size: 0.9em; */
+  color: rgba(0, 0, 0, 0.6);
+  margin-bottom: 0.5rem;
+}
+
+.book-code {
+  color: rgba(0, 0, 0, 0.6);
+  display: inline;
+  padding-right: 1em;
+}
+
+.chap-title, .chap-title-zh {
+  margin-bottom: 0.5rem;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.text-title {
+  margin-left: 2em;
+}

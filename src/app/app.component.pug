@@ -1,0 +1,12 @@
+.ui.container
+  .ui.stackable.secondary.pointing.menu
+    a.item(routerLink='/') Home
+    ng-template([ngIf]='currentUser')
+      a.item(routerLink='/books', routerLinkActive='active') 图书
+    .right.menu
+      .item(*ngIf='currentUser')
+        | {{currentUser.nickName}} &nbsp;&nbsp;
+
+  router-outlet
+
+  p &nbsp;

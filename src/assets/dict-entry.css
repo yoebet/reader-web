@@ -1,0 +1,103 @@
+.entry-word {
+  padding-right: 0.8em;
+  font-size: 1.4em;
+}
+
+.entry-word, .categories, .phonetics {
+  display: inline;
+}
+
+.phonetics {
+  padding-right: 1em;
+}
+
+span.pinyin {
+  margin-left: 0.8em;
+}
+
+.categories, .categories *, .phonetics, .phonetics * {
+  font-weight: normal;
+  font-size: 0.9rem;
+}
+
+.categories .mini.button {
+  font-size: 0.8rem;
+}
+
+.categories .ui.label, .phonetics .ui.label, .meaning-item .ui.label {
+  padding: 0 0.4rem;
+  margin-left: 0.2rem;
+  display: inline-block;
+  /*background: #e8e8e8;*/
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 0.8rem;
+  line-height: 1.1rem;
+  font-weight: normal;
+}
+
+.meaning-item .ui.label {
+  margin-left: 0;
+  margin-right: 0.2rem;
+}
+
+.ui.list.meaning-items {
+  margin-top: 0;
+  margin-left: 2em !important;
+  overflow: auto;
+}
+
+.ui.list.meaning-items.smi {
+  max-height: 300px;
+}
+
+.ui.list.meaning-items .item sui-select-option {
+  line-height: 1rem;
+}
+
+.pos-header {
+  font-weight: bold;
+}
+
+.pos-meanings {
+  margin-top: 0.5em;
+}
+
+.pos-meanings .pos-header .header .ui.mini.button {
+  margin-top: -0.4em;
+}
+
+.new-pos {
+  margin-top: 1em;
+}
+
+input.ui.mini.input {
+  padding: 0.57em 1em;
+}
+
+.meaning-items > .editing-item.item:before {
+  top: 0.7em;
+}
+
+.ui.selection.list > .item {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.ui.selection.list > .item:hover {
+  color: rgba(0, 0, 0, 1);
+}
+
+.selected-item.item {
+  color: #bf4040 !important;
+}
+
+.selected-tip {
+  display: inline-block;
+  color: silver;
+  font-size: 0.9em;
+}
+
+.selected-meaning {
+  display: inline-block;
+  color: rgba(0, 0, 0, 0.8);
+  margin-left: 1em;
+}

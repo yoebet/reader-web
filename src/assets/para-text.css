@@ -1,0 +1,75 @@
+
+.para-content, .para-editor > .para-form {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  border: 1px solid white;
+  padding: 0.3em;
+  border-radius: 0.5em;
+  line-height: 1.4rem;
+  font-size: 1.1rem;
+}
+
+.para-text {
+  white-space: pre-wrap;
+  flex: 1;
+}
+
+.para-text.content-text {
+  flex-grow: 1.5;
+}
+
+.para-content.left-right {
+  /*flex-direction: row;*/
+}
+
+.para-content.up-down {
+  flex-direction: column;
+}
+
+.para-content.up-down .para-text.trans-text {
+  margin-left: 0;
+  margin-top: 0.6em;
+}
+
+.para-content.left-right .para-text.trans-text {
+  margin-left: 1em;
+}
+
+.para-editor.left-right > .para-form {
+  /*flex-direction: row;*/
+}
+
+.para-textarea {
+  /*white-space: pre-wrap;*/
+  flex: 1;
+}
+
+.para-editor.up-down > .para-form {
+  flex-direction: column;
+}
+
+.para-editor.up-down > .para-form > .trans-textarea {
+  margin-left: 0;
+  margin-top: 0.6em;
+}
+
+.para-editor.left-right > .para-form > .trans-textarea {
+  margin-left: 1em;
+}
+
+/* Colors */
+
+.paragraph > .selected.para-content {
+  border-color: lightskyblue;
+}
+
+
+.para-text s-st.highlight, .para-quote s-st.highlight {
+  /*background: lightblue;*/
+  background: rgba(173, 216, 230, 0.4)
+}
+
+.para-text y-o.highlight {
+  border-bottom-width: 3px;
+}

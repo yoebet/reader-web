@@ -1,0 +1,119 @@
+/* *** 词类 Parts of Speech *** */
+
+y-o, .yo {
+  border-bottom: 1px dashed grey;
+  /*border-bottom-width: 1px;*/
+  /*border-bottom-color: grey;*/
+  /*border-bottom-style: dashed;*/
+}
+
+.pos, [data-pos] {
+  border-bottom-color: dimgrey;
+}
+
+/*.pos:before {
+}*/
+
+/*.pos:after {
+}*/
+
+/* *** 名词 Noun *** */
+
+.noun, [data-noun] {
+  border-bottom-color: cadetblue;
+}
+
+/* *** 动词 Verb *** */
+
+.verb, [data-verb] {
+  border-bottom-color: darkgreen;
+}
+
+/* *** 成分 Members of the Sentence *** */
+
+.memb, [data-memb] {
+  border-bottom-color: darkolivegreen;
+  border-bottom-style: solid;
+}
+
+/* *** 从句 Clauses *** */
+
+.clau, [data-clau] {
+  border-bottom-color: silver;
+}
+
+/* *** 时态 Tense *** */
+
+.tens, [data-tens] {
+  border-bottom-color: olive;
+  border-bottom-style: solid;
+}
+
+/* *** 短语 Phrases *** */
+
+.assoc, [data-assoc] {
+  border-bottom-color: lightskyblue;
+  border-bottom-style: solid;
+}
+
+[data-assoc=phra1] {
+  border-bottom-color: deepskyblue;
+}
+
+[data-assoc=phra2] {
+  border-bottom-color: lightsalmon;
+}
+
+[data-assoc=phra3] {
+  border-bottom-color: darkgreen;
+}
+
+[data-assoc=trunk] {
+  border-bottom-color: darkgreen;
+  border-bottom-style: double;
+}
+
+[data-assoc=antec] {
+  border-bottom-color: palevioletred;
+  border-bottom-style: solid;
+}
+
+[data-assoc=group1] {
+  border-bottom-color: deepskyblue;
+}
+
+[data-assoc=group2] {
+  border-bottom-color: lightsalmon;
+}
+
+[data-assoc=group3] {
+  border-bottom-color: darkgreen;
+}
+
+[data-mean] {
+  font-weight: bold;
+}
+
+/* *** 其他 Misc *** */
+
+.misc, [data-misc] {
+  border-bottom-color: cornflowerblue;
+  border-bottom-style: solid;
+}
+
+
+.para-text.content-text [data-note]:after {
+  content: '注';
+  font-size: 0.6em;
+  vertical-align: super;
+  color: indianred;
+}
+
+body.anno-disabled .para-content y-o {
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+
+body.anno-disabled .para-content y-o[data-note]:after {
+  content:'';
+}

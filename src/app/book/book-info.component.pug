@@ -1,0 +1,56 @@
+.ui.content
+  .ui.unstackable.definition.table(*ngIf='book')
+    tr
+      td 英文
+      td
+        .book-name {{book.name}}
+        .author
+          span.author-by by
+          | {{book.author}}
+    tr
+      td 中文
+      td
+        ng-template([ngIf]='book.zhName')
+          .book-name {{book.zhName}}
+          .author(*ngIf='book.zhAuthor')
+            span.author-by by
+            | {{book.zhAuthor}}
+    tr
+      td 基本
+      td.props
+        .prop
+          span.prop-name 代号
+          | {{book.code}}
+        .prop
+          span.prop-name 类别
+          | {{categoryNames[book.category]}}
+        .prop
+          span.prop-name 状态
+          | {{statusNames[book.status]}}
+        .prop
+          span.prop-name 章节
+          | {{book.chapsComplete? '完整':'未完整'}}
+    tr
+      td 简介
+      td {{book.introduction}}
+    tr
+      td 详情
+      td {{book.description}}
+    tr(*ngIf='!book.isPrivate')
+      td 定价
+      td
+        //| {{book.isFree? '免费':book.price}}
+        //label 标签
+        | {{book.priceLabel}}
+    tr
+      td 标签
+      td {{book.tags}}
+    tr(*ngIf='!book.isPrivate')
+      td 推荐语
+      td {{book.slogan}}
+    tr
+      td 主编辑
+      td {{book.chiefEditorName}}
+
+.actions
+  button.ui.tiny.button((click)="close()", autofocus='') 关闭

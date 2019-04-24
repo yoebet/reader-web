@@ -1,0 +1,27 @@
+.dict-entry(*ngIf='entry')
+  .ui.header.entry-header
+    .ui.right.floated.sub.header
+    .entry-word {{entry.word}}
+    .phonetics(*ngIf='entry.pinyins')
+      label.ui.small.label 拼音
+      span.pinyin(*ngFor='let py of entry.pinyins') {{py}}
+  .clearing
+
+  .ui.horizontal.list.base-forms(*ngIf='refWords||entryStack.length > 0')
+    a.ui.item(*ngIf='entryStack.length > 0', (click)='goback()')
+      i.left.arrow.icon
+      | {{entryStack[entryStack.length-1].word}}
+    a.ui.item(*ngFor='let word of refWords||[]', (click)='goto(word)')
+      | {{word}}
+
+  .ui.clearing.divider
+  .ui.segment
+    sui-accordion(*ngIf='entry.complete', [closeOthers]='false')
+      sui-accordion-panel.pos-meanings(*ngFor='let pm of entry.complete; first as first', [isOpen]='first')
+        .pos-header(title='')
+          i.dropdown.icon
+          | {{pm.head}}
+        .ui.ordered.selection.divided.list.meaning-items(content='')
+          .ui.item(*ngFor='let item of pm.items')
+            span.meaning-item
+              | {{item.exp}}

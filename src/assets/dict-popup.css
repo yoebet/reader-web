@@ -1,0 +1,24 @@
+.dp-element, .dp-element:after, .dp-element:before, .dp-element *, .dp-element *:after, .dp-element *:before {
+  box-sizing: border-box;
+}
+
+.dp-element {
+  position: absolute;
+  display: none;
+}
+
+.dp-element.dp-enabled {
+  display: block;
+}
+
+.dp-element-attached-bottom.dp-target-attached-top {
+  margin-top: -5px;
+}
+
+.dp-element-attached-top.dp-target-attached-bottom {
+  margin-top: 3px;
+}
+
+.dp-target {
+  background: #ffffa0;
+}

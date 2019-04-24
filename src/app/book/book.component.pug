@@ -1,0 +1,44 @@
+div(*ngIf='book')
+  .ui.content
+    .ui.right.floated.sub.header
+      button.ui.tiny.button((click)='showDetail()') 详情
+    .name-author
+      .book-name {{book.name}}
+      .author
+        span.author-by by
+        | {{book.author}}
+    .zh-name-author(*ngIf='book.zhName')
+      .book-name {{book.zhName}}
+      .author(*ngIf='book.zhAuthor')
+        span.author-by by
+        | {{book.zhAuthor}}
+    .props
+      .prop
+        span.prop-name 代号
+        | {{book.code}}
+      .prop
+        span.prop-name 分类
+        | {{categoryNames[book.category]}}
+      .prop
+        span.prop-name 状态
+        | {{statusNames[book.status]}}
+
+  .ui.hidden.clearing.divider
+
+  .ui.small.header
+    .ui.right.floated.small.header
+      sui-checkbox([(ngModel)]='showZh') 中文
+
+    | 章节
+
+  .ui.celled.list(*ngIf='book')
+    .item(*ngFor='let chap of book.chaps; trackBy: chapTracker; first as first; last as last')
+      .right.floated.header
+        .ui.mini.left.pointing.basic.label([ngClass]='{"green": chap.status==="R"}') {{statusNames[chap.status]}}
+
+      a([routerLink]="['/chaps', chap._id]")
+        .pre-wrap {{chap.name}}
+        .zhname.pre-wrap(*ngIf="showZh && chap.zhName") {{chap.zhName}}
+
+.ui.hidden.clearing.divider
+button.ui.tiny.button((click)='goBack()') 返回

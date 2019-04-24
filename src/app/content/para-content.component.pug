@@ -1,0 +1,9 @@
+.para-text.content-text(
+(mouseup)='onMouseup($event,"content")',
+(contextmenu)='onContextmenu($event,"content")',
+spellcheck='false', #contentText='')
+.para-text.trans-text([hidden]='!showTrans',
+(mouseup)='onMouseup($event,"trans")',
+(contextmenu)='onContextmenu($event,"trans")',
+spellcheck='false', #transText='')
+ng-template(#wordAnnos='')
