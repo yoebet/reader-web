@@ -1,9 +1,0 @@
-//.ui.small.header {{word}}
-.phonetics(*ngIf='entry&&entry.phonetics')
-  label.ui.small.label 英
-  span {{entry.phonetics['UK']}}
-  label.ui.small.label 美
-  span {{entry.phonetics['US']}}
-.ui.list(*ngIf='entry')
-  .ui.item(*ngFor='let item of entry.simple')
-    | {{item.pos}} {{item.exp}}

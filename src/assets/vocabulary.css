@@ -1,0 +1,26 @@
+
+.ui.horizontal.link.list.user-vocabulary {
+  display: block;
+}
+
+.ui.horizontal.link.list.user-vocabulary .item {
+  font-size: 0.9rem;
+}
+
+.user-vocabulary .word-add-on {
+  font-size: 0.9em;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.ui.label.word-familiarity-1 {
+  color: indianred;
+}
+
+.ui.label.word-familiarity-2 {
+  color: darkcyan;
+}
+
+.ui.label.word-familiarity-3 {
+  color: green;
+}
+

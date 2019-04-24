@@ -9,6 +9,8 @@ export class DictRequest {
   relatedWords?: string[];
   context?: any;
   meaningItemCallback: (selected: DictSelectedResult) => void;
+
+  simplePopup = false;
 }
 
 export class SelectedItem {

@@ -22,7 +22,6 @@ import {UserWord} from '../models/user-word';
 
 import {DictService} from '../services/dict.service';
 import {DictZhService} from '../services/dict-zh.service';
-import {UserVocabularyService} from '../services/user-vocabulary.service';
 import {DictRequest, DictSelectedResult, SelectedItem} from '../content-types/dict-request';
 import {NoteRequest} from '../content-types/note-request';
 import {WordAnnosComponent} from './word-annos.component';
@@ -33,6 +32,8 @@ declare type Side = 'content' | 'trans';
 
 const SideContent: Side = 'content';
 const SideTrans: Side = 'trans';
+
+// declare type TriggerMethod = Tap/Click/LongClick/RightClick/Selection
 
 @Component({
   selector: 'para-content',
@@ -56,6 +57,8 @@ export class ParaContentComponent implements OnInit, OnChanges {
   @Output() dictRequest = new EventEmitter<DictRequest>();
   @Output() noteRequest = new EventEmitter<NoteRequest>();
 
+  lookupDictSimple = true;
+
   _contentAnnotator: Annotator;
   _transAnnotator: Annotator;
   transRendered = false;
@@ -66,6 +69,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
 
   highlightedSentences: Element[];
   highlightedWords: Element[];
+
   wordsPopupMap = new Map<Element, Drop>();
   wordAnnosComponentRef: ComponentRef<WordAnnosComponent>;
 
@@ -76,8 +80,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
 
   constructor(private resolver: ComponentFactoryResolver,
               private dictService: DictService,
-              private dictZhService: DictZhService,
-              private userVocabularyService: UserVocabularyService) {
+              private dictZhService: DictZhService) {
   }
 
 
@@ -93,13 +96,15 @@ export class ParaContentComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.userVocabularyService.getCombinedWordsMap()
-      .subscribe((map: CombinedWordsMap) => {
+    let wmObs = this.contentContext.combinedWordsMapObs;
+    if (wmObs) {
+      wmObs.subscribe((map: CombinedWordsMap) => {
         this.combinedWordsMap = map;
         if (this.active) {
           this.markUserNewWords();
         }
       });
+    }
 
     if (this.activeAlways) {
       this.setupAssociationHover();
@@ -164,7 +169,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
     }
   }
 
-  selectWordMeaning(side: Side) {
+  selectWordMeaning(side: Side, triggerMethod = null) {
     let ann = AnnotationSet.selectMeaningAnnotation;
     let ar: AnnotateResult = this.getAnnotator(side, ann).annotate();
     if (!ar || !ar.wordEl) {
@@ -237,6 +242,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
       if (oriForWord.indexOf('­') >= 0) {// 173, 0xAD, soft hyphen
         oriForWord = oriForWord.replace(/­/, '');
       }
+
       this.dictService.getEntry(oriForWord, {base: true, stem: true})
         .subscribe((entry: DictEntry) => {
           if (entry == null) {
@@ -262,6 +268,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
               dr.relatedWords.push(phrase);
             }
           }
+          dr.simplePopup = (triggerMethod !== 'RightClick' && this.lookupDictSimple);
           this.dictRequest.emit(dr);
         });
     } else if (Book.isChineseText(lang)) {
@@ -282,10 +289,9 @@ export class ParaContentComponent implements OnInit, OnChanges {
           this.dictRequest.emit(dr);
         });
     }
-
   }
 
-  addANote(side: Side) {
+  addANote(side: Side, triggerMethod = null) {
     let ann = AnnotationSet.addNoteAnnotation;
     let ar: AnnotateResult = this.getAnnotator(side, ann).annotate();
     if (!ar || !ar.wordEl) {
@@ -329,13 +335,13 @@ export class ParaContentComponent implements OnInit, OnChanges {
     this.noteRequest.emit(nr);
   }
 
-  private doAnnotate(side: Side) {
+  private doAnnotate(side: Side, triggerMethod = null) {
     if (this.annotation.nameEn === SpecialAnnotations.SelectMeaning.nameEn) {
-      this.selectWordMeaning(side);
+      this.selectWordMeaning(side, triggerMethod);
       return;
     }
     if (this.annotation.nameEn === SpecialAnnotations.AddANote.nameEn) {
-      this.addANote(side);
+      this.addANote(side, triggerMethod);
       return;
     }
     let ar: AnnotateResult = this.getAnnotator(side).annotate();
@@ -364,16 +370,18 @@ export class ParaContentComponent implements OnInit, OnChanges {
 
   onMouseup($event, side: Side) {
     $event.stopPropagation();
+    $event.preventDefault();
     if ($event.which === 3) {
       return;
     }
+    let triggerMethod = 'Click';
     let ctrlKey = $event.ctrlKey || $event.metaKey;
     if (ctrlKey) {
-      this.addANote(side);
+      this.addANote(side, triggerMethod);
       return;
     }
     if (this.lookupDict) {
-      this.selectWordMeaning(side);
+      this.selectWordMeaning(side, triggerMethod);
       return;
     }
     if (!this.gotFocus) {
@@ -382,11 +390,11 @@ export class ParaContentComponent implements OnInit, OnChanges {
     if (!this.annotation) {
       return;
     }
-    this.doAnnotate(side);
+    this.doAnnotate(side, triggerMethod);
   }
 
   onContextmenu($event, side: Side) {
-    this.selectWordMeaning(side);
+    this.selectWordMeaning(side, 'RightClick');
     $event.stopPropagation();
     $event.preventDefault();
   }
@@ -772,7 +780,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
     let annotator = this.getAnnotator(side);
     let wacins = annotator.wordAtCursorIfNoSelection;
     annotator.wordAtCursorIfNoSelection = false;
-    this.doAnnotate(side);
+    this.doAnnotate(side, 'Selection');
     annotator.wordAtCursorIfNoSelection = wacins;
   }
 

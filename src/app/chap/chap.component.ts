@@ -1,4 +1,8 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {
+  Component, ComponentFactory, ComponentFactoryResolver,
+  ComponentRef, HostListener,
+  OnInit, ViewChild, ViewContainerRef
+} from '@angular/core';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {Location} from '@angular/common';
 import {PopStateEvent} from '@angular/common/src/location/location';
@@ -6,7 +10,7 @@ import {PopStateEvent} from '@angular/common/src/location/location';
 import {switchMap} from 'rxjs/operators';
 
 import * as Tether from 'tether';
-import {SuiModalService} from 'ng2-semantic-ui';
+import * as Drop from 'tether-drop';
 
 import {UIConstants} from '../config';
 import {AnnotationSet} from '../anno/annotation-set';
@@ -22,6 +26,10 @@ import {ChapService} from '../services/chap.service';
 import {ParaService} from '../services/para.service';
 import {DictZhService} from '../services/dict-zh.service';
 import {AnnotationsService} from '../services/annotations.service';
+import {UserVocabularyService} from '../services/user-vocabulary.service';
+import {DictSimpleComponent} from '../dict/dict-simple.component';
+import {AnnotatorHelper} from '../anno/annotator-helper';
+import {DictEntry} from '../models/dict-entry';
 
 @Component({
   selector: 'chap-detail',
@@ -29,6 +37,7 @@ import {AnnotationsService} from '../services/annotations.service';
   styleUrls: ['./chap.component.css']
 })
 export class ChapComponent implements OnInit {
+  @ViewChild('dictSimple', {read: ViewContainerRef}) dictSimple: ViewContainerRef;
   book: Book;
   chap: Chap;
 
@@ -48,16 +57,22 @@ export class ChapComponent implements OnInit {
   dictRequest: DictRequest = null;
   dictTether = null;
 
+  simpleDictRequest: DictRequest = null;
+  simpleDictDrop: Drop;
+
   noteRequest: NoteRequest = null;
   noteTether = null;
   noteRequestNote = '';
 
-  constructor(private bookService: BookService,
+  dictSimpleComponentRef: ComponentRef<DictSimpleComponent>;
+
+  constructor(private resolver: ComponentFactoryResolver,
+              private bookService: BookService,
               private chapService: ChapService,
               private paraService: ParaService,
               private dictZhService: DictZhService,
               private annoService: AnnotationsService,
-              public modalService: SuiModalService,
+              private userVocabularyService: UserVocabularyService,
               private route: ActivatedRoute,
               private location: Location) {
   }
@@ -83,8 +98,28 @@ export class ChapComponent implements OnInit {
       if (!this.contentContext) {
         this.contentContext = new ContentContext();
       }
+      this.contentContext.combinedWordsMapObs = this.userVocabularyService.getCombinedWordsMap();
       this.loadBook(chap);
     });
+
+    document.addEventListener('click', (event) => {
+      if (this.dictRequest && this.dictTether) {
+        let dictPopup = document.getElementById('dictPopup');
+        if (event.target) {
+          let target = event.target as Element;
+          if (target.contains(this.dictRequest.wordElement)) {
+            if (target.closest(`${UIConstants.sentenceTagName}, .para-text, .paragraph`)) {
+              return;
+            }
+          }
+          if (dictPopup.contains(target)) {
+            return;
+          }
+        }
+        this.onDictItemSelect(null);
+        event.stopPropagation();
+      }
+    }, true);
   }
 
   private loadBook(chap) {
@@ -202,7 +237,7 @@ export class ChapComponent implements OnInit {
     }
   }
 
-  onDictRequest(dictRequest) {
+  onDictRequest(dictRequest: DictRequest) {
     if (this.dictRequest) {
       if (this.dictRequest.wordElement === dictRequest.wordElement) {
         this.onDictItemSelect(null);
@@ -212,7 +247,11 @@ export class ChapComponent implements OnInit {
         this.onDictItemSelect(null);
       }
     }
-    this.dictRequest = dictRequest;
+    if (dictRequest && dictRequest.simplePopup) {
+      this.showDictSimple(dictRequest);
+    } else {
+      this.dictRequest = dictRequest;
+    }
   }
 
   onDictPopupReady() {
@@ -247,6 +286,55 @@ export class ChapComponent implements OnInit {
     let dr = this.dictRequest;
     this.closeDictPopup();
     dr.meaningItemCallback(selected);
+  }
+
+  private showDictSimple(dictRequest: DictRequest) {
+    if (!dictRequest) {
+      return;
+    }
+    if (this.simpleDictRequest) {
+      let el = this.simpleDictRequest.wordElement;
+      if (el === dictRequest.wordElement) {
+        return;
+      }
+    }
+
+    let {dictEntry, wordElement} = dictRequest;
+    if (!this.dictSimpleComponentRef) {
+      let factory: ComponentFactory<DictSimpleComponent> = this.resolver.resolveComponentFactory(DictSimpleComponent);
+      this.dictSimple.clear();
+      this.dictSimpleComponentRef = this.dictSimple.createComponent(factory);
+    }
+    let dscr = this.dictSimpleComponentRef;
+
+    let content = function () {
+      dscr.instance.entry = dictEntry as DictEntry;
+      return dscr.location.nativeElement;
+    };
+
+    setTimeout(() => {
+      let drop = new Drop({
+        target: wordElement,
+        content: content,
+        classes: `${UIConstants.dropClassPrefix}dict`,
+        position: 'bottom center',
+        constrainToScrollParent: false,
+        remove: true,
+        openOn: 'click'//click,hover,always
+      });
+      drop.open();
+      drop.on('close', () => {
+        AnnotatorHelper.removeDropTagIfDummy(wordElement);
+        this.simpleDictRequest = null;
+        setTimeout(() => {
+          drop.destroy();
+          this.simpleDictDrop = null;
+        }, 10);
+      });
+
+      this.simpleDictRequest = dictRequest;
+      this.simpleDictDrop = drop;
+    }, 10);
   }
 
   private closeNotePopup() {

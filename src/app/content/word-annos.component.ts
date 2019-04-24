@@ -30,7 +30,7 @@ export class WordAnnosComponent implements OnInit {
 
   set wordEl(_wordEl: HTMLElement) {
     this._wordEl = _wordEl;
-    if (this.initialized && this.enabled) {
+    if (this.initialized && this.enabled && this.annotationSet) {
       this.parseAnnotations();
     }
   }

@@ -126,17 +126,15 @@ export class DictService extends BaseService<DictEntry> {
     }
 
     let url = `${this.staticBase}/dict/baseForms/belowCET6`;
-    let obs = this.http.get<any[]>(url, this.httpOptions).pipe(
-      catchError(this.handleError),map((words: string[][]) => {
+    return this.http.get<any[]>(url, this.httpOptions).pipe(
+      map((words: string[][]) => {
         this.baseFormsMap = new Map();
         for (let [word, base] of words) {
           this.baseFormsMap.set(word, base);
         }
         return this.baseFormsMap;
-      }),);
-
-    obs = obs.pipe(share());
-    return obs;
+      }),
+      catchError(this.handleError));
   }
 
 }

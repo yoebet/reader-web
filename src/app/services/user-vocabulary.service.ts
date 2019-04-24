@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 
-import {combineLatest as observableCombineLatest, of as observableOf, Observable} from 'rxjs';
-import {map,share} from 'rxjs/operators';
+import {combineLatest as observableCombineLatest, of as observableOf, Observable, EMPTY} from 'rxjs';
+import {map, share, catchError} from 'rxjs/operators';
 
 import {groupBy} from 'lodash';
 
@@ -21,7 +21,6 @@ export class UserVocabularyService {
 
   private baseVocabularyMap: Map<string, string>;
   private combinedWordsMap: CombinedWordsMap;
-  private combinedWordsMap$: Observable<CombinedWordsMap>;
 
 
   constructor(private preferenceService: UserPreferenceService,
@@ -41,7 +40,6 @@ export class UserVocabularyService {
   invalidateBaseVocabularyMap() {
     this.baseVocabularyMap = null;
     this.combinedWordsMap = null;
-    this.combinedWordsMap$ = null;
   }
 
   getBaseVocabularyMap(): Observable<Map<string, string>> {
@@ -127,11 +125,8 @@ export class UserVocabularyService {
     if (this.combinedWordsMap) {
       return observableOf(this.combinedWordsMap);
     }
-    if (this.combinedWordsMap$) {
-      return this.combinedWordsMap$;
-    }
 
-    let obs = observableCombineLatest(
+    return observableCombineLatest(
       this.getBaseVocabularyMap(),
       this.userWordService.getUserWordsMap(),
       this.dictService.loadBaseForms()
@@ -145,13 +140,11 @@ export class UserVocabularyService {
           userWordsMap as Map<string, UserWord>,
           baseFormsMap as Map<string, string>);
         this.combinedWordsMap = cwm;
-        this.combinedWordsMap$ = null;
         return cwm;
       }),
+      catchError(e => EMPTY),
       share()
     );
-    this.combinedWordsMap$ = obs;
-    return obs;
   }
 
   statistic(): Observable<Object> {

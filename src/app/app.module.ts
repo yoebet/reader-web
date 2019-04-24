@@ -35,7 +35,7 @@ import {BookInfoComponent} from './book/book-info.component';
 import {ChapComponent} from './chap/chap.component';
 import {ParaContentComponent} from './content/para-content.component';
 import {WordAnnosComponent} from './content/word-annos.component';
-import {SimpleMeaningsComponent} from './dict/simple-meanings.component';
+import {DictSimpleComponent} from './dict/dict-simple.component';
 import {WordTagsComponent} from './dict/word-tags.component';
 import {WordTextComponent} from './dict/word-text.component';
 import {DictEntryComponent} from './dict/dict-entry.component';
@@ -68,7 +68,7 @@ import {LoginPopupComponent} from './account/login-popup.component';
     FileSizePipe,
     ApproximateNumberPipe,
     WordFamiliarityPipe,
-    SimpleMeaningsComponent,
+    DictSimpleComponent,
     WordTagsComponent,
     WordTextComponent,
     LoginPopupComponent
@@ -92,7 +92,7 @@ import {LoginPopupComponent} from './account/login-popup.component';
   entryComponents: [
     BookInfoComponent,
     WordAnnosComponent,
-    SimpleMeaningsComponent,
+    DictSimpleComponent,
     LoginPopupComponent
   ],
   bootstrap: [AppComponent]
