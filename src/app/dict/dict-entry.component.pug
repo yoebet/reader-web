@@ -19,6 +19,8 @@
     a.ui.item(*ngFor='let word of refWords||[]', (click)='goto(word)')
       | {{word}}
 
+    user-word([word]='entry.word', [userWord]='userWord', [context]='context')
+
   .ui.clearing.divider
   sui-tabset
     //.ui.pointing.secondary.menu

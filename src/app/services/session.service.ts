@@ -2,8 +2,8 @@ import {Injectable, EventEmitter} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 
-import {throwError, Observable} from 'rxjs';
-import {map, catchError} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 import {DefaultHttpHeaders} from '../config';
 import {User} from '../models/user';
@@ -32,19 +32,20 @@ export class SessionService {
     return this.http.post(this.loginUrl, {name, pass}, this.httpOptions)
       .pipe(
         map((opr: OpResult) => {
-            if (opr && opr.ok === 1) {
-              let from = this.currentUser ? this.currentUser.name : null;
-              this.currentUser = new User();
-              this.currentUser.name = name;
-              this.currentUser.nickName = (opr as any).nickName;
-              this.currentUser.role = (opr as any).role;
-              if (from !== name) {
-                this.onCurrentUserChanged.emit({from, to: name});
-              }
-              return opr;
+          if (opr && opr.ok === 1) {
+            let cu = this.currentUser;
+            let from = cu ? cu.name : null;
+            cu = new User();
+            cu.name = name;
+            cu.nickName = (opr as any).nickName;
+            cu.role = (opr as any).role;
+            this.currentUser = cu;
+            if (from !== name) {
+              this.onCurrentUserChanged.emit({from, to: name});
             }
-          },
-          catchError(this.handleError)));
+            return opr;
+          }
+        }));
   }
 
   logout(): Observable<OpResult> {
@@ -59,8 +60,7 @@ export class SessionService {
             }
           }
           return opr;
-        }),
-        catchError(this.handleError));
+        }));
   }
 
   checkLogin(): Observable<any> {
@@ -83,12 +83,6 @@ export class SessionService {
           this.onCurrentUserChanged.emit({from, to});
         }
         return userinfo;
-      }),
-      catchError(this.handleError));
-  }
-
-  private handleError(error: any): Observable<any> {
-    console.error(error);
-    return throwError(error);
+      }));
   }
 }

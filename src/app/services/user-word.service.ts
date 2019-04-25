@@ -104,20 +104,18 @@ export class UserWordService extends BaseService<UserWord> {
   getOne(word: string): Observable<UserWord> {
     if (this.userWordsMap) {
       let userWord = this.userWordsMap.get(word);
-      if (userWord) {
-        return observableOf(userWord);
-      }
+      return observableOf(userWord);
     }
-    let obs = super.getOne(word) as Observable<UserWord>;
-    return obs.pipe(
-      tap((uw: UserWord) => {
-        if (uw && this.userWordsMap) {
-          this.userWordsMap.set(uw.word, uw);
+    return this.getUserWordsMap().pipe(
+      map(uwm => {
+        if (uwm) {
+          return uwm.get(word);
         }
+        return null;
       }));
   }
 
-  list(): Observable<UserWord[]> {
+  loadAll(): Observable<UserWord[]> {
     if (this.allWords) {
       return observableOf(this.allWords);
     }
@@ -151,7 +149,7 @@ export class UserWordService extends BaseService<UserWord> {
     if (this.userWordsMap) {
       return observableOf(this.userWordsMap);
     }
-    return this.list().pipe(map(_ => this.userWordsMap));
+    return this.loadAll().pipe(map(_ => this.userWordsMap));
   }
 
   create(userWord: UserWord): Observable<UserWord> {

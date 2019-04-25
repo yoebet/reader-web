@@ -14,12 +14,14 @@ import * as Drop from 'tether-drop';
 
 import {UIConstants} from '../config';
 import {AnnotationSet} from '../anno/annotation-set';
+import {AnnotatorHelper} from '../anno/annotator-helper';
 import {ContentContext} from '../content-types/content-context';
 import {DictRequest, DictSelectedResult} from '../content-types/dict-request';
 import {NoteRequest} from '../content-types/note-request';
 import {Book} from '../models/book';
 import {Chap} from '../models/chap';
 import {Para} from '../models/para';
+import {DictEntry} from '../models/dict-entry';
 import {Annotation} from '../models/annotation';
 import {BookService} from '../services/book.service';
 import {ChapService} from '../services/chap.service';
@@ -28,8 +30,6 @@ import {DictZhService} from '../services/dict-zh.service';
 import {AnnotationsService} from '../services/annotations.service';
 import {UserVocabularyService} from '../services/user-vocabulary.service';
 import {DictSimpleComponent} from '../dict/dict-simple.component';
-import {AnnotatorHelper} from '../anno/annotator-helper';
-import {DictEntry} from '../models/dict-entry';
 
 @Component({
   selector: 'chap-detail',
@@ -59,12 +59,12 @@ export class ChapComponent implements OnInit {
 
   simpleDictRequest: DictRequest = null;
   simpleDictDrop: Drop;
+  simpleDictComponentRef: ComponentRef<DictSimpleComponent>;
 
   noteRequest: NoteRequest = null;
   noteTether = null;
   noteRequestNote = '';
 
-  dictSimpleComponentRef: ComponentRef<DictSimpleComponent>;
 
   constructor(private resolver: ComponentFactoryResolver,
               private bookService: BookService,
@@ -300,12 +300,12 @@ export class ChapComponent implements OnInit {
     }
 
     let {dictEntry, wordElement} = dictRequest;
-    if (!this.dictSimpleComponentRef) {
+    if (!this.simpleDictComponentRef) {
       let factory: ComponentFactory<DictSimpleComponent> = this.resolver.resolveComponentFactory(DictSimpleComponent);
       this.dictSimple.clear();
-      this.dictSimpleComponentRef = this.dictSimple.createComponent(factory);
+      this.simpleDictComponentRef = this.dictSimple.createComponent(factory);
     }
-    let dscr = this.dictSimpleComponentRef;
+    let dscr = this.simpleDictComponentRef;
 
     let content = function () {
       dscr.instance.entry = dictEntry as DictEntry;
@@ -313,6 +313,10 @@ export class ChapComponent implements OnInit {
     };
 
     setTimeout(() => {
+      let lastDrop = this.simpleDictDrop;
+      if (lastDrop) {
+        lastDrop.close();
+      }
       let drop = new Drop({
         target: wordElement,
         content: content,
@@ -323,12 +327,10 @@ export class ChapComponent implements OnInit {
         openOn: 'click'//click,hover,always
       });
       drop.open();
-      drop.on('close', () => {
+      drop.once('close', () => {
         AnnotatorHelper.removeDropTagIfDummy(wordElement);
-        this.simpleDictRequest = null;
         setTimeout(() => {
           drop.destroy();
-          this.simpleDictDrop = null;
         }, 10);
       });
 

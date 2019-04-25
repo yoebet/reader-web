@@ -38,6 +38,7 @@ import {WordAnnosComponent} from './content/word-annos.component';
 import {DictSimpleComponent} from './dict/dict-simple.component';
 import {WordTagsComponent} from './dict/word-tags.component';
 import {WordTextComponent} from './dict/word-text.component';
+import {UserWordComponent} from './dict/user-word.component';
 import {DictEntryComponent} from './dict/dict-entry.component';
 import {DictZhEntryComponent} from './dict-zh/dict-zh-entry.component';
 import {DictZhEntrySmiComponent} from './dict-zh/dict-zh-entry-smi.component';
@@ -71,6 +72,7 @@ import {LoginPopupComponent} from './account/login-popup.component';
     DictSimpleComponent,
     WordTagsComponent,
     WordTextComponent,
+    UserWordComponent,
     LoginPopupComponent
   ],
   providers: [

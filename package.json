@@ -25,7 +25,6 @@
     "moment": "^2.19.3",
     "ng2-semantic-ui": "^0.9.7",
     "rxjs": "~6.3.3",
-    "rxjs-compat": "^6.4.0",
     "tether": "^1.4.5",
     "tether-drop": "^1.4.2",
     "tslib": "^1.9.0",

@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {SuiModalService} from 'ng2-semantic-ui';
 
 import {User} from './models/user';
+import {OpResult} from './models/op-result';
 import {AppService} from './services/app.service';
 import {SessionService} from './services/session.service';
 
@@ -25,12 +26,18 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.sessionService.checkLogin();
+    this.sessionService.checkLogin()
+      .subscribe(a => {
+      });
   }
 
 
   logout() {
-    this.sessionService.logout();
-    this.router.navigate(['/']);
+    this.sessionService.logout()
+      .subscribe((opr: OpResult) => {
+        if (opr && opr.ok === 1) {
+          this.router.navigate(['/']);
+        }
+      });
   }
 }

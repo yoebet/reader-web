@@ -57,7 +57,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
   @Output() dictRequest = new EventEmitter<DictRequest>();
   @Output() noteRequest = new EventEmitter<NoteRequest>();
 
-  lookupDictSimple = true;
+  lookupDictSimple = false;
 
   _contentAnnotator: Annotator;
   _transAnnotator: Annotator;
@@ -268,7 +268,11 @@ export class ParaContentComponent implements OnInit, OnChanges {
               dr.relatedWords.push(phrase);
             }
           }
-          dr.simplePopup = (triggerMethod !== 'RightClick' && this.lookupDictSimple);
+          if (triggerMethod === 'Ctrl_Click') {
+            dr.simplePopup = !this.lookupDictSimple;
+          } else {
+            dr.simplePopup = this.lookupDictSimple;
+          }
           this.dictRequest.emit(dr);
         });
     } else if (Book.isChineseText(lang)) {
@@ -375,12 +379,21 @@ export class ParaContentComponent implements OnInit, OnChanges {
       return;
     }
     let triggerMethod = 'Click';
-    let ctrlKey = $event.ctrlKey || $event.metaKey;
-    if (ctrlKey) {
+    if ($event.altKey) {
+      triggerMethod = 'Alt_' + triggerMethod;
       this.addANote(side, triggerMethod);
       return;
     }
+
+    let ctrl = $event.ctrlKey || $event.metaKey;
+    if (ctrl) {
+      triggerMethod = 'Ctrl_' + triggerMethod;
+    }
     if (this.lookupDict) {
+      this.selectWordMeaning(side, triggerMethod);
+      return;
+    }
+    if ($event.ctrlKey || $event.metaKey) {
       this.selectWordMeaning(side, triggerMethod);
       return;
     }
