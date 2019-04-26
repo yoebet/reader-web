@@ -16,7 +16,7 @@ import {UIConstants} from '../config';
 import {AnnotationSet} from '../anno/annotation-set';
 import {AnnotatorHelper} from '../anno/annotator-helper';
 import {ContentContext} from '../content-types/content-context';
-import {DictRequest, DictSelectedResult} from '../content-types/dict-request';
+import {DictRequest, SelectedItem, UserWordChange} from '../content-types/dict-request';
 import {NoteRequest} from '../content-types/note-request';
 import {Book} from '../models/book';
 import {Chap} from '../models/chap';
@@ -209,7 +209,7 @@ export class ChapComponent implements OnInit {
   }
 
   onMarkNewWordsChange() {
-    this.toggleBodyClass(UIConstants.newwordDisabledBodyClass, this.markNewWords);
+    this.toggleBodyClass(UIConstants.userwordDisabledBodyClass, this.markNewWords);
   }
 
   onWordsHoverChange() {
@@ -279,7 +279,7 @@ export class ChapComponent implements OnInit {
     }
   }
 
-  onDictItemSelect(selected: DictSelectedResult) {
+  onDictItemSelect(selected: SelectedItem) {
     if (!this.dictRequest) {
       return;
     }
@@ -337,6 +337,16 @@ export class ChapComponent implements OnInit {
       this.simpleDictRequest = dictRequest;
       this.simpleDictDrop = drop;
     }, 10);
+  }
+
+  onUserWordChange(change: UserWordChange) {
+    let dr = this.dictRequest;
+    if (!dr) {
+      return;
+    }
+    if (dr.userWordChangeCallback) {
+      dr.userWordChangeCallback(change);
+    }
   }
 
   private closeNotePopup() {

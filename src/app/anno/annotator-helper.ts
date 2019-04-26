@@ -3,6 +3,13 @@ import {ZhPhrases} from './zh-phrases';
 
 export class AnnotatorHelper {
 
+  static stripEnWord(word: string): string {
+    if (word.indexOf('­') >= 0) {// 173, 0xAD, soft hyphen
+      word = word.replace(/­/, '');
+    }
+    return word;
+  }
+
   static trimSelected(text: string, charPattern: RegExp, wordStart: number, wordEnd: number) {
     let result = {trimLeft: false, trimRight: false, wordStart, wordEnd};
     let cp = charPattern;

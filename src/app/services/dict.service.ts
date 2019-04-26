@@ -125,7 +125,8 @@ export class DictService extends BaseService<DictEntry> {
       return of(this.baseFormsMap);
     }
 
-    let url = `${this.staticBase}/dict/baseForms/b6`;
+    let scope = 'all'; //b6
+    let url = `${this.baseUrl}/baseForms/${scope}`;
     return this.http.get<any[]>(url, this.httpOptions).pipe(
       map((words: string[][]) => {
         this.baseFormsMap = new Map();

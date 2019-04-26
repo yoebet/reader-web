@@ -9,12 +9,9 @@ const UIConstants = {
   tetherClassPrefixNoHyphen: 'dp',
   highlightClass: 'highlight',
   highlightWordClass: 'highlight-word',
-  newwordDisabledBodyClass: 'newword-disabled',
   annoDisabledBodyClass: 'anno-disabled',
-  userWordTagName: 'w-d',
-  userWordCommonClass: 'word',
-  userWordBeyondClass: 'beyond',
-  userWordFamiliarityClassPrefix: 'wf'
+  userwordDisabledBodyClass: 'uwf-disabled',
+  userWordTagName: 'w-d'
 };
 
 
@@ -24,7 +21,8 @@ const DataAttrNames = {
   word: 'word',
   mean: 'mean',
   note: 'note',
-  assoc: 'assoc'//关联组
+  assoc: 'assoc',//关联组
+  wordFamiliarity: 'uwf'
 };
 
 const ValuePhras = ['phra1', 'phra2', 'phra3'];
@@ -33,7 +31,8 @@ const ValueGroups = ['group1', 'group2', 'group3'];
 const DataAttrValues = {
   phraPattern: /^phra\d$/,
   assocPhra1: ValuePhras[0],
-  assocGroups: ValuePhras.concat(['trunk', 'antec']).concat(ValueGroups)
+  assocGroups: ValuePhras.concat(['trunk', 'antec']).concat(ValueGroups),
+  uwfBeyond: '0'
 };
 
 

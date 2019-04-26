@@ -1,10 +1,10 @@
 .ui.horizontal.link.list.user-vocabulary
   .item(*ngIf='wordCategory')
-    | 我的基础词汇
+    | 基础词汇
     .ui.mini.label {{wordCategory.name}}
   ng-template([ngIf]='userWord')
     .item
-      .ui.mini.label([ngClass]='"word-familiarity-"+userWord.familiarity') {{userWord.familiarity | wordFamiliarity}}
+      .ui.mini.label([ngClass]='"uwf-"+userWord.familiarity') {{userWord.familiarity | wordFamiliarity}}
       .ui.icon.mini.buttons
         .ui.button([ngClass]='{disabled:userWord.familiarity===3}', (click)='familiarityUp()')
           i.double.angle.up.icon
@@ -14,4 +14,4 @@
       .word-add-on 加入于 {{userWord | createdDateString}}
     a.item((click)='removeUserWord()') 移除
   .item(*ngIf='!userWord')
-    .ui.mini.button((click)='addToVocabulary()') 加入我的词汇
+    .ui.mini.button((click)='addToVocabulary()') 加入

@@ -1,5 +1,5 @@
 
-.para-content, .para-editor > .para-form {
+.para-content {
   position: relative;
   display: flex;
   flex: 1 1 auto;
@@ -33,28 +33,6 @@
 }
 
 .para-content.left-right .para-text.trans-text {
-  margin-left: 1em;
-}
-
-.para-editor.left-right > .para-form {
-  /*flex-direction: row;*/
-}
-
-.para-textarea {
-  /*white-space: pre-wrap;*/
-  flex: 1;
-}
-
-.para-editor.up-down > .para-form {
-  flex-direction: column;
-}
-
-.para-editor.up-down > .para-form > .trans-textarea {
-  margin-left: 0;
-  margin-top: 0.6em;
-}
-
-.para-editor.left-right > .para-form > .trans-textarea {
   margin-left: 1em;
 }
 

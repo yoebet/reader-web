@@ -8,16 +8,22 @@ export class DictRequest {
   initialSelected?: SelectedItem;
   relatedWords?: string[];
   context?: any;
-  meaningItemCallback: (selected: DictSelectedResult) => void;
+  meaningItemCallback: (selected: SelectedItem) => void;
+  userWordChangeCallback: (change: UserWordChange) => void;
 
   simplePopup = false;
 }
 
 export class SelectedItem {
+  word?: string;
   pos?: string;
   meaning?: string;
 }
 
-export class DictSelectedResult extends SelectedItem {
-  word?: string;
+
+export class UserWordChange {
+  word: string;
+  dictEntry: DictEntry;
+  op: string; // add/inc/dec/remove
+  familiarity: number; // null: removed
 }

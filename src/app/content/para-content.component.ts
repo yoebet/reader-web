@@ -12,7 +12,7 @@ import {AnnotateResult} from '../anno/annotate-result';
 import {AnnotationSet, HighlightGroups} from '../anno/annotation-set';
 import {CombinedWordsMap} from '../en/combined-words-map';
 
-import {UIConstants, DataAttrNames, SpecialAnnotations} from '../config';
+import {UIConstants, DataAttrNames, SpecialAnnotations, DataAttrValues} from '../config';
 import {Para} from '../models/para';
 import {DictEntry} from '../models/dict-entry';
 import {DictZh} from '../models/dict-zh';
@@ -22,7 +22,7 @@ import {UserWord} from '../models/user-word';
 
 import {DictService} from '../services/dict.service';
 import {DictZhService} from '../services/dict-zh.service';
-import {DictRequest, DictSelectedResult, SelectedItem} from '../content-types/dict-request';
+import {DictRequest, SelectedItem, UserWordChange} from '../content-types/dict-request';
 import {NoteRequest} from '../content-types/note-request';
 import {WordAnnosComponent} from './word-annos.component';
 import {ContentContext} from '../content-types/content-context';
@@ -65,7 +65,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
   sentenceHoverSetup = false;
   associationsHoverSetup = false;
   wordsHoverSetup = false;
-  wordMarked = false;
+  userWordsMarked = false;
 
   highlightedSentences: Element[];
   highlightedWords: Element[];
@@ -88,7 +88,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
     return this.activeAlways || this.gotFocus;
   }
 
-  get annotationSet() {
+  get annotationSet(): AnnotationSet {
     if (!this.contentContext) {
       return AnnotationSet.emptySet();
     }
@@ -98,12 +98,15 @@ export class ParaContentComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     let wmObs = this.contentContext.combinedWordsMapObs;
     if (wmObs) {
-      wmObs.subscribe((map: CombinedWordsMap) => {
-        this.combinedWordsMap = map;
-        if (this.active) {
-          this.markUserNewWords();
-        }
-      });
+      let contentLang = this.getTextLang(SideContent);
+      if (!contentLang || contentLang === Book.LangCodeEn) {
+        wmObs.subscribe((map: CombinedWordsMap) => {
+          this.combinedWordsMap = map;
+          if (this.active) {
+            this.markUserWords(SideContent);
+          }
+        });
+      }
     }
 
     if (this.activeAlways) {
@@ -112,12 +115,12 @@ export class ParaContentComponent implements OnInit, OnChanges {
     }
   }
 
-  getTextLang(side: Side) {
+  getTextLang(side: Side): string {
     let {contentLang, transLang} = this.contentContext;
     return (side === SideContent) ? (contentLang || Book.LangCodeEn) : (transLang || Book.LangCodeZh);
   }
 
-  getAnnotator(side: Side, annotation = null) {
+  getAnnotator(side: Side, annotation = null): Annotator {
     let annt;
     if (side === SideContent) {
       annt = this._contentAnnotator;
@@ -149,7 +152,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
       this.transText.element.nativeElement;
   }
 
-  private getTheSide(textEl) {
+  private getTheSide(textEl): Side {
     return textEl === this.contentText.element.nativeElement ?
       SideContent :
       SideTrans;
@@ -184,7 +187,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
 
     let textEl = this.getTextEl(side);
 
-    let meaningItemCallback = (selected: DictSelectedResult) => {
+    let meaningItemCallback = (selected: SelectedItem) => {
 
       if (!selected) {
         // cancel
@@ -239,9 +242,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
 
     let lang = this.getTextLang(side);
     if (!lang || lang === Book.LangCodeEn) {
-      if (oriForWord.indexOf('­') >= 0) {// 173, 0xAD, soft hyphen
-        oriForWord = oriForWord.replace(/­/, '');
-      }
+      oriForWord = AnnotatorHelper.stripEnWord(oriForWord);
 
       this.dictService.getEntry(oriForWord, {base: true, stem: true})
         .subscribe((entry: DictEntry) => {
@@ -256,7 +257,6 @@ export class ParaContentComponent implements OnInit, OnChanges {
           dr.initialSelected = {pos: oriPos, meaning: oriMeaning} as SelectedItem;
           dr.relatedWords = null;
           dr.context = textContext;
-          dr.meaningItemCallback = meaningItemCallback;
           if (oriForWord !== word) {
             dr.relatedWords = [word];
           }
@@ -273,6 +273,24 @@ export class ParaContentComponent implements OnInit, OnChanges {
           } else {
             dr.simplePopup = this.lookupDictSimple;
           }
+          dr.meaningItemCallback = meaningItemCallback;
+          dr.userWordChangeCallback = (change: UserWordChange) => {
+            let {word: uwWord, dictEntry, op, familiarity} = change;
+            if (dictEntry !== entry) {
+              return;
+            }
+            const NAME_WF = DataAttrNames.wordFamiliarity;
+            if (op === 'removed') {
+              let codeOrUW = this.combinedWordsMap.get(uwWord);
+              if (codeOrUW) {
+                delete element.dataset[NAME_WF];
+              } else {
+                element.dataset[NAME_WF] = DataAttrValues.uwfBeyond;
+              }
+              return;
+            }
+            element.dataset[NAME_WF] = '' + familiarity;
+          };
           this.dictRequest.emit(dr);
         });
     } else if (Book.isChineseText(lang)) {
@@ -654,9 +672,9 @@ export class ParaContentComponent implements OnInit, OnChanges {
     this.wordsHoverSetup = true;
   }
 
-  markUserNewWords() {
+  private markUserWords(side: Side) {
 
-    if (this.wordMarked || !this.markNewWords || !this.combinedWordsMap || !this.active) {
+    if (this.userWordsMarked || !this.markNewWords || !this.combinedWordsMap || !this.active) {
       return;
     }
 
@@ -676,7 +694,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
 
     let wordsMap = this.combinedWordsMap;
 
-    let wordPattern = /\b\w{3,}\b/;
+    let wordPattern = /\b[\w­]{3,}\b/;
 
     for (let textNode of textNodes) {
       let text = textNode.nodeValue;
@@ -693,7 +711,8 @@ export class ParaContentComponent implements OnInit, OnChanges {
         let word = matcher[0];
         let offset = matcher.index;
 
-        let codeOrUW = wordsMap.get(word);
+        let tWord = AnnotatorHelper.stripEnWord(word);
+        let codeOrUW = wordsMap.get(tWord);
 
         if (!codeOrUW) {
           if (/[A-Z]/.test(word)
@@ -703,21 +722,21 @@ export class ParaContentComponent implements OnInit, OnChanges {
           }
         }
 
-        let wordClasses: string[];
+        let uwfValue: string = null;
         if (!codeOrUW) {
-          wordClasses = [UIConstants.userWordBeyondClass];
+          uwfValue = DataAttrValues.uwfBeyond;
         } else if (typeof codeOrUW === 'string') {
-          // base vocabulary
+          // base vocabulary / ignore
         } else {
           let uw = codeOrUW as UserWord;
           if (uw.familiarity === UserWord.FamiliarityHighest) {
             // grasped
           } else {
-            wordClasses = [UIConstants.userWordFamiliarityClassPrefix + uw.familiarity];
+            uwfValue = '' + uw.familiarity;
           }
         }
 
-        if (!wordClasses) {
+        if (!uwfValue) {
           if (word.length + 3 >= text.length) {
             break;
           }
@@ -727,10 +746,8 @@ export class ParaContentComponent implements OnInit, OnChanges {
           continue;
         }
 
-        wordClasses.unshift(UIConstants.userWordCommonClass);
-
         if (word === parentWholeText) {
-          element.classList.add(...wordClasses);
+          element.dataset[DataAttrNames.wordFamiliarity] = uwfValue;
           break;
         }
 
@@ -744,7 +761,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
         }
 
         let wrapping = document.createElement(UIConstants.userWordTagName);
-        wrapping.classList.add(...wordClasses);
+        wrapping.dataset[DataAttrNames.wordFamiliarity] = uwfValue;
         element.replaceChild(wrapping, wordNode);
         wrapping.appendChild(wordNode);
 
@@ -756,7 +773,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
       }
     }
 
-    this.wordMarked = true;
+    this.userWordsMarked = true;
   }
 
   refreshContent() {

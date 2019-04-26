@@ -46,6 +46,7 @@ div(*ngIf='chap')
     [relatedWords]='dictRequest.relatedWords',
     [context]='dictRequest.context',
     (viewReady)='onDictPopupReady()',
+    (userWordChanged)='onUserWordChange($event)',
     (dictItemSelected)='onDictItemSelect($event)')
     dict-zh-entry-smi(*ngIf='dictRequest.dictLang==="zh"',
     [entry]='dictRequest.dictEntry',

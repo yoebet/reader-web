@@ -5,7 +5,6 @@ import {
 
 import {MeaningItemZh} from '../models/dict-zh';
 import {DictZhService} from '../services/dict-zh.service';
-import {DictSelectedResult} from '../content-types/dict-request';
 import {SelectedItem} from '../content-types/dict-request';
 import {DictZhEntryComponent} from './dict-zh-entry.component';
 
@@ -17,7 +16,7 @@ import {DictZhEntryComponent} from './dict-zh-entry.component';
 export class DictZhEntrySmiComponent extends DictZhEntryComponent implements OnInit, AfterViewChecked {
   @Input() initialSelectedItem: SelectedItem;
   @Output() viewReady = new EventEmitter();
-  @Output() dictItemSelected = new EventEmitter<DictSelectedResult>();
+  @Output() dictItemSelected = new EventEmitter<SelectedItem>();
 
   viewReadyEntry = null;
   initialWord: string;
@@ -105,7 +104,7 @@ export class DictZhEntrySmiComponent extends DictZhEntryComponent implements OnI
       return;
     }
     let {meaning} = this.selectedItem;
-    let selectedResult: DictSelectedResult = {meaning, word: this.entry.word};
+    let selectedResult: SelectedItem = {meaning, word: this.entry.word};
     this.dictItemSelected.emit(selectedResult);
   }
 

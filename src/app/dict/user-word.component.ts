@@ -1,11 +1,13 @@
-import {Component, Input, OnInit} from "@angular/core";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
-import {UserWordService} from "../services/user-word.service";
-import {UserWord} from "../models/user-word";
-import {OpResult} from "../models/op-result";
-import {UserVocabularyService} from "../services/user-vocabulary.service";
-import {WordCategoryService} from "../services/word-category.service";
-import {WordCategory} from "../models/word-category";
+import {UserWord} from '../models/user-word';
+import {OpResult} from '../models/op-result';
+import {WordCategory} from '../models/word-category';
+import {UserWordChange} from '../content-types/dict-request';
+
+import {UserWordService} from '../services/user-word.service';
+import {UserVocabularyService} from '../services/user-vocabulary.service';
+import {WordCategoryService} from '../services/word-category.service';
 
 
 @Component({
@@ -41,6 +43,8 @@ export class UserWordComponent implements OnInit {
   @Input() userWord: UserWord;
   @Input() context: any;
 
+  @Output() userWordChanged = new EventEmitter<UserWordChange>();
+
   wordCategory: WordCategory;
 
 
@@ -62,7 +66,14 @@ export class UserWordComponent implements OnInit {
       uw.paraId = this.context.paraId;
     }
     this.userWordService.create(uw)
-      .subscribe(_ => this.userWord = uw);
+      .subscribe(_ => {
+        this.userWord = uw;
+        let uwc = new UserWordChange();
+        uwc.word = this._word;
+        uwc.familiarity = this.userWord.familiarity;
+        uwc.op = 'add';
+        this.userWordChanged.emit(uwc);
+      });
   }
 
   familiarityUp() {
@@ -70,6 +81,11 @@ export class UserWordComponent implements OnInit {
       this.userWord.familiarity++;
       this.userWordService.update(this.userWord)
         .subscribe(() => {
+          let uwc = new UserWordChange();
+          uwc.word = this._word;
+          uwc.familiarity = this.userWord.familiarity;
+          uwc.op = 'inc';
+          this.userWordChanged.emit(uwc);
         });
     }
   }
@@ -79,6 +95,11 @@ export class UserWordComponent implements OnInit {
       this.userWord.familiarity--;
       this.userWordService.update(this.userWord)
         .subscribe(() => {
+          let uwc = new UserWordChange();
+          uwc.word = this._word;
+          uwc.familiarity = this.userWord.familiarity;
+          uwc.op = 'dec';
+          this.userWordChanged.emit(uwc);
         });
     }
   }
@@ -91,6 +112,10 @@ export class UserWordComponent implements OnInit {
       .subscribe((opr: OpResult) => {
         if (opr.ok === 1) {
           this.userWord = null;
+          let uwc = new UserWordChange();
+          uwc.word = this._word;
+          uwc.op = 'remove';
+          this.userWordChanged.emit(uwc);
         }
       });
   }

@@ -19,7 +19,8 @@
     a.ui.item(*ngFor='let word of refWords||[]', (click)='goto(word)')
       | {{word}}
 
-    user-word([word]='entry.word', [userWord]='userWord', [context]='context')
+  user-word([word]='entry.word', [userWord]='userWord', [context]='context',
+  (userWordChanged)='onUserWordChange($event)')
 
   .ui.clearing.divider
   sui-tabset
@@ -29,24 +30,27 @@
       a.item(suiTabHeader='te', [(isActive)]='textTabActive', (activate)='textTabActivated()') 文本
       a.item(*ngIf='entry.phrases', suiTabHeader='ph') 短语
     .ui.bottom.attached.segment(suiTabContent='co')
-      .ui.clearing.divider
+      .ui.selection.divided.list(*ngIf='entry.simple')
+        .ui.item(*ngFor='let item of entry.simple',
+        [ngClass]='{"selected-item":selectedItem&&item.pos===selectedItem.pos&&item.exp===selectedItem.meaning}',
+        (click)='clickMeaningItem(item.pos,item)')
+          | {{item.pos}} {{item.exp}}
       sui-accordion([closeOthers]='false')
-        .ui.selection.divided.list(*ngIf='entry.simple')
-          .ui.item(*ngFor='let item of entry.simple',
-          [ngClass]='{"selected-item":selectedItem&&item.pos===selectedItem.pos&&item.exp===selectedItem.meaning}',
-          (click)='clickMeaningItem(item.pos,item)')
-            | {{item.pos}} {{item.exp}}
-        sui-accordion-panel.pos-meanings(*ngFor='let pm of entry.complete||[]', [isOpen]='false')
-          .pos-header(title='')
-            i.dropdown.icon
-            | {{pm.pos}}
-          .ui.ordered.selection.divided.list.meaning-items.smi(content='')
-            .ui.item(*ngFor='let item of pm.items',
-            [ngClass]='{"selected-item":selectedItem&&pm.pos===selectedItem.pos&&item.exp===selectedItem.meaning}',
-            (click)='clickMeaningItem(pm.pos,item)')
-              span.meaning-item
-                span.ui.small.label(*ngFor='let tag of item.tags') {{tagLabelMap[tag]}}
-                | {{item.exp}}
+        ng-template([ngIf]='!entry.complete')
+          .ui.right.floated.mini.button((click)='loadCompleteMeanings()') 详尽释义...
+          .ui.clearing.hidden.divider
+        ng-template([ngIf]='entry.complete')
+          sui-accordion-panel.pos-meanings(*ngFor='let pm of entry.complete||[]', [isOpen]='false')
+            .pos-header(title='')
+              i.dropdown.icon
+              | {{pm.pos}}
+            .ui.ordered.selection.divided.list.meaning-items.smi(content='')
+              .ui.item(*ngFor='let item of pm.items',
+              [ngClass]='{"selected-item":selectedItem&&pm.pos===selectedItem.pos&&item.exp===selectedItem.meaning}',
+              (click)='clickMeaningItem(pm.pos,item)')
+                span.meaning-item
+                  span.ui.small.label(*ngFor='let tag of item.tags') {{tagLabelMap[tag]}}
+                  | {{item.exp}}
 
     .ui.bottom.attached.segment(suiTabContent='te')
       .ui.right.floated.header

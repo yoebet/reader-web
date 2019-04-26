@@ -8,8 +8,7 @@ import {DictService} from '../services/dict.service';
 import {UserWordService} from '../services/user-word.service';
 import {ParaService} from '../services/para.service';
 
-import {DictSelectedResult} from '../content-types/dict-request';
-import {SelectedItem} from '../content-types/dict-request';
+import {SelectedItem, UserWordChange} from '../content-types/dict-request';
 import {DictEntry, MeaningItem, SimpleMeaning, TagLabelMap} from '../models/dict-entry';
 import {UserWord} from '../models/user-word';
 import {Para} from '../models/para';
@@ -26,7 +25,8 @@ export class DictEntryComponent implements OnInit, OnChanges, AfterViewChecked {
   @Input() context: any;
 
   @Output() viewReady = new EventEmitter();
-  @Output() dictItemSelected = new EventEmitter<DictSelectedResult>();
+  @Output() userWordChanged = new EventEmitter<UserWordChange>();
+  @Output() dictItemSelected = new EventEmitter<SelectedItem>();
 
   cdr: ChangeDetectorRef;
 
@@ -98,6 +98,11 @@ export class DictEntryComponent implements OnInit, OnChanges, AfterViewChecked {
       }
       this.onEntryChanged();
     }
+  }
+
+  onUserWordChange(change: UserWordChange) {
+    change.dictEntry = this.entry;
+    this.userWordChanged.emit(change);
   }
 
   loadMoreParas() {
@@ -233,7 +238,7 @@ export class DictEntryComponent implements OnInit, OnChanges, AfterViewChecked {
       return;
     }
     let {pos, meaning} = this.selectedItem;
-    let selectedResult: DictSelectedResult = {pos, meaning, word: this.entry.word};
+    let selectedResult: SelectedItem = {pos, meaning, word: this.entry.word};
     this.dictItemSelected.emit(selectedResult);
   }
 
