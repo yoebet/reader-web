@@ -1,9 +1,13 @@
+.ui.header.entry-header {
+  margin-bottom: 0.4em;
+}
+
 .entry-word {
   padding-right: 0.8em;
   font-size: 1.4em;
 }
 
-.entry-word, .categories, .phonetics {
+.entry-word, .phonetics {
   display: inline;
 }
 
@@ -47,7 +51,7 @@ span.pinyin {
 }
 
 .ui.list.meaning-items.smi {
-  max-height: 300px;
+  max-height: 200px;
 }
 
 .ui.list.meaning-items .item sui-select-option {

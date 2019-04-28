@@ -51,10 +51,6 @@ export class BookComponent implements OnInit {
     this.location.back();
   }
 
-  gotoDetail(chap: Chap): void {
-    this.router.navigate(['/chaps', chap._id]);
-  }
-
   chapTracker(index, chap) {
     return chap._id;
   }

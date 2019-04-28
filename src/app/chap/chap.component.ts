@@ -81,6 +81,7 @@ export class ChapComponent implements OnInit {
     this.route.paramMap.pipe(switchMap((params: ParamMap) =>
       this.chapService.getDetail(params.get('id'))
     )).subscribe(chap => {
+      console.log(chap);
       if (!chap) {
         return;
       }
@@ -122,8 +123,23 @@ export class ChapComponent implements OnInit {
     }, true);
   }
 
+  switchChap(chap) {
+    if (!chap) {
+      return;
+    }
+    if (this.chap && chap._id === this.chap._id) {
+      return;
+    }
+    // let last = this.chap;
+    this.chapService.getDetail(chap._id)
+      .subscribe(chapDetail => {
+        this.chap = chapDetail;
+        window.history.pushState({}, '', `chaps/${chap._id}`);
+      });
+  }
+
   private loadBook(chap) {
-    this.bookService.getOne(chap.bookId)
+    this.bookService.getDetail(chap.bookId)
       .subscribe((book) => {
         if (!book) {
           return;
@@ -208,11 +224,13 @@ export class ChapComponent implements OnInit {
     }
   }
 
-  onMarkNewWordsChange() {
+  toggleMarkNewWords() {
+    this.markNewWords = !this.markNewWords;
     this.toggleBodyClass(UIConstants.userwordDisabledBodyClass, this.markNewWords);
   }
 
-  onWordsHoverChange() {
+  toggleWordsHover() {
+    this.wordsHover = !this.wordsHover;
     this.toggleBodyClass(UIConstants.annoDisabledBodyClass, this.wordsHover);
   }
 
@@ -269,7 +287,7 @@ export class ChapComponent implements OnInit {
         targetAttachment: 'bottom center',
         constraints: [
           {
-            to: 'window',
+            to: 'scrollParent',
             attachment: 'together',
             pin: true
           }
@@ -324,7 +342,17 @@ export class ChapComponent implements OnInit {
         position: 'bottom center',
         constrainToScrollParent: false,
         remove: true,
-        openOn: 'click'//click,hover,always
+        openOn: 'click',//click,hover,always
+        tetherOptions: {
+          attachment: 'together',
+          constraints: [
+            {
+              to: 'window',
+              attachment: 'together',
+              pin: true
+            }
+          ]
+        }
       });
       drop.open();
       drop.once('close', () => {

@@ -8,7 +8,7 @@
       label.ui.small.label 美
       span {{entry.phonetics['US']}}
 
-    word-tags([categories]='entry.categories')
+  word-tags([categories]='entry.categories')
 
   .clearing
 
@@ -30,7 +30,7 @@
       a.item(suiTabHeader='te', [(isActive)]='textTabActive', (activate)='textTabActivated()') 文本
       a.item(*ngIf='entry.phrases', suiTabHeader='ph') 短语
     .ui.bottom.attached.segment(suiTabContent='co')
-      .ui.selection.divided.list(*ngIf='entry.simple')
+      .ui.selection.divided.small.list(*ngIf='entry.simple')
         .ui.item(*ngFor='let item of entry.simple',
         [ngClass]='{"selected-item":selectedItem&&item.pos===selectedItem.pos&&item.exp===selectedItem.meaning}',
         (click)='clickMeaningItem(item.pos,item)')
@@ -44,7 +44,7 @@
             .pos-header(title='')
               i.dropdown.icon
               | {{pm.pos}}
-            .ui.ordered.selection.divided.list.meaning-items.smi(content='')
+            .ui.ordered.selection.divided.small.list.meaning-items.smi(content='')
               .ui.item(*ngFor='let item of pm.items',
               [ngClass]='{"selected-item":selectedItem&&pm.pos===selectedItem.pos&&item.exp===selectedItem.meaning}',
               (click)='clickMeaningItem(pm.pos,item)')
@@ -84,7 +84,7 @@
             | No More.
 
     .ui.bottom.attached.segment(*ngIf='entry.phrases', suiTabContent='ph')
-      .ui.ordered.list.meaning-items.smi
+      .ui.ordered.small.list.meaning-items.smi
         a.ui.item(*ngFor='let phrase of entry.phrases', (click)='goto(phrase)')
           | {{phrase}}
 

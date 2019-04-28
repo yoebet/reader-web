@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 
-import {map, catchError, share} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
+import {map, catchError, share} from 'rxjs/operators';
 
 import {SuiModalService} from 'ng2-semantic-ui';
 

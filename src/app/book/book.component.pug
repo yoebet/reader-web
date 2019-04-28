@@ -32,13 +32,9 @@ div(*ngIf='book')
     | 章节
 
   .ui.celled.list(*ngIf='book')
-    .item(*ngFor='let chap of book.chaps; trackBy: chapTracker; first as first; last as last')
+    .item(*ngFor='let chap of book.chaps; trackBy: chapTracker')
       .right.floated.header(*ngIf='chap.status!=="R"')
         .ui.mini.left.pointing.basic.label {{statusNames[chap.status]}}
-
       a([routerLink]="['/chaps', chap._id]")
         .pre-wrap {{chap.name}}
         .zhname.pre-wrap(*ngIf="showZh && chap.zhName") {{chap.zhName}}
-
-.ui.hidden.clearing.divider
-button.ui.tiny.button((click)='goBack()') 返回

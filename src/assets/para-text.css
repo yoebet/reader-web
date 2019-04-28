@@ -4,7 +4,7 @@
   display: flex;
   flex: 1 1 auto;
   border: 1px solid white;
-  padding: 0.3em;
+  /*padding: 0.3em;*/
   border-radius: 0.5em;
   line-height: 1.4rem;
   font-size: 1.1rem;
@@ -39,7 +39,11 @@
 /* Colors */
 
 .paragraph > .selected.para-content {
-  border-color: lightskyblue;
+  /*border-color: rgba(9, 187, 7, 0.5);*/
+}
+
+.paragraph > .selected.para-no {
+  color: rgba(9, 187, 7, 1);
 }
 
 

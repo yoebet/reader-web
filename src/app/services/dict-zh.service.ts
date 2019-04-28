@@ -18,11 +18,14 @@ export class DictZhService extends BaseService<DictZh> {
   private entryCache: Map<string, DictZh> = new Map();
   private phrases: ZhPhrases;
 
+  private staticBase;
+
   constructor(protected http: HttpClient,
               protected modalService: SuiModalService) {
     super(http, modalService);
     let apiBase = environment.apiBase || '';
     this.baseUrl = `${apiBase}/dict_zh`;
+    this.staticBase = environment.staticBase;
   }
 
   clearCache() {
@@ -87,7 +90,8 @@ export class DictZhService extends BaseService<DictZh> {
     if (this.phrases) {
       return of(this.phrases);
     }
-    let url = `${this.baseUrl}/phrases/all`;
+    let url = `${this.staticBase}/dict-zh/phrases_all.json`;
+    // let url = `${this.baseUrl}/phrases/all`;
     return this.http.get<string[]>(url, this.httpOptions).pipe(
       map(words => {
         this.phrases = new ZhPhrases(words);

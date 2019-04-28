@@ -28,7 +28,7 @@
 @import url('assets/semantic/table.css');
 @import url('assets/semantic/message.css');
 @import url('assets/semantic/image.css');
-/*@import url('assets/semantic/sidebar.css');*/
+@import url('assets/semantic/sidebar.css');
 @import url('assets/annos-popup.css');
 @import url('assets/dict-popup.css');
 @import url('assets/dict-entry.css');
@@ -101,4 +101,8 @@ sui-multi-select i.list.icon {
 
 .para-quote .ui.checkbox label {
   color: rgba(0, 0, 0, 0.6);
+}
+
+.ui.popup {
+  margin: 0.6em;
 }

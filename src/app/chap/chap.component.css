@@ -1,59 +1,47 @@
-.ui.header .book-name, .ui.header .book-zhname {
-  display: inline-block;
+.zhname.pre-wrap {
+  margin-top: 0.3em;
 }
 
-.ui.header .book-zhname {
-  margin-left: 1em;
+.ui.menu .item.chap-name {
+  display: initial;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 1;
 }
 
-.chap-zhname.pre-wrap {
-  margin-top: 0.5em;
+.ui.container.chap-content {
+  /*height: 100%;*/
+  /*overflow: auto;*/
+  margin-left: .5em !important;
+  margin-right: .5em !important;
 }
 
-.sticky.header {
-  background-color: white;
-  border: 1px solid silver;
-  border-radius: 5px;
-  padding: 5px;
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
-  z-index: 10;
+.ui.bottom.fixed.menu .item {
+  font-weight: bold;
 }
 
-.sticky.header .operations {
-  padding: .3em;
-  border-bottom: 1px dashed silver;
+.ui.bottom.fixed.menu .item.active {
+  color: rgb(9, 187, 7);
 }
 
-.sticky.header .operations:last-child {
-  border-bottom: none !important;
-}
-
-.ui[class*="right floated"].header {
-  margin: 0 0 .5em 0;
-}
-
-.operations, .operations .ui.header {
-  font-weight: normal;
-  font-size: 0.8em;
-  margin-left: 1.2em;
-}
-
-.annotations .ui.buttons {
-  margin-right: 0.5rem;
+.ui.bottom.fixed.menu .item.active.disabled {
+  color: rgba(9, 187, 7, 0.5);
 }
 
 .item.paragraph {
-  margin: 0;
+  margin: 0 !important;
+  flex-direction: row !important;
 }
 
-.ui.statistic.para-no {
-  min-width: 1.8em;
+.para-no {
+  /*min-width: 1.2em;*/
   padding-top: 0.6em;
+  margin-right: 0.6em;
+  align-self: center;
 }
 
-.ui.statistic.para-no .value {
+.para-no .value {
   text-align: right;
   font-size: 1.1rem !important;
 }
@@ -63,8 +51,8 @@
 }
 
 #dictPopup {
-  min-width: 300px;
-  max-width: 600px;
+  min-width: 200px;
+  max-width: 400px;
 }
 
 #notePopup.ui.form .field {

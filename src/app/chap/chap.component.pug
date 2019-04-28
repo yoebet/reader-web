@@ -1,75 +1,75 @@
-h4.ui.gray.header(*ngIf='book')
-  .book-name ({{book.code}}) {{book.name}}
-  .book-zhname(*ngIf='book.zhName') {{book.zhName}}
-div(*ngIf='chap')
-  h5.ui.blue.header([hidden]='editing')
-    .chap-name.pre-wrap {{chap.name}}
-    .chap-zhname.pre-wrap(*ngIf='chap.zhName') {{chap.zhName}}
+sui-sidebar-container.ui.bottom.attached.segment
+  sui-sidebar.inverted.vertical.small(#sidebar="")
+    a.item(*ngFor='let c of book&&book.chaps',
+    (click)='switchChap(c);sidebar.close()',
+    [ngClass]='{active: c._id===chap._id}')
+      .pre-wrap {{c.name}}
+      .zhname.pre-wrap(*ngIf="c.zhName") {{c.zhName}}
+  sui-sidebar-sibling([isDimmedWhenVisible]='true')
+    .ui.small.top.fixed.inverted.main.menu
+      .item.chap-name(*ngIf='chap') {{chap.name}}
+      .right.menu
+        //.item(*ngIf='currentUser')
+          | {{currentUser.nickName}}
+    .ui.container.chap-content
+      .ui.list.items(*ngIf='chap')
+        ng-template(ngFor='', let-para='', [ngForOf]="chap.paras", let-index="index", [ngForTrackBy]="paraTracker")
+          .item.paragraph
+            .para-no((click)='selectPara2(para)', [ngClass]='{"selected": para===selectedPara}')
+              .value {{index+1}}
+            para-content.para-content(
+            [para]='para',
+            [contentContext]='contentContext',
+            [showTrans]='showTrans',
+            [gotFocus]='para===selectedPara',
+            [activeAlways]='true',
+            [lookupDict]='lookupDict',
+            [highlightSentence]='para===selectedPara && highlightSentence',
+            [markNewWords]='markNewWords',
+            [wordsHover]='wordsHover',
+            [annotation]='(para===selectedPara)? currentAnnotation : null',
+            [ngClass]='{"selected": para===selectedPara, "left-right": leftRight, "up-down": !leftRight}',
+            (click)='selectPara(para)',
+            (dictRequest)="onDictRequest($event)",
+            (noteRequest)="onNoteRequest($event)")
+      p &nbsp;
 
-  //sticky.sticky.ui.right.floated.header([sticky-offset-top]="10")
-  .sticky.ui.right.floated.header
-    .operations
-      sui-checkbox([(ngModel)]='lookupDict') 查词
-      sui-checkbox([(ngModel)]='showTrans') 中文
-      sui-checkbox([(ngModel)]='leftRight', [isDisabled]='!showTrans') 左右对照
-      sui-checkbox([(ngModel)]='highlightSentence') 句子高亮
-      sui-checkbox([(ngModel)]='markNewWords', (ngModelChange)='onMarkNewWordsChange()') 标记生词
-      sui-checkbox([(ngModel)]='wordsHover', (ngModelChange)='onWordsHoverChange()') 显示标注
+#dictPopup.ui.basic.popup(*ngIf='dictRequest')
+  dict-entry(*ngIf='dictRequest.dictLang==="en"',
+  [entry]='dictRequest.dictEntry',
+  [initialSelectedItem]='dictRequest.initialSelected',
+  [relatedWords]='dictRequest.relatedWords',
+  [context]='dictRequest.context',
+  (viewReady)='onDictPopupReady()',
+  (userWordChanged)='onUserWordChange($event)',
+  (dictItemSelected)='onDictItemSelect($event)')
+  dict-zh-entry-smi(*ngIf='dictRequest.dictLang==="zh"',
+  [entry]='dictRequest.dictEntry',
+  [initialSelectedItem]='dictRequest.initialSelected',
+  [relatedWords]='dictRequest.relatedWords',
+  [context]='dictRequest.context',
+  (viewReady)='onDictPopupReady()',
+  (dictItemSelected)='onDictItemSelect($event)')
+ng-template(#dictSimple='')
 
-  .ui.list.items
-    ng-template(ngFor='', let-para='', [ngForOf]="chap.paras", let-index="index", let-first="first", let-last="last", [ngForTrackBy]="paraTracker")
-      .item.paragraph
-        .ui.left.floated.mini.statistic.para-no((click)='selectPara2(para)')
-          .value {{index+1}}
-        para-content.para-content(
-        [para]='para',
-        [contentContext]='contentContext',
-        [showTrans]='showTrans',
-        [gotFocus]='para===selectedPara',
-        [activeAlways]='true',
-        [lookupDict]='lookupDict',
-        [highlightSentence]='para===selectedPara && highlightSentence',
-        [markNewWords]='markNewWords',
-        [wordsHover]='wordsHover',
-        [annotation]='(para===selectedPara)? currentAnnotation : null',
-        [ngClass]='{"selected": para===selectedPara, "left-right": leftRight, "up-down": !leftRight}',
-        (click)='selectPara(para)',
-        (dictRequest)="onDictRequest($event)",
-        (noteRequest)="onNoteRequest($event)")
+#notePopup.ui.basic.popup.form
+  .ui.sub.header 注：
+  .field
+    textarea.note-textarea([(ngModel)]='noteRequestNote', spellcheck='false', #noteTextarea='')
+  .field
+    button.ui.mini.compact.button((click)='completeNoteEdit("")')
+      i.remove.icon
+      | 删除
+    .ui.right.floated.mini.compact.buttons
+      button.ui.button((click)='completeNoteEdit(null)') 取消
+      .or
+      button.ui.primary.button((click)='completeNoteEdit(noteTextarea.value)') 保存
 
-  .ui.clearing.hidden.divider
-
-  #dictPopup.ui.basic.popup(*ngIf='dictRequest')
-    dict-entry(*ngIf='dictRequest.dictLang==="en"',
-    [entry]='dictRequest.dictEntry',
-    [initialSelectedItem]='dictRequest.initialSelected',
-    [relatedWords]='dictRequest.relatedWords',
-    [context]='dictRequest.context',
-    (viewReady)='onDictPopupReady()',
-    (userWordChanged)='onUserWordChange($event)',
-    (dictItemSelected)='onDictItemSelect($event)')
-    dict-zh-entry-smi(*ngIf='dictRequest.dictLang==="zh"',
-    [entry]='dictRequest.dictEntry',
-    [initialSelectedItem]='dictRequest.initialSelected',
-    [relatedWords]='dictRequest.relatedWords',
-    [context]='dictRequest.context',
-    (viewReady)='onDictPopupReady()',
-    (dictItemSelected)='onDictItemSelect($event)')
-  ng-template(#dictSimple='')
-
-  #notePopup.ui.basic.popup.form
-    .ui.sub.header 注：
-    .field
-      textarea.note-textarea([(ngModel)]='noteRequestNote', spellcheck='false', #noteTextarea='')
-    .field
-      button.ui.mini.compact.button((click)='completeNoteEdit("")')
-        i.remove.icon
-        | 删除
-      .ui.right.floated.mini.compact.buttons
-        button.ui.button((click)='completeNoteEdit(null)') 取消
-        .or
-        button.ui.primary.button((click)='completeNoteEdit(noteTextarea.value)') 保存
-
-
-.ui.hidden.clearing.divider
-button.ui.tiny.button((click)='goBack()') 返回
+.ui.small.bottom.fixed.menu
+  .item((click)='sidebar.toggle()')
+    i.content.icon
+  .item([ngClass]='{active: lookupDict}', (click)='lookupDict=!lookupDict') 查词
+  .item([ngClass]='{active: markNewWords}', (click)='toggleMarkNewWords()') 生词
+  .item([ngClass]='{active: wordsHover}', (click)='toggleWordsHover()') 标注
+  .item([ngClass]='{active: showTrans}', (click)='showTrans=!showTrans') 中文
+  .item([ngClass]='{active: leftRight, disabled: !showTrans}', (click)='leftRight=showTrans? !leftRight:leftRight') 左右
