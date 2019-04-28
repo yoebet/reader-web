@@ -4,7 +4,7 @@ div(*ngIf='book')
       button.ui.tiny.button((click)='showDetail()') 详情
     .name-author
       .book-name {{book.name}}
-      .author
+      .author(*ngIf='book.author')
         span.author-by by
         | {{book.author}}
     .zh-name-author(*ngIf='book.zhName')
@@ -33,8 +33,8 @@ div(*ngIf='book')
 
   .ui.celled.list(*ngIf='book')
     .item(*ngFor='let chap of book.chaps; trackBy: chapTracker; first as first; last as last')
-      .right.floated.header
-        .ui.mini.left.pointing.basic.label([ngClass]='{"green": chap.status==="R"}') {{statusNames[chap.status]}}
+      .right.floated.header(*ngIf='chap.status!=="R"')
+        .ui.mini.left.pointing.basic.label {{statusNames[chap.status]}}
 
       a([routerLink]="['/chaps', chap._id]")
         .pre-wrap {{chap.name}}

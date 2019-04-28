@@ -14,7 +14,7 @@ export class Annotator {
 
   wordAtCursorIfNoSelection = true;
   isExtendWholeWord = true;
-  charPattern = /[-a-zA-Z­']/; // ­ soft hyphen
+  charPattern = /[a-zA-Z­']/; // ­ soft hyphen
 
   current: Annotation;
 
