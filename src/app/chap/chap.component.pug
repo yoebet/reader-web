@@ -1,16 +1,34 @@
 sui-sidebar-container.reader.fit-bottom-menu
-  sui-sidebar.inverted.vertical.small.chap-list(transition='overlay', #sidebar="")
-    ng-template([ngIf]='allowSwitchChap')
+  sui-sidebar.inverted.vertical.small(transition='overlay', #sidebar="")
+    .chap-list(*ngIf='sidebarContent==="chap-list" && allowSwitchChap')
       a.item(*ngFor='let c of book&&book.chaps',
       (click)='switchChap(c);sidebar.close()',
       [ngClass]='{active: c._id===chap._id}')
         .pre-wrap {{c.name}}
         .zhname.pre-wrap(*ngIf="c.zhName") {{c.zhName}}
+    sui-accordion.inverted(*ngIf='sidebarContent==="vocabulary"', [closeOthers]='false')
+      sui-accordion-panel.item([isOpen]='true')
+        .column-header(title='')
+          i.dropdown.icon
+          | 最新加入
+        .ui.relaxed.list.word-list(content='')
+          a.item(*ngFor='let uw of latestAdded', (click)='lookupUserWord($event,uw)')
+            | {{uw.word}}
+      sui-accordion-panel.item([isOpen]='true')
+        .column-header(title='')
+          i.dropdown.icon
+          | 查词历史
+        .ui.relaxed.list.word-list(content='')
+          a.item(*ngFor='let entry of entryHistory', (click)='showEntryPopup($event,entry)')
+            | {{entry.word}}
+          .item
+            a.operation(*ngIf='entryHistory.length>0', (click)='clearDictLookupHistory()') ^^ 清空
+
   sui-sidebar-sibling.fit-top-menu([isDimmedWhenVisible]='true')
     .ui.small.top.fixed.inverted.main.menu
       .item.chap-name(*ngIf='chap') {{chap.name}}
       .right.menu
-        .item((click)='sidebar.toggle()')
+        .item((click)='toggleSidebar(sidebar,"chap-list")')
           i.content.icon
         //.item(*ngIf='currentUser')
           | {{currentUser.nickName}}
@@ -37,13 +55,13 @@ sui-sidebar-container.reader.fit-bottom-menu
             (dictRequest)="onDictRequest($event)",
             (noteRequest)="onNoteRequest($event)")
 
-      .ui.list.prev-next-nav(*ngIf='allowSwitchChap')
-        a.item.prev-nav([ngClass]='{disabled: !this.prevChap}', (click)='switchChap(prevChap)')
+      .ui.list.prev-next-nav(*ngIf='book&&allowSwitchChap')
+        a.item.prev-nav([ngClass]='{disabled: !prevChap}', (click)='switchChap(prevChap)')
           i.left.arrow.icon
-          span.pre-wrap {{this.prevChap? this.prevChap.name:'（无）'}}
-        a.item.next-nav([ngClass]='{disabled: !this.nextChap}', (click)='switchChap(nextChap)')
+          span.pre-wrap {{prevChap? prevChap.name:'（无）'}}
+        a.item.next-nav([ngClass]='{disabled: !nextChap}', (click)='switchChap(nextChap)')
           i.right.arrow.icon
-          span.pre-wrap {{this.nextChap? this.nextChap.name:'（无）'}}
+          span.pre-wrap {{nextChap? nextChap.name:'（无）'}}
       p &nbsp;
 
 #dictPopup.ui.basic.popup(*ngIf='dictRequest')
@@ -78,8 +96,20 @@ ng-template(#dictSimple='')
       button.ui.primary.button((click)='completeNoteEdit(noteTextarea.value)') 保存
 
 .ui.small.bottom.fixed.menu
-  .item([ngClass]='{active: lookupDict}', (click)='lookupDict=!lookupDict') 查词
-  .item([ngClass]='{active: markNewWords}', (click)='toggleMarkNewWords()') 生词
-  .item([ngClass]='{active: wordsHover}', (click)='toggleWordsHover()') 标注
-  .item([ngClass]='{active: showTrans}', (click)='showTrans=!showTrans') 中文
-  .item([ngClass]='{active: leftRight, disabled: !showTrans}', (click)='leftRight=showTrans? !leftRight:leftRight') 左右
+  .item((click)='toggleSidebar(sidebar,"vocabulary")')
+    i.ul.list.icon
+  .item([ngClass]='{active: lookupDict}', (click)='lookupDict=!lookupDict')
+    i.search.icon
+    | 查词
+  .item([ngClass]='{active: markNewWords}', (click)='toggleMarkNewWords()')
+    i.pointing.up.icon
+    | 生词
+  .item([ngClass]='{active: wordsHover}', (click)='toggleWordsHover()')
+    i.underline.icon
+    | 标注
+  .item([ngClass]='{active: showTrans}', (click)='showTrans=!showTrans')
+    i.translate.icon
+    | 中文
+  .item([ngClass]='{active: leftRight, disabled: !showTrans}', (click)='leftRight=showTrans? !leftRight:leftRight')
+    i.columns.icon
+    | 左右

@@ -64,9 +64,9 @@ export class UserWordService extends BaseService<UserWord> {
   }
 
 
-  private updateLatest(uw) {
+  private updateLatest(uw, firstSetup = false) {
     let la = this._latestAdded;
-    if (uw.familiarity === UserWord.FamiliarityHighest) {
+    if (!firstSetup && uw.familiarity === UserWord.FamiliarityHighest) {
       let idx = la.indexOf(uw);
       if (idx >= 0) {
         la.splice(idx, 1);
@@ -131,10 +131,11 @@ export class UserWordService extends BaseService<UserWord> {
         } else {
           this.userWordsMap = new Map();
         }
+        this._latestAdded = [];
         for (let uw of userWords) {
           this.userWordsMap.set(uw.word, uw);
           UserWord.ensureCreatedDate(uw);
-          this.updateLatest(uw);
+          this.updateLatest(uw, true);
         }
         return userWords;
       }),

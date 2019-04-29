@@ -7,7 +7,7 @@
   position: fixed;
 }
 
-.ui.left.sidebar.chap-list {
+.ui.left.sidebar {
   width: 260px;
   padding: 1em 0;
 }
@@ -25,10 +25,10 @@
 }
 
 .fit-bottom-menu {
-  margin-bottom: 40px;
+  margin-bottom: 39px;
 }
 
-.ui.menu .item.chap-name {
+.ui.top.fixed.menu .item.chap-name {
   display: initial;
   white-space: nowrap;
   overflow: hidden;
@@ -37,14 +37,13 @@
 }
 
 .ui.container.chap-content {
-  /*height: 100%;*/
-  /*overflow: auto;*/
   margin-left: .5em !important;
   margin-right: .5em !important;
 }
 
 .ui.bottom.fixed.menu .item {
   font-weight: bold;
+  padding: 0.36em 0.57em;
 }
 
 .ui.bottom.fixed.menu .item.active {

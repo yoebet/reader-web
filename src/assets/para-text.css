@@ -4,7 +4,6 @@
   display: flex;
   flex: 1 1 auto;
   border: 1px solid white;
-  /*padding: 0.3em;*/
   border-radius: 0.5em;
   line-height: 1.4rem;
   font-size: 1.1rem;
@@ -54,4 +53,8 @@
 
 .para-text y-o.highlight {
   border-bottom-width: 3px;
+}
+
+.para-text .highlight-word {
+  background: lightgoldenrodyellow;
 }

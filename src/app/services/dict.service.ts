@@ -19,7 +19,7 @@ export class DictService extends BaseService<DictEntry> {
   private entryCache: Map<string, DictEntry> = new Map();
   private baseFormsMap: Map<string, string>;
 
-  entryHistoryCapacity = 20;
+  entryHistoryCapacity = 10;
 
   constructor(protected http: HttpClient,
               protected modalService: SuiModalService) {
@@ -38,6 +38,10 @@ export class DictService extends BaseService<DictEntry> {
     return this._entryHistory;
   }
 
+  clearHistory() {
+    this._entryHistory = [];
+  }
+
   private pushHistory(entry) {
     let eh = this._entryHistory;
     let inHistory = eh.find(e => e.word === entry.word);
@@ -47,17 +51,6 @@ export class DictService extends BaseService<DictEntry> {
     if (eh.length > this.entryHistoryCapacity) {
       eh.shift();
     }
-  }
-
-  private cacheOne(obs: Observable<DictEntry>): Observable<DictEntry> {
-    obs = obs.pipe(share());
-    obs.subscribe(entry => {
-      if (entry) {
-        this.pushHistory(entry);
-        this.entryCache.set(entry.word, entry);
-      }
-    });
-    return obs;
   }
 
   getEntry(word: string, options: any = {}): Observable<DictEntry> {
@@ -77,7 +70,16 @@ export class DictService extends BaseService<DictEntry> {
       return obs;
     }
 
-    return this.cacheOne(obs);
+    return obs.pipe(map(entry => {
+        if (entry) {
+          if (options.pushHistory !== false) {
+            this.pushHistory(entry);
+          }
+          this.entryCache.set(entry.word, entry);
+        }
+        return entry;
+      }),
+      share());
   }
 
   getCompleteMeanings(word: string): Observable<PosMeanings[]> {

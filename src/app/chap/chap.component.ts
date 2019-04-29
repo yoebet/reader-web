@@ -4,13 +4,14 @@ import {
   OnInit, ViewChild, ViewContainerRef
 } from '@angular/core';
 import {ActivatedRoute, ParamMap} from '@angular/router';
-import {Location} from '@angular/common';
 import {PopStateEvent} from '@angular/common/src/location/location';
 
 import {switchMap} from 'rxjs/operators';
 
 import * as Tether from 'tether';
 import * as Drop from 'tether-drop';
+
+import {SuiSidebar} from 'ng2-semantic-ui/dist';
 
 import {UIConstants} from '../config';
 import {AnnotationSet} from '../anno/annotation-set';
@@ -21,12 +22,15 @@ import {NoteRequest} from '../content-types/note-request';
 import {Book} from '../models/book';
 import {Chap} from '../models/chap';
 import {Para} from '../models/para';
+import {UserWord} from '../models/user-word';
 import {DictEntry} from '../models/dict-entry';
 import {Annotation} from '../models/annotation';
 import {BookService} from '../services/book.service';
 import {ChapService} from '../services/chap.service';
 import {ParaService} from '../services/para.service';
+import {DictService} from '../services/dict.service';
 import {DictZhService} from '../services/dict-zh.service';
+import {UserWordService} from '../services/user-word.service';
 import {AnnotationsService} from '../services/annotations.service';
 import {UserVocabularyService} from '../services/user-vocabulary.service';
 import {DictSimpleComponent} from '../dict/dict-simple.component';
@@ -48,9 +52,12 @@ export class ChapComponent implements OnInit {
   wordsHover = true;
   markNewWords = true;
   lookupDict = false;
+  loadZhPhrases = false;
 
   allowSwitchChap = true;
-  hideUrl = false;
+  hideWindowUrl = false;
+
+  sidebarContent = 'vocabulary';//chap-list
 
   prevChap: Chap;
   nextChap: Chap;
@@ -76,18 +83,32 @@ export class ChapComponent implements OnInit {
               private bookService: BookService,
               private chapService: ChapService,
               private paraService: ParaService,
+              private dictService: DictService,
               private dictZhService: DictZhService,
+              private userWordService: UserWordService,
               private annoService: AnnotationsService,
-              private userVocabularyService: UserVocabularyService,
-              private route: ActivatedRoute,
-              private location: Location) {
+              private vocabularyService: UserVocabularyService,
+              private route: ActivatedRoute) {
+  }
+
+
+  get entryHistory(): DictEntry[] {
+    return this.dictService.entryHistory;
+  }
+
+  get latestAdded(): UserWord[] {
+    return this.userWordService.latestAdded;
+  }
+
+  clearDictLookupHistory() {
+    this.dictService.clearHistory();
   }
 
   ngOnInit(): void {
     this.route.paramMap.pipe(switchMap((params: ParamMap) =>
       this.chapService.getDetail(params.get('id'))
     )).subscribe(chap => {
-      if (this.hideUrl) {
+      if (this.hideWindowUrl) {
         window.history.pushState({}, '', `/`);
       }
       console.log(chap);
@@ -108,9 +129,11 @@ export class ChapComponent implements OnInit {
       if (!this.contentContext) {
         this.contentContext = new ContentContext();
       }
-      this.contentContext.combinedWordsMapObs = this.userVocabularyService.getCombinedWordsMap();
+      this.contentContext.combinedWordsMapObs = this.vocabularyService.getCombinedWordsMap();
       this.loadBook(chap);
     });
+
+    this.userWordService.loadAll().subscribe();
 
     document.addEventListener('click', (event) => {
       if (this.dictRequest && this.dictTether) {
@@ -168,7 +191,7 @@ export class ChapComponent implements OnInit {
     this.chapService.getDetail(chap._id)
       .subscribe(chapDetail => {
         this.chap = chapDetail;
-        if (!this.hideUrl) {
+        if (!this.hideWindowUrl) {
           window.history.pushState({}, '', `chaps/${chap._id}`);
         }
         this.setupNavigation();
@@ -192,8 +215,10 @@ export class ChapComponent implements OnInit {
 
       this.contentContext.contentLang = book.contentLang;
       this.contentContext.transLang = book.transLang;
-      this.dictZhService.getPhrases()
-        .subscribe(ph => this.contentContext.zhPhrases = ph);
+      if (this.loadZhPhrases) {
+        this.dictZhService.getPhrases()
+          .subscribe(ph => this.contentContext.zhPhrases = ph);
+      }
       this.loadAnnotations();
 
       if (this.allowSwitchChap) {
@@ -244,6 +269,19 @@ export class ChapComponent implements OnInit {
     if (this.noteRequest) {
       this.closeNotePopup();
     }
+  }
+
+  toggleSidebar(sidebar: SuiSidebar, which) {
+    if (sidebar.isVisible) {
+      if (this.sidebarContent === which) {
+        sidebar.close();
+        return;
+      }
+      this.sidebarContent = which;
+      return;
+    }
+    this.sidebarContent = which;
+    sidebar.open();
   }
 
   selectPara(para): void {
@@ -352,6 +390,25 @@ export class ChapComponent implements OnInit {
     dr.meaningItemCallback(selected);
   }
 
+  onUserWordChange(change: UserWordChange) {
+    let dr = this.dictRequest;
+    if (!dr) {
+      return;
+    }
+    if (dr.userWordChangeCallback) {
+      dr.userWordChangeCallback(change);
+    }
+  }
+
+  private getSimpleDictComponentRef() {
+    if (!this.simpleDictComponentRef) {
+      let factory: ComponentFactory<DictSimpleComponent> = this.resolver.resolveComponentFactory(DictSimpleComponent);
+      this.dictSimple.clear();
+      this.simpleDictComponentRef = this.dictSimple.createComponent(factory);
+    }
+    return this.simpleDictComponentRef;
+  }
+
   private showDictSimple(dictRequest: DictRequest) {
     if (!dictRequest) {
       return;
@@ -364,13 +421,7 @@ export class ChapComponent implements OnInit {
     }
 
     let {dictEntry, wordElement} = dictRequest;
-    if (!this.simpleDictComponentRef) {
-      let factory: ComponentFactory<DictSimpleComponent> = this.resolver.resolveComponentFactory(DictSimpleComponent);
-      this.dictSimple.clear();
-      this.simpleDictComponentRef = this.dictSimple.createComponent(factory);
-    }
-    let dscr = this.simpleDictComponentRef;
-
+    let dscr = this.getSimpleDictComponentRef();
     let content = function () {
       dscr.instance.entry = dictEntry as DictEntry;
       return dscr.location.nativeElement;
@@ -412,14 +463,55 @@ export class ChapComponent implements OnInit {
     }, 10);
   }
 
-  onUserWordChange(change: UserWordChange) {
-    let dr = this.dictRequest;
-    if (!dr) {
-      return;
+  lastWordDrop = null;
+
+  showDictSimplePopup(el, entry) {
+    if (this.lastWordDrop) {
+      this.lastWordDrop.destroy();
+      this.lastWordDrop = null;
     }
-    if (dr.userWordChangeCallback) {
-      dr.userWordChangeCallback(change);
-    }
+    let dscr = this.getSimpleDictComponentRef();
+    let content = function () {
+      dscr.instance.entry = entry;
+      return dscr.location.nativeElement;
+    };
+    let drop = new Drop({
+      target: el,
+      content: content,
+      classes: `${UIConstants.dropClassPrefix}dict`,
+      constrainToScrollParent: false,
+      remove: true,
+      openOn: 'click',//click,hover,always
+      tetherOptions: {
+        attachment: 'top center',
+        constraints: [
+          {
+            to: 'window',
+            attachment: 'together',
+            pin: true
+          }
+        ]
+      }
+    });
+    drop.open();
+    drop.once('close', () => {
+      if (this.lastWordDrop === drop) {
+        this.lastWordDrop = null;
+      }
+    });
+    this.lastWordDrop = drop;
+  }
+
+  lookupUserWord($event, uw) {
+    let el = $event.target;
+    this.dictService.getEntry(uw.word, {pushHistory: false})
+      .subscribe(entry => {
+        this.showDictSimplePopup(el, entry);
+      });
+  }
+
+  showEntryPopup($event, entry) {
+    this.showDictSimplePopup($event.target, entry);
   }
 
   private closeNotePopup() {
@@ -470,10 +562,6 @@ export class ChapComponent implements OnInit {
 
   paraTracker(index, para) {
     return para._id;
-  }
-
-  goBack(): void {
-    this.location.back();
   }
 
 }
