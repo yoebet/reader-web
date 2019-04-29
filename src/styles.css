@@ -106,3 +106,11 @@ sui-multi-select i.list.icon {
 .ui.popup {
   margin: 0.6em;
 }
+
+.pushable > .pusher {
+  height: 100vh;
+  overflow-y: auto;
+}
+.right-floated {
+  float: right;
+}

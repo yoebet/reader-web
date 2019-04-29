@@ -88,7 +88,7 @@
         a.ui.item(*ngFor='let phrase of entry.phrases', (click)='goto(phrase)')
           | {{phrase}}
 
-  .ui.fields
+  .ui.fields(*ngIf='selectAnItem')
     .ui.clearing.divider
     .ui.right.floated.mini.buttons
       button.ui.button((click)='cancelSelect()') 取消

@@ -49,6 +49,12 @@ export class ChapComponent implements OnInit {
   markNewWords = true;
   lookupDict = false;
 
+  allowSwitchChap = true;
+  hideUrl = false;
+
+  prevChap: Chap;
+  nextChap: Chap;
+
   annotationSet: AnnotationSet;
   contentContext: ContentContext;
 
@@ -81,6 +87,9 @@ export class ChapComponent implements OnInit {
     this.route.paramMap.pipe(switchMap((params: ParamMap) =>
       this.chapService.getDetail(params.get('id'))
     )).subscribe(chap => {
+      if (this.hideUrl) {
+        window.history.pushState({}, '', `/`);
+      }
       console.log(chap);
       if (!chap) {
         return;
@@ -123,8 +132,33 @@ export class ChapComponent implements OnInit {
     }, true);
   }
 
+  private setupNavigation() {
+    this.prevChap = null;
+    this.nextChap = null;
+    if (!this.book) {
+      return;
+    }
+    let chaps = this.book.chaps;
+    if (!chaps || chaps.length === 0) {
+      return;
+    }
+    let ci = chaps.findIndex(c => c._id === this.chap._id);
+    if (ci === -1) {
+      return;
+    }
+    if (ci > 0) {
+      this.prevChap = chaps[ci - 1];
+    }
+    if (ci < chaps.length - 1) {
+      this.nextChap = chaps[ci + 1];
+    }
+  }
+
   switchChap(chap) {
     if (!chap) {
+      return;
+    }
+    if (!this.allowSwitchChap) {
       return;
     }
     if (this.chap && chap._id === this.chap._id) {
@@ -134,25 +168,38 @@ export class ChapComponent implements OnInit {
     this.chapService.getDetail(chap._id)
       .subscribe(chapDetail => {
         this.chap = chapDetail;
-        window.history.pushState({}, '', `chaps/${chap._id}`);
+        if (!this.hideUrl) {
+          window.history.pushState({}, '', `chaps/${chap._id}`);
+        }
+        this.setupNavigation();
       });
   }
 
   private loadBook(chap) {
-    this.bookService.getDetail(chap.bookId)
-      .subscribe((book) => {
-        if (!book) {
-          return;
-        }
-        this.book = book;
-        chap.book = book;
+    let bookId = chap.bookId;
+    let obs = null;
+    if (this.allowSwitchChap) {
+      obs = this.bookService.getDetail(bookId);
+    } else {
+      obs = this.bookService.getOne(bookId);
+    }
+    obs.subscribe((book) => {
+      if (!book) {
+        return;
+      }
+      this.book = book;
+      chap.book = book;
 
-        this.contentContext.contentLang = book.contentLang;
-        this.contentContext.transLang = book.transLang;
-        this.dictZhService.getPhrases()
-          .subscribe(ph => this.contentContext.zhPhrases = ph);
-        this.loadAnnotations();
-      });
+      this.contentContext.contentLang = book.contentLang;
+      this.contentContext.transLang = book.transLang;
+      this.dictZhService.getPhrases()
+        .subscribe(ph => this.contentContext.zhPhrases = ph);
+      this.loadAnnotations();
+
+      if (this.allowSwitchChap) {
+        this.setupNavigation();
+      }
+    });
   }
 
   private loadAnnotations() {
@@ -284,10 +331,9 @@ export class ChapComponent implements OnInit {
         element: dictPopup,
         target: this.dictRequest.wordElement,
         attachment: 'top center',
-        targetAttachment: 'bottom center',
         constraints: [
           {
-            to: 'scrollParent',
+            to: 'window',
             attachment: 'together',
             pin: true
           }
@@ -339,12 +385,11 @@ export class ChapComponent implements OnInit {
         target: wordElement,
         content: content,
         classes: `${UIConstants.dropClassPrefix}dict`,
-        position: 'bottom center',
         constrainToScrollParent: false,
         remove: true,
         openOn: 'click',//click,hover,always
         tetherOptions: {
-          attachment: 'together',
+          attachment: 'top center',
           constraints: [
             {
               to: 'window',
@@ -403,7 +448,6 @@ export class ChapComponent implements OnInit {
       element: notePopup,
       target: this.noteRequest.wordElement,
       attachment: 'top center',
-      targetAttachment: 'bottom right',
       constraints: [
         {
           to: 'window',

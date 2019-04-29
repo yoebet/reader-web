@@ -44,6 +44,8 @@ export class DictEntryComponent implements OnInit, OnChanges, AfterViewChecked {
   textShowTitle = false;
   textTabActive = false;
 
+  selectAnItem = false;
+
   userWord: UserWord;
   userWordSource: { isCurrentPara?: boolean, para?: Para, moreParas?: Para[] };
 
@@ -220,6 +222,10 @@ export class DictEntryComponent implements OnInit, OnChanges, AfterViewChecked {
   }
 
   clickMeaningItem(pos, mi: MeaningItem | SimpleMeaning | string) {
+    if (!this.selectAnItem) {
+      this.cancelSelect();
+      return;
+    }
     let exp = (typeof mi === 'string') ? mi : mi.exp;
     if (this.selectedItem && pos === this.selectedItem.pos && exp === this.selectedItem.meaning) {
       this.selectedItem.meaning = null;

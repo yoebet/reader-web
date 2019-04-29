@@ -17,7 +17,7 @@ import {BookInfoModal} from './book-info.component';
 })
 export class BookComponent implements OnInit {
   book: Book;
-  showZh = false;
+  showZh = true;
 
   statusNames = Book.StatusNames;
   categoryNames = Book.CategoryNames;

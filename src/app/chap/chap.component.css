@@ -1,5 +1,31 @@
-.zhname.pre-wrap {
+
+.pushable.reader {
+  height: initial;
+}
+
+.pushable.reader > .pusher.dimmed:after {
+  position: fixed;
+}
+
+.ui.left.sidebar.chap-list {
+  width: 260px;
+  padding: 1em 0;
+}
+
+.chap-list .item {
+  line-height: 1.3;
+}
+
+.chap-list .item .zhname {
   margin-top: 0.3em;
+}
+
+.fit-top-menu {
+  margin-top: 39px;
+}
+
+.fit-bottom-menu {
+  margin-bottom: 40px;
 }
 
 .ui.menu .item.chap-name {
@@ -48,6 +74,14 @@
 
 .paragraph .para-no {
   cursor: pointer;
+}
+
+.prev-next-nav .item.next-nav {
+  margin-top: 0.8em;
+}
+
+.prev-next-nav .item > i.icon {
+   display: initial;
 }
 
 #dictPopup {

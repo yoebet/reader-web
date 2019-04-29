@@ -1,17 +1,21 @@
-sui-sidebar-container.ui.bottom.attached.segment
-  sui-sidebar.inverted.vertical.small(#sidebar="")
-    a.item(*ngFor='let c of book&&book.chaps',
-    (click)='switchChap(c);sidebar.close()',
-    [ngClass]='{active: c._id===chap._id}')
-      .pre-wrap {{c.name}}
-      .zhname.pre-wrap(*ngIf="c.zhName") {{c.zhName}}
-  sui-sidebar-sibling([isDimmedWhenVisible]='true')
+sui-sidebar-container.reader.fit-bottom-menu
+  sui-sidebar.inverted.vertical.small.chap-list(transition='overlay', #sidebar="")
+    ng-template([ngIf]='allowSwitchChap')
+      a.item(*ngFor='let c of book&&book.chaps',
+      (click)='switchChap(c);sidebar.close()',
+      [ngClass]='{active: c._id===chap._id}')
+        .pre-wrap {{c.name}}
+        .zhname.pre-wrap(*ngIf="c.zhName") {{c.zhName}}
+  sui-sidebar-sibling.fit-top-menu([isDimmedWhenVisible]='true')
     .ui.small.top.fixed.inverted.main.menu
       .item.chap-name(*ngIf='chap') {{chap.name}}
       .right.menu
+        .item((click)='sidebar.toggle()')
+          i.content.icon
         //.item(*ngIf='currentUser')
           | {{currentUser.nickName}}
     .ui.container.chap-content
+      p &nbsp;
       .ui.list.items(*ngIf='chap')
         ng-template(ngFor='', let-para='', [ngForOf]="chap.paras", let-index="index", [ngForTrackBy]="paraTracker")
           .item.paragraph
@@ -32,6 +36,14 @@ sui-sidebar-container.ui.bottom.attached.segment
             (click)='selectPara(para)',
             (dictRequest)="onDictRequest($event)",
             (noteRequest)="onNoteRequest($event)")
+
+      .ui.list.prev-next-nav(*ngIf='allowSwitchChap')
+        a.item.prev-nav([ngClass]='{disabled: !this.prevChap}', (click)='switchChap(prevChap)')
+          i.left.arrow.icon
+          span.pre-wrap {{this.prevChap? this.prevChap.name:'（无）'}}
+        a.item.next-nav([ngClass]='{disabled: !this.nextChap}', (click)='switchChap(nextChap)')
+          i.right.arrow.icon
+          span.pre-wrap {{this.nextChap? this.nextChap.name:'（无）'}}
       p &nbsp;
 
 #dictPopup.ui.basic.popup(*ngIf='dictRequest')
@@ -66,8 +78,6 @@ ng-template(#dictSimple='')
       button.ui.primary.button((click)='completeNoteEdit(noteTextarea.value)') 保存
 
 .ui.small.bottom.fixed.menu
-  .item((click)='sidebar.toggle()')
-    i.content.icon
   .item([ngClass]='{active: lookupDict}', (click)='lookupDict=!lookupDict') 查词
   .item([ngClass]='{active: markNewWords}', (click)='toggleMarkNewWords()') 生词
   .item([ngClass]='{active: wordsHover}', (click)='toggleWordsHover()') 标注

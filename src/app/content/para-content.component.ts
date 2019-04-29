@@ -639,11 +639,21 @@ export class ParaContentComponent implements OnInit, OnChanges {
       target: wordEl,
       content: content,
       classes: `${UIConstants.dropClassPrefix}anno`,
-      position: 'bottom center',
+      // position: 'bottom center',
       constrainToScrollParent: false,
       remove: true,
       hoverOpenDelay: 100,
-      openOn: 'hover'//click,hover,always
+      openOn: 'hover',//click,hover,always
+      tetherOptions: {
+        attachment: 'top center',
+        constraints: [
+          {
+            to: 'window',
+            attachment: 'together',
+            pin: true
+          }
+        ]
+      }
     });
 
     this.wordsPopupMap.set(wordEl, drop);

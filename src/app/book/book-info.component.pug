@@ -4,7 +4,7 @@
       td 英文
       td
         .book-name {{book.name}}
-        .author
+        .author(*ngIf='book.author')
           span.author-by by
           | {{book.author}}
     tr
@@ -29,7 +29,7 @@
           | {{statusNames[book.status]}}
         .prop
           span.prop-name 章节
-          | {{book.chapsComplete? '完整':'未完整'}}
+          | {{book.chapsComplete? '完整':'录入中'}}
     tr
       td 简介
       td {{book.introduction}}

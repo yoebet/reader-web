@@ -1,18 +1,18 @@
 .ui.small.header {{head}}
 .ui.list
   .item(*ngFor='let item of items')
-    .ui.right.floated.circular.icon.compact.mini.button((click)='dropAnno(item)')
+    //.ui.right.floated.circular.icon.compact.mini.button((click)='dropAnno(item)')
       i.right.close.icon
     span.yo([ngClass]='item.dataName') {{item.text}}
   .item(*ngIf='meaning')
-    .ui.right.floated.circular.icon.compact.mini.button((click)='dropAnno("meaning")')
+    //.ui.right.floated.circular.icon.compact.mini.button((click)='dropAnno("meaning")')
       i.right.close.icon
     .item-head 释义：
     .item-text
       ng-template([ngIf]='word!==meaning.word') ({{meaning.word}}) &nbsp;
       | {{meaning.text}}
   .item(*ngIf='note')
-    .ui.right.floated.circular.icon.compact.mini.button((click)='dropAnno("note")')
+    //.ui.right.floated.circular.icon.compact.mini.button((click)='dropAnno("note")')
       i.right.close.icon
     .item-head 注：
     .item-text.pre-wrap {{note}}
