@@ -55,7 +55,7 @@
 }
 
 .item.paragraph {
-  margin: 0 !important;
+  margin: 1em 0 !important;
   flex-direction: row !important;
 }
 
@@ -76,7 +76,7 @@
 }
 
 .prev-next-nav .item.next-nav {
-  margin-top: 0.8em;
+  /*margin-top: 0.8em;*/
 }
 
 .prev-next-nav .item > i.icon {
@@ -85,7 +85,7 @@
 
 #dictPopup {
   min-width: 200px;
-  max-width: 400px;
+  max-width: 360px;
 }
 
 #notePopup.ui.form .field {

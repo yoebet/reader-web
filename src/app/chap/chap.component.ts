@@ -6,12 +6,15 @@ import {
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {PopStateEvent} from '@angular/common/src/location/location';
 
-import {switchMap} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 import * as Tether from 'tether';
 import * as Drop from 'tether-drop';
 
 import {SuiSidebar} from 'ng2-semantic-ui/dist';
+import {SuiModalService} from 'ng2-semantic-ui';
+
 
 import {UIConstants} from '../config';
 import {AnnotationSet} from '../anno/annotation-set';
@@ -22,6 +25,7 @@ import {NoteRequest} from '../content-types/note-request';
 import {Book} from '../models/book';
 import {Chap} from '../models/chap';
 import {Para} from '../models/para';
+import {OpResult} from '../models/op-result';
 import {UserWord} from '../models/user-word';
 import {DictEntry} from '../models/dict-entry';
 import {Annotation} from '../models/annotation';
@@ -34,6 +38,9 @@ import {UserWordService} from '../services/user-word.service';
 import {AnnotationsService} from '../services/annotations.service';
 import {UserVocabularyService} from '../services/user-vocabulary.service';
 import {DictSimpleComponent} from '../dict/dict-simple.component';
+import {LoginModal} from '../account/login-popup.component';
+import {SessionService} from '../services/session.service';
+import {User} from '../models/user';
 
 @Component({
   selector: 'chap-detail',
@@ -79,7 +86,11 @@ export class ChapComponent implements OnInit {
   noteRequestNote = '';
 
 
-  constructor(private resolver: ComponentFactoryResolver,
+  get currentUser(): User {
+    return this.sessionService.currentUser;
+  }
+
+  constructor(private sessionService: SessionService,
               private bookService: BookService,
               private chapService: ChapService,
               private paraService: ParaService,
@@ -88,6 +99,8 @@ export class ChapComponent implements OnInit {
               private userWordService: UserWordService,
               private annoService: AnnotationsService,
               private vocabularyService: UserVocabularyService,
+              private modalService: SuiModalService,
+              private resolver: ComponentFactoryResolver,
               private route: ActivatedRoute) {
   }
 
@@ -104,36 +117,90 @@ export class ChapComponent implements OnInit {
     this.dictService.clearHistory();
   }
 
-  ngOnInit(): void {
-    this.route.paramMap.pipe(switchMap((params: ParamMap) =>
-      this.chapService.getDetail(params.get('id'))
-    )).subscribe(chap => {
-      if (this.hideWindowUrl) {
-        window.history.pushState({}, '', `/`);
-      }
-      console.log(chap);
-      if (!chap) {
-        return;
-      }
-      if (!chap.paras) {
-        chap.paras = [];
-      } else {
-        for (let para of chap.paras) {
-          para.chap = chap;
+  private initialLoadContent(chapId) {
+    this.chapService.getDetail(chapId)
+      .subscribe(chap => {
+        if (this.hideWindowUrl) {
+          window.history.pushState({}, '', `/`);
         }
-      }
-      if (chap.zhName == null) {
-        chap.zhName = '';
-      }
-      this.chap = chap;
-      if (!this.contentContext) {
-        this.contentContext = new ContentContext();
-      }
-      this.contentContext.combinedWordsMapObs = this.vocabularyService.getCombinedWordsMap();
-      this.loadBook(chap);
-    });
+        console.log(chap);
+        if (!chap) {
+          return;
+        }
+        if (!chap.paras) {
+          chap.paras = [];
+        } else {
+          for (let para of chap.paras) {
+            para.chap = chap;
+          }
+        }
+        if (chap.zhName == null) {
+          chap.zhName = '';
+        }
+        this.chap = chap;
+        if (!this.contentContext) {
+          this.contentContext = new ContentContext();
+        }
+        this.contentContext.combinedWordsMapObs = this.vocabularyService.getCombinedWordsMap();
+        this.loadBook(chap.bookId);
+      });
 
     this.userWordService.loadAll().subscribe();
+  }
+
+  private fetchTheChapId(): Observable<string> {
+    return this.route.paramMap.pipe(
+      map((params: ParamMap) => {
+          console.log(params);
+          return params.get('id');
+        }
+      ));
+  }
+
+  private loginThenInit(chapId) {
+    this.modalService.open<string, string, string>(new LoginModal('请登录'))
+      .onDeny(d => {
+
+      })
+      .onApprove(r => {
+        this.initialLoadContent(chapId);
+      });
+  }
+
+  ngOnInit(): void {
+    this.fetchTheChapId().subscribe(chapId => {
+      let cu = this.sessionService.currentUser;
+      if (cu) {
+        this.initialLoadContent(chapId);
+        return;
+      }
+      this.route.queryParamMap.subscribe(params => {
+        console.log(params);
+        let tempToken = params.get('tt');
+        if (!tempToken) {
+          this.sessionService.checkLogin()
+            .subscribe(cu => {
+              if (cu) {
+                this.initialLoadContent(chapId);
+                return;
+              }
+              this.loginThenInit(chapId);
+            });
+          return;
+        }
+
+        this.sessionService.loginByTempToken(tempToken)
+          .subscribe((opr: OpResult) => {
+            if (opr && opr.ok === 1) {
+              window.history.pushState({}, '', `chaps/${chapId}`);
+              this.initialLoadContent(chapId);
+            } else {
+              let msg = opr.message || '登录失败';
+              alert(msg);
+            }
+          });
+      });
+    });
 
     document.addEventListener('click', (event) => {
       if (this.dictRequest && this.dictTether) {
@@ -198,8 +265,7 @@ export class ChapComponent implements OnInit {
       });
   }
 
-  private loadBook(chap) {
-    let bookId = chap.bookId;
+  private loadBook(bookId) {
     let obs = null;
     if (this.allowSwitchChap) {
       obs = this.bookService.getDetail(bookId);
@@ -211,7 +277,6 @@ export class ChapComponent implements OnInit {
         return;
       }
       this.book = book;
-      chap.book = book;
 
       this.contentContext.contentLang = book.contentLang;
       this.contentContext.transLang = book.transLang;

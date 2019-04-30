@@ -19,9 +19,6 @@ export class WordCategoryService extends BaseService<WordCategory> {
   // categoryCode -> words
   private allWordsMap = new Map<string, Observable<string[]>>();
 
-  private cachedCategories = ['junior1', 'junior2', 'basic', 'cet4', 'cet6', 'cet', 'gre', 'yasi'];
-
-
   constructor(protected http: HttpClient,
               protected modalService: SuiModalService) {
     super(http, modalService);

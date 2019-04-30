@@ -32,8 +32,8 @@ sui-sidebar-container.reader.fit-bottom-menu
           i.content.icon
         //.item(*ngIf='currentUser')
           | {{currentUser.nickName}}
+
     .ui.container.chap-content
-      p &nbsp;
       .ui.list.items(*ngIf='chap')
         ng-template(ngFor='', let-para='', [ngForOf]="chap.paras", let-index="index", [ngForTrackBy]="paraTracker")
           .item.paragraph

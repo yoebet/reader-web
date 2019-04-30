@@ -26,9 +26,9 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.sessionService.checkLogin()
-      .subscribe(a => {
-      });
+    /*this.sessionService.checkLogin()
+      .subscribe(cu => {
+      });*/
   }
 
 

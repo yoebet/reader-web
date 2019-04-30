@@ -28,8 +28,17 @@ export class SessionService {
     this.loginUrl = `${apiBase}/login`;
   }
 
+
+  loginByTempToken(tempToken: string): Observable<OpResult> {
+    return this.doLogin({tempToken});
+  }
+
   login(name, pass): Observable<OpResult> {
-    return this.http.post(this.loginUrl, {name, pass}, this.httpOptions)
+    return this.doLogin({name, pass});
+  }
+
+  private doLogin(form): Observable<OpResult> {
+    return this.http.post(this.loginUrl, form, this.httpOptions)
       .pipe(
         map((opr: OpResult) => {
           if (opr && opr.ok === 1) {
@@ -43,8 +52,8 @@ export class SessionService {
             if (from !== name) {
               this.onCurrentUserChanged.emit({from, to: name});
             }
-            return opr;
           }
+          return opr;
         }));
   }
 
@@ -63,26 +72,27 @@ export class SessionService {
         }));
   }
 
-  checkLogin(): Observable<any> {
+  checkLogin(): Observable<User> {
     let url = `${this.loginUrl}/userinfo`;
-    return this.http.get<any>(url, this.httpOptions).pipe(
-      map(userinfo => {
-        let cu = this.currentUser;
-        let from = cu ? cu.name : null;
-        if (userinfo && userinfo.login) {
-          cu = new User();
-          cu.name = userinfo.name;
-          cu.nickName = userinfo.nickName;
-          cu.role = userinfo.role;
-        } else {
-          cu = null;
-        }
-        this.currentUser = cu;
-        let to = cu ? cu.name : null;
-        if (from !== to) {
-          this.onCurrentUserChanged.emit({from, to});
-        }
-        return userinfo;
-      }));
+    return this.http.get<any>(url, this.httpOptions)
+      .pipe(
+        map(userinfo => {
+          let cu = this.currentUser;
+          let from = cu ? cu.name : null;
+          if (userinfo && userinfo.login) {
+            cu = new User();
+            cu.name = userinfo.name;
+            cu.nickName = userinfo.nickName;
+            cu.role = userinfo.role;
+          } else {
+            cu = null;
+          }
+          this.currentUser = cu;
+          let to = cu ? cu.name : null;
+          if (from !== to) {
+            this.onCurrentUserChanged.emit({from, to});
+          }
+          return cu;
+        }));
   }
 }
