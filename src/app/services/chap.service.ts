@@ -3,15 +3,15 @@ import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 
 import {Chap} from '../models/chap';
-import {SuiModalService} from 'ng2-semantic-ui';
 import {BaseService} from './base.service';
+import {SessionService} from './session.service';
 
 @Injectable()
 export class ChapService extends BaseService<Chap> {
 
   constructor(protected http: HttpClient,
-              protected modalService: SuiModalService) {
-    super(http, modalService);
+              protected sessionService: SessionService) {
+    super(http, sessionService);
     let apiBase = environment.apiBase || '';
     this.baseUrl = `${apiBase}/chaps`;
   }

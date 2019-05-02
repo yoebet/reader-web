@@ -6,14 +6,14 @@ import {Observable} from 'rxjs';
 
 import {UserBook} from '../models/user-book';
 import {BaseService} from './base.service';
-import {SuiModalService} from 'ng2-semantic-ui';
+import {SessionService} from './session.service';
 
 @Injectable()
 export class UserBookService extends BaseService<UserBook> {
 
   constructor(protected http: HttpClient,
-              protected modalService: SuiModalService) {
-    super(http, modalService);
+              protected sessionService: SessionService) {
+    super(http, sessionService);
     let apiBase = environment.apiBase || '';
     this.baseUrl = `${apiBase}/user_books`;
   }

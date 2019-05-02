@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 
-import {SuiModalService} from 'ng2-semantic-ui';
 import {Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 
@@ -10,6 +9,7 @@ import {AnnotationFamily} from '../models/annotation-family';
 import {AnnotationSet} from '../anno/annotation-set';
 
 import {BaseService} from './base.service';
+import {SessionService} from './session.service';
 
 @Injectable()
 export class AnnotationsService extends BaseService<AnnotationFamily> {
@@ -17,8 +17,8 @@ export class AnnotationsService extends BaseService<AnnotationFamily> {
   annotationsMap: Map<string, AnnotationSet> = new Map<string, AnnotationSet>();
 
   constructor(protected http: HttpClient,
-              protected modalService: SuiModalService) {
-    super(http, modalService);
+              protected sessionService: SessionService) {
+    super(http, sessionService);
     let apiBase = environment.apiBase || '';
     this.baseUrl = `${apiBase}/annotation_families`;
   }

@@ -5,11 +5,10 @@ import {environment} from '../../environments/environment';
 import {of as observableOf, Observable} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
 
-import {SuiModalService} from 'ng2-semantic-ui';
-
 import {OpResult} from '../models/op-result';
-import {BaseService} from './base.service';
 import {UserPreference} from '../models/user-preference';
+import {BaseService} from './base.service';
+import {SessionService} from './session.service';
 
 @Injectable()
 export class UserPreferenceService extends BaseService<UserPreference> {
@@ -19,8 +18,8 @@ export class UserPreferenceService extends BaseService<UserPreference> {
   readonly onBaseVocabularyChanged = new EventEmitter<string>();
 
   constructor(protected http: HttpClient,
-              protected modalService: SuiModalService) {
-    super(http, modalService);
+              protected sessionService: SessionService) {
+    super(http, sessionService);
     let apiBase = environment.apiBase || '';
     this.baseUrl = `${apiBase}/user_preferences`;
   }
@@ -54,7 +53,7 @@ export class UserPreferenceService extends BaseService<UserPreference> {
 
   private setValue(code: string, value) {
     let url = `${this.baseUrl}/code/${code}`;
-    return this.http.post<OpResult>(url, {[code]: value}, this.httpOptions)
+    return this.http.post<OpResult>(url, {[code]: value}, this.getHttpOptions())
       .pipe(catchError(this.handleError));
   }
 

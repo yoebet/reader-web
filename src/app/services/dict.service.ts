@@ -3,12 +3,11 @@ import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 
 import {Observable, of} from 'rxjs';
-import {map, catchError, share} from 'rxjs/operators';
-
-import {SuiModalService} from 'ng2-semantic-ui';
+import {map, catchError} from 'rxjs/operators';
 
 import {DictEntry, DictFields, PosMeanings} from '../models/dict-entry';
 import {BaseService} from './base.service';
+import {SessionService} from './session.service';
 
 @Injectable()
 export class DictService extends BaseService<DictEntry> {
@@ -22,8 +21,8 @@ export class DictService extends BaseService<DictEntry> {
   entryHistoryCapacity = 10;
 
   constructor(protected http: HttpClient,
-              protected modalService: SuiModalService) {
-    super(http, modalService);
+              protected sessionService: SessionService) {
+    super(http, sessionService);
     let apiBase = environment.apiBase || '';
     this.baseUrl = `${apiBase}/dict`;
     this.staticBase = environment.staticBase;
@@ -71,15 +70,14 @@ export class DictService extends BaseService<DictEntry> {
     }
 
     return obs.pipe(map(entry => {
-        if (entry) {
-          if (options.pushHistory !== false) {
-            this.pushHistory(entry);
-          }
-          this.entryCache.set(entry.word, entry);
+      if (entry) {
+        if (options.pushHistory !== false) {
+          this.pushHistory(entry);
         }
-        return entry;
-      }),
-      share());
+        this.entryCache.set(entry.word, entry);
+      }
+      return entry;
+    }));
   }
 
   getCompleteMeanings(word: string): Observable<PosMeanings[]> {
@@ -91,8 +89,9 @@ export class DictService extends BaseService<DictEntry> {
     }
 
     let url = `${this.baseUrl}/${word}/complete`;
-    let obs = this.http.get<PosMeanings[]>(url, this.httpOptions).pipe(
-      catchError(this.handleError));
+    let obs = this.http.get<PosMeanings[]>(url, this.getHttpOptions())
+      .pipe(
+        catchError(this.handleError));
     if (!cachedEntry) {
       return obs;
     }
@@ -123,21 +122,31 @@ export class DictService extends BaseService<DictEntry> {
   }
 
   loadBaseForms(): Observable<Map<string, string>> {
-    if (this.baseFormsMap) {
-      return of(this.baseFormsMap);
-    }
 
-    let scope = 'all'; //b6
-    let url = `${this.baseUrl}/baseForms/${scope}`;
-    return this.http.get<any[]>(url, this.httpOptions).pipe(
-      map((words: string[][]) => {
-        this.baseFormsMap = new Map();
-        for (let [word, base] of words) {
-          this.baseFormsMap.set(word, base);
+    return Observable.create(observer => {
+      if (this.baseFormsMap) {
+        observer.next(this.baseFormsMap);
+        observer.complete();
+        return;
+      }
+
+      let scope = 'b6'; // b6/all
+      let url = `${this.baseUrl}/baseForms/${scope}`;
+      this.http.get<any[]>(url, this.getHttpOptions())
+        .pipe(
+          catchError(this.handleError)
+        ).subscribe((words: string[][]) => {
+          this.baseFormsMap = new Map();
+          for (let [word, base] of words) {
+            this.baseFormsMap.set(word, base);
+          }
+          console.log('baseFormsMap: ' + this.baseFormsMap.size);
+          observer.next(this.baseFormsMap);
+          observer.complete();
         }
-        return this.baseFormsMap;
-      }),
-      catchError(this.handleError));
+      );
+    });
+
   }
 
 }

@@ -53,6 +53,19 @@ const BookImagesBase = `${ImagesBase}/book`;
 const BookImageNotSet = `${BookImagesBase}/missing.png`;
 
 
+const HeaderPrefix = 'X-';
+
+const HeaderNames = {
+  UserToken: HeaderPrefix + 'UT',
+  UserName: HeaderPrefix + 'UN',
+  Client: HeaderPrefix + 'CL'
+};
+
+const HeaderValues = {
+  Client: 'R'/*,
+  Client_Agent: 'M'*/
+};
+
 const DefaultHttpHeaders = environment.httpHeaders || {};
 
 export {
@@ -62,5 +75,7 @@ export {
   SpecialAnnotations,
   BookImagesBase,
   BookImageNotSet,
+  HeaderNames,
+  HeaderValues,
   DefaultHttpHeaders
 };

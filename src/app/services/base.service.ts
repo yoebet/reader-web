@@ -1,24 +1,13 @@
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 
 import {Observable, EMPTY, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 
-import {SuiModalService} from 'ng2-semantic-ui';
-import {ActiveModal} from 'ng2-semantic-ui/dist/modules/modal/classes/active-modal';
-
-import {DefaultHttpHeaders} from '../config';
 import {Model} from '../models/model';
 import {OpResult} from '../models/op-result';
-import {LoginModal} from '../account/login-popup.component';
+import {SessionService} from './session.service';
 
 export class BaseService<M extends Model> {
-
-  private static loginModal: ActiveModal<string, string, string> = null;
-
-  protected httpOptions = {
-    headers: new HttpHeaders(DefaultHttpHeaders),
-    withCredentials: true
-  };
 
   protected baseUrl: string;
 
@@ -26,22 +15,26 @@ export class BaseService<M extends Model> {
 
 
   constructor(protected http: HttpClient,
-              protected modalService: SuiModalService) {
+              protected sessionService: SessionService) {
+  }
+
+  protected getHttpOptions() {
+    return this.sessionService.getHttpOptions();
   }
 
   list(url: string = null): Observable<M[]> {
-    return this.http.get<M[]>(url || this.baseUrl, this.httpOptions)
+    return this.http.get<M[]>(url || this.baseUrl, this.getHttpOptions())
       .pipe(catchError(this.handleError));
   }
 
   getOne(id: string): Observable<M> {
     const url = `${this.baseUrl}/${id}`;
-    return this.http.get<M>(url, this.httpOptions)
+    return this.http.get<M>(url, this.getHttpOptions())
       .pipe(catchError(this.handleError));
   }
 
   getOneByUrl(url: string): Observable<M> {
-    return this.http.get<M>(url, this.httpOptions)
+    return this.http.get<M>(url, this.getHttpOptions())
       .pipe(catchError(this.handleError));
   }
 
@@ -51,26 +44,26 @@ export class BaseService<M extends Model> {
   }
 
   create(model: M): Observable<M> {
-    return this.http.post<M>(this.baseUrl, model, this.httpOptions)
+    return this.http.post<M>(this.baseUrl, model, this.getHttpOptions())
       .pipe(catchError(this.handleError));
   }
 
   remove(model: M | string): Observable<OpResult> {
     const id = this.modelId(model);
     const url = `${this.baseUrl}/${id}`;
-    return this.http.delete<OpResult>(url, this.httpOptions)
+    return this.http.delete<OpResult>(url, this.getHttpOptions())
       .pipe(catchError(this.handleError));
   }
 
   update(model: M): Observable<OpResult> {
     const id = this.modelId(model);
     const url = `${this.baseUrl}/${id}`;
-    return this.http.put<OpResult>(url, model, this.httpOptions)
+    return this.http.put<OpResult>(url, model, this.getHttpOptions())
       .pipe(catchError(this.handleError));
   }
 
   protected postForOpResult(url, body = null): Observable<OpResult> {
-    return this.http.post<OpResult>(url, body, this.httpOptions)
+    return this.http.post<OpResult>(url, body, this.getHttpOptions())
       .pipe(catchError(this.handleError));
   }
 
@@ -84,15 +77,6 @@ export class BaseService<M extends Model> {
       alert(message);
     } else {
       alert('输入错误');
-    }
-    return EMPTY;
-  }
-
-  protected handleError401(error: any): Observable<any> {
-    if (BaseService.loginModal == null) {
-      BaseService.loginModal = this.modalService.open<string, string, string>(new LoginModal('请重新登录'))
-        .onDeny(d => BaseService.loginModal = null)
-        .onApprove(r => BaseService.loginModal = null);
     }
     return EMPTY;
   }
@@ -143,7 +127,7 @@ export class BaseService<M extends Model> {
       case 400:
         return this.handleError400(error);
       case 401:
-        return this.handleError401(error);
+        return this.sessionService.handleError401(error);
       case 461:
         return this.handleError461(error);
       case 500:

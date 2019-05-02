@@ -6,11 +6,11 @@ import {of as observableOf, Observable} from 'rxjs';
 import {catchError, map, tap, share} from 'rxjs/operators';
 
 import {sortedIndexBy} from 'lodash';
-import {SuiModalService} from 'ng2-semantic-ui';
 
 import {UserWord} from '../models/user-word';
 import {OpResult} from '../models/op-result';
 import {BaseService} from './base.service';
+import {SessionService} from './session.service';
 
 @Injectable()
 export class UserWordService extends BaseService<UserWord> {
@@ -24,8 +24,8 @@ export class UserWordService extends BaseService<UserWord> {
 
 
   constructor(protected http: HttpClient,
-              protected modalService: SuiModalService) {
-    super(http, modalService);
+              protected sessionService: SessionService) {
+    super(http, sessionService);
     let apiBase = environment.apiBase || '';
     this.baseUrl = `${apiBase}/user_words`;
   }
@@ -154,8 +154,9 @@ export class UserWordService extends BaseService<UserWord> {
   }
 
   create(userWord: UserWord): Observable<UserWord> {
-    let obs = this.http.post<UserWord>(this.baseUrl, userWord, this.httpOptions).pipe(
-      catchError(this.handleError));
+    let obs = this.http.post<UserWord>(this.baseUrl, userWord, this.getHttpOptions())
+      .pipe(
+        catchError(this.handleError));
     return obs.pipe(
       tap((result: UserWord) => {
         if (!result || !result._id) {
@@ -176,8 +177,9 @@ export class UserWordService extends BaseService<UserWord> {
   update(userWord: UserWord): Observable<OpResult> {
     const url = `${this.baseUrl}/${userWord.word}`;
     let up = {familiarity: userWord.familiarity};
-    let obs = this.http.put<OpResult>(url, up, this.httpOptions).pipe(
-      catchError(this.handleError));
+    let obs = this.http.put<OpResult>(url, up, this.getHttpOptions())
+      .pipe(
+        catchError(this.handleError));
     return obs.pipe(
       tap((opr: OpResult) => {
         if (opr.ok === 1) {
@@ -188,8 +190,9 @@ export class UserWordService extends BaseService<UserWord> {
 
   remove(word: string): Observable<OpResult> {
     const url = `${this.baseUrl}/${word}`;
-    let obs = this.http.delete<OpResult>(url, this.httpOptions).pipe(
-      catchError(this.handleError));
+    let obs = this.http.delete<OpResult>(url, this.getHttpOptions())
+      .pipe(
+        catchError(this.handleError));
     return obs.pipe(
       tap((opr: OpResult) => {
         if (opr.ok === 1) {
@@ -225,7 +228,7 @@ export class UserWordService extends BaseService<UserWord> {
       }
       return uw;
     });
-    return this.http.post<OpResult>(url, userWords, this.httpOptions)
+    return this.http.post<OpResult>(url, userWords, this.getHttpOptions())
       .catch(this.handleError);
   }*/
 

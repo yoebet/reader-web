@@ -7,6 +7,8 @@ export class User extends Model {
   role: string;
   status: string;
 
+  accessToken?: string;
+
   static Roles = ['', 'A', 'E'];
 }
 

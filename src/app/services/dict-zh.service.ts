@@ -4,13 +4,12 @@ import {HttpClient} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {catchError, map, share} from 'rxjs/operators';
 
-import {SuiModalService} from 'ng2-semantic-ui';
-
 import {environment} from '../../environments/environment';
 import {DictZh} from '../models/dict-zh';
 import {ZhPhrases} from '../anno/zh-phrases';
 
 import {BaseService} from './base.service';
+import {SessionService} from './session.service';
 
 @Injectable()
 export class DictZhService extends BaseService<DictZh> {
@@ -21,8 +20,8 @@ export class DictZhService extends BaseService<DictZh> {
   private staticBase;
 
   constructor(protected http: HttpClient,
-              protected modalService: SuiModalService) {
-    super(http, modalService);
+              protected sessionService: SessionService) {
+    super(http, sessionService);
     let apiBase = environment.apiBase || '';
     this.baseUrl = `${apiBase}/dict_zh`;
     this.staticBase = environment.staticBase;
@@ -92,7 +91,7 @@ export class DictZhService extends BaseService<DictZh> {
     }
     let url = `${this.staticBase}/dict-zh/phrases_all.json`;
     // let url = `${this.baseUrl}/phrases/all`;
-    return this.http.get<string[]>(url, this.httpOptions).pipe(
+    return this.http.get<string[]>(url, this.getHttpOptions()).pipe(
       map(words => {
         this.phrases = new ZhPhrases(words);
         return this.phrases;

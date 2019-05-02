@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {SuiModalService} from 'ng2-semantic-ui';
 
 import {combineLatest as observableCombineLatest, Observable} from 'rxjs';
 
@@ -12,15 +11,16 @@ import {Para} from '../models/para';
 import {ChapService} from './chap.service';
 import {BookService} from './book.service';
 import {BaseService} from './base.service';
+import {SessionService} from './session.service';
 
 @Injectable()
 export class ParaService extends BaseService<Para> {
 
   constructor(protected http: HttpClient,
-              protected modalService: SuiModalService,
+              protected sessionService: SessionService,
               private bookService: BookService,
               private chapService: ChapService) {
-    super(http, modalService);
+    super(http, sessionService);
     let apiBase = environment.apiBase || '';
     this.baseUrl = `${apiBase}/paras`;
   }

@@ -151,7 +151,6 @@ export class ChapComponent implements OnInit {
   private fetchTheChapId(): Observable<string> {
     return this.route.paramMap.pipe(
       map((params: ParamMap) => {
-          console.log(params);
           return params.get('id');
         }
       ));
@@ -175,7 +174,7 @@ export class ChapComponent implements OnInit {
         return;
       }
       this.route.queryParamMap.subscribe(params => {
-        console.log(params);
+        // console.log(params);
         let tempToken = params.get('tt');
         if (!tempToken) {
           this.sessionService.checkLogin()

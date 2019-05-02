@@ -2,13 +2,12 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 
-import {SuiModalService} from 'ng2-semantic-ui';
-
 import {of as observableOf, Observable} from 'rxjs';
-import {catchError, map, share} from 'rxjs/operators';
+import {catchError, map, share, tap} from 'rxjs/operators';
 
 import {WordBook, WordCategory} from '../models/word-category';
 import {BaseService} from './base.service';
+import {SessionService} from './session.service';
 
 @Injectable()
 export class WordCategoryService extends BaseService<WordCategory> {
@@ -17,11 +16,11 @@ export class WordCategoryService extends BaseService<WordCategory> {
   wordCategoriesMap: Map<string, WordCategory>;
 
   // categoryCode -> words
-  private allWordsMap = new Map<string, Observable<string[]>>();
+  private allWordsMap = new Map<string, string[]>();
 
   constructor(protected http: HttpClient,
-              protected modalService: SuiModalService) {
-    super(http, modalService);
+              protected sessionService: SessionService) {
+    super(http, sessionService);
     let apiBase = environment.apiBase || '';
     this.baseUrl = `${apiBase}/word_categories`;
   }
@@ -70,24 +69,23 @@ export class WordCategoryService extends BaseService<WordCategory> {
     if (limit) {
       url = url + '?limit=' + limit;
     }
-    return this.http.post<string[]>(url, null, this.httpOptions).pipe(
-      catchError(this.handleError));
+    return this.http.post<string[]>(url, null, this.getHttpOptions())
+      .pipe(catchError(this.handleError));
   }
 
   loadAllWords(code): Observable<string[]> {
-    let wordsObs = this.allWordsMap.get(code);
-    if (wordsObs) {
-      return wordsObs;
+    let words = this.allWordsMap.get(code);
+    if (words) {
+      return observableOf(words);
     }
 
     let url = `${this.baseUrl}/word_book/${code}`;
-    wordsObs = this.http.get<WordBook>(url, this.httpOptions)
+    return this.http.get<WordBook>(url, this.getHttpOptions())
       .pipe(
         map(wordBook => wordBook.words),
-        share(),
-        catchError(this.handleError));
-    this.allWordsMap.set(code, wordsObs);
-    return wordsObs;
+        tap(words => this.allWordsMap.set(code, words)),
+        catchError(this.handleError)
+      );
   }
 
 }

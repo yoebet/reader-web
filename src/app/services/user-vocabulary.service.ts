@@ -43,13 +43,16 @@ export class UserVocabularyService {
   }
 
   getBaseVocabularyMap(): Observable<Map<string, string>> {
-    if (this.baseVocabularyMap) {
-      return observableOf(this.baseVocabularyMap);
-    }
-
-    let bvm = this.baseVocabularyMap = new Map();
 
     return Observable.create(observer => {
+      if (this.baseVocabularyMap) {
+        observer.next(this.baseVocabularyMap);
+        observer.complete();
+        return;
+      }
+
+      let bvm = this.baseVocabularyMap = new Map();
+
       this.preferenceService.getBaseVocabulary()
         .subscribe((code) => {
           if (!code) {
