@@ -52,8 +52,7 @@ sui-sidebar-container.reader.fit-bottom-menu
             [annotation]='(para===selectedPara)? currentAnnotation : null',
             [ngClass]='{"selected": para===selectedPara, "left-right": leftRight, "up-down": !leftRight}',
             (click)='selectPara(para)',
-            (dictRequest)="onDictRequest($event)",
-            (noteRequest)="onNoteRequest($event)")
+            (dictRequest)="onDictRequest($event)")
 
       .ui.list.prev-next-nav(*ngIf='book&&allowSwitchChap')
         a.item.prev-nav([ngClass]='{disabled: !prevChap}', (click)='switchChap(prevChap)')
@@ -82,7 +81,7 @@ sui-sidebar-container.reader.fit-bottom-menu
   (dictItemSelected)='onDictItemSelect($event)')
 ng-template(#dictSimple='')
 
-#notePopup.ui.basic.popup.form
+//#notePopup.ui.basic.popup.form
   .ui.sub.header 注：
   .field
     textarea.note-textarea([(ngModel)]='noteRequestNote', spellcheck='false', #noteTextarea='')

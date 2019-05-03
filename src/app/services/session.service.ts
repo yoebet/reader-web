@@ -42,8 +42,8 @@ export class SessionService {
       }
     }
     return {
-      headers,
-      withCredentials: true
+      headers/*,
+      withCredentials: true*/
     };
   }
 

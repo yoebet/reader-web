@@ -23,7 +23,6 @@ import {UserWord} from '../models/user-word';
 import {DictService} from '../services/dict.service';
 import {DictZhService} from '../services/dict-zh.service';
 import {DictRequest, SelectedItem, UserWordChange} from '../content-types/dict-request';
-import {NoteRequest} from '../content-types/note-request';
 import {WordAnnosComponent} from './word-annos.component';
 import {ContentContext} from '../content-types/content-context';
 
@@ -55,7 +54,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
   @Input() annotation: Annotation;
   @Input() contentContext: ContentContext;
   @Output() dictRequest = new EventEmitter<DictRequest>();
-  @Output() noteRequest = new EventEmitter<NoteRequest>();
+  // @Output() noteRequest = new EventEmitter<NoteRequest>();
 
   lookupDictSimple = false;
 
@@ -313,7 +312,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
     }
   }
 
-  addANote(side: Side, triggerMethod = null) {
+  /*addANote(side: Side, triggerMethod = null) {
     let ann = AnnotationSet.addNoteAnnotation;
     let ar: AnnotateResult = this.getAnnotator(side, ann).annotate();
     if (!ar || !ar.wordEl) {
@@ -355,17 +354,17 @@ export class ParaContentComponent implements OnInit, OnChanges {
     nr.note = oriNote || '';
     nr.editNoteCallback = editNoteCallback;
     this.noteRequest.emit(nr);
-  }
+  }*/
 
   private doAnnotate(side: Side, triggerMethod = null) {
     if (this.annotation.nameEn === SpecialAnnotations.SelectMeaning.nameEn) {
       this.selectWordMeaning(side, triggerMethod);
       return;
     }
-    if (this.annotation.nameEn === SpecialAnnotations.AddANote.nameEn) {
+    /*if (this.annotation.nameEn === SpecialAnnotations.AddANote.nameEn) {
       this.addANote(side, triggerMethod);
       return;
-    }
+    }*/
     let ar: AnnotateResult = this.getAnnotator(side).annotate();
     if (!ar) {
       return;
@@ -398,11 +397,11 @@ export class ParaContentComponent implements OnInit, OnChanges {
       return;
     }
     let triggerMethod = 'Click';
-    if ($event.altKey) {
+    /*if ($event.altKey) {
       triggerMethod = 'Alt_' + triggerMethod;
       this.addANote(side, triggerMethod);
       return;
-    }
+    }*/
 
     let ctrl = $event.ctrlKey || $event.metaKey;
     if (ctrl) {

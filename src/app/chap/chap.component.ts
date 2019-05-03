@@ -21,7 +21,6 @@ import {AnnotationSet} from '../anno/annotation-set';
 import {AnnotatorHelper} from '../anno/annotator-helper';
 import {ContentContext} from '../content-types/content-context';
 import {DictRequest, SelectedItem, UserWordChange} from '../content-types/dict-request';
-import {NoteRequest} from '../content-types/note-request';
 import {Book} from '../models/book';
 import {Chap} from '../models/chap';
 import {Para} from '../models/para';
@@ -81,9 +80,9 @@ export class ChapComponent implements OnInit {
   simpleDictDrop: Drop;
   simpleDictComponentRef: ComponentRef<DictSimpleComponent>;
 
-  noteRequest: NoteRequest = null;
-  noteTether = null;
-  noteRequestNote = '';
+  // noteRequest: NoteRequest = null;
+  // noteTether = null;
+  // noteRequestNote = '';
 
 
   get currentUser(): User {
@@ -330,9 +329,9 @@ export class ChapComponent implements OnInit {
     if (this.dictRequest) {
       this.closeDictPopup();
     }
-    if (this.noteRequest) {
+    /*if (this.noteRequest) {
       this.closeNotePopup();
-    }
+    }*/
   }
 
   toggleSidebar(sidebar: SuiSidebar, which) {
@@ -578,7 +577,7 @@ export class ChapComponent implements OnInit {
     this.showDictSimplePopup($event.target, entry);
   }
 
-  private closeNotePopup() {
+  /*private closeNotePopup() {
     if (this.noteRequest) {
       if (this.noteTether) {
         this.noteTether.destroy();
@@ -589,9 +588,9 @@ export class ChapComponent implements OnInit {
       this.noteRequest = null;
     }
     this.noteRequestNote = '';
-  }
+  }*/
 
-  onNoteRequest(noteRequest) {
+  /*onNoteRequest(noteRequest) {
     if (this.noteRequest) {
       // cancel
       this.completeNoteEdit(null);
@@ -613,16 +612,16 @@ export class ChapComponent implements OnInit {
       ],
       classPrefix: UIConstants.tetherClassPrefixNoHyphen
     });
-  }
+  }*/
 
-  completeNoteEdit(note) {
+  /*completeNoteEdit(note) {
     if (!this.noteRequest) {
       return;
     }
     let nr = this.noteRequest;
     this.closeNotePopup();
     nr.editNoteCallback(note);
-  }
+  }*/
 
   paraTracker(index, para) {
     return para._id;
