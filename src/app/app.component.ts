@@ -1,43 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-
-import {SuiModalService} from 'ng2-semantic-ui';
-
-import {User} from './models/user';
-import {OpResult} from './models/op-result';
-import {AppService} from './services/app.service';
-import {SessionService} from './services/session.service';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  templateUrl: './app.component.html'
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
 
-  get currentUser(): User {
-    return this.sessionService.currentUser;
+  constructor() {
   }
 
-  constructor(private appService: AppService,
-              private sessionService: SessionService,
-              private router: Router,
-              public modalService: SuiModalService) {
-  }
-
-  ngOnInit() {
-    /*this.sessionService.checkLogin()
-      .subscribe(cu => {
-      });*/
-  }
-
-
-  logout() {
-    this.sessionService.logout()
-      .subscribe((opr: OpResult) => {
-        if (opr && opr.ok === 1) {
-          this.router.navigate(['/']);
-        }
-      });
-  }
 }

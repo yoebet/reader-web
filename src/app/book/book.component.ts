@@ -5,9 +5,9 @@ import {Location} from '@angular/common';
 import {SuiModalService} from 'ng2-semantic-ui';
 import {switchMap} from 'rxjs/operators';
 
-import {Chap} from '../models/chap';
 import {Book} from '../models/book';
 import {BookService} from '../services/book.service';
+import {SessionService} from '../services/session.service';
 import {BookInfoModal} from './book-info.component';
 
 @Component({
@@ -22,7 +22,8 @@ export class BookComponent implements OnInit {
   statusNames = Book.StatusNames;
   categoryNames = Book.CategoryNames;
 
-  constructor(private bookService: BookService,
+  constructor(private sessionService: SessionService,
+              private bookService: BookService,
               private route: ActivatedRoute,
               private router: Router,
               private location: Location,

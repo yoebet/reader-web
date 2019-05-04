@@ -8,8 +8,7 @@ import {OpResult} from '../models/op-result';
 
 @Component({
   selector: 'login-popup',
-  templateUrl: './login-popup.component.html',
-  styleUrls: ['./login-popup.component.css']
+  templateUrl: './login-popup.component.html'
 })
 export class LoginPopupComponent {
 
@@ -42,7 +41,7 @@ export class LoginPopupComponent {
 }
 
 export class LoginModal extends ComponentModalConfig<string> {
-  constructor(message: string) {
+  constructor(message: string = null) {
     super(LoginPopupComponent, message, false);
     this.size = ModalSize.Mini;
     this.mustScroll = false;

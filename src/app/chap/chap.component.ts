@@ -6,7 +6,7 @@ import {
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {PopStateEvent} from '@angular/common/src/location/location';
 
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 import * as Tether from 'tether';
@@ -80,10 +80,6 @@ export class ChapComponent implements OnInit {
   simpleDictDrop: Drop;
   simpleDictComponentRef: ComponentRef<DictSimpleComponent>;
 
-  // noteRequest: NoteRequest = null;
-  // noteTether = null;
-  // noteRequestNote = '';
-
 
   get currentUser(): User {
     return this.sessionService.currentUser;
@@ -133,9 +129,6 @@ export class ChapComponent implements OnInit {
             para.chap = chap;
           }
         }
-        if (chap.zhName == null) {
-          chap.zhName = '';
-        }
         this.chap = chap;
         if (!this.contentContext) {
           this.contentContext = new ContentContext();
@@ -156,7 +149,7 @@ export class ChapComponent implements OnInit {
   }
 
   private loginThenInit(chapId) {
-    this.modalService.open<string, string, string>(new LoginModal('请登录'))
+    this.modalService.open<string, string, string>(new LoginModal(/*'请登录'*/))
       .onDeny(d => {
 
       })
@@ -175,27 +168,27 @@ export class ChapComponent implements OnInit {
       this.route.queryParamMap.subscribe(params => {
         // console.log(params);
         let tempToken = params.get('tt');
-        if (!tempToken) {
-          this.sessionService.checkLogin()
-            .subscribe(cu => {
-              if (cu) {
+        if (tempToken) {
+          this.sessionService.loginByTempToken(tempToken)
+            .subscribe((opr: OpResult) => {
+              if (opr && opr.ok === 1) {
+                window.history.pushState({}, '', `chaps/${chapId}`);
                 this.initialLoadContent(chapId);
-                return;
+              } else {
+                let msg = opr.message || '登录失败';
+                alert(msg);
               }
-              this.loginThenInit(chapId);
             });
           return;
         }
 
-        this.sessionService.loginByTempToken(tempToken)
-          .subscribe((opr: OpResult) => {
-            if (opr && opr.ok === 1) {
-              window.history.pushState({}, '', `chaps/${chapId}`);
+        this.sessionService.checkLogin()
+          .subscribe(cu => {
+            if (cu) {
               this.initialLoadContent(chapId);
-            } else {
-              let msg = opr.message || '登录失败';
-              alert(msg);
+              return;
             }
+            this.loginThenInit(chapId);
           });
       });
     });
@@ -329,9 +322,6 @@ export class ChapComponent implements OnInit {
     if (this.dictRequest) {
       this.closeDictPopup();
     }
-    /*if (this.noteRequest) {
-      this.closeNotePopup();
-    }*/
   }
 
   toggleSidebar(sidebar: SuiSidebar, which) {
@@ -576,52 +566,6 @@ export class ChapComponent implements OnInit {
   showEntryPopup($event, entry) {
     this.showDictSimplePopup($event.target, entry);
   }
-
-  /*private closeNotePopup() {
-    if (this.noteRequest) {
-      if (this.noteTether) {
-        this.noteTether.destroy();
-        this.noteTether = null;
-      }
-      let el = this.noteRequest.wordElement;
-      this.removeTetherClass(el);
-      this.noteRequest = null;
-    }
-    this.noteRequestNote = '';
-  }*/
-
-  /*onNoteRequest(noteRequest) {
-    if (this.noteRequest) {
-      // cancel
-      this.completeNoteEdit(null);
-    }
-    this.noteRequest = noteRequest;
-    this.noteRequestNote = noteRequest.note;
-
-    let notePopup = document.getElementById('notePopup');
-    this.noteTether = new Tether({
-      element: notePopup,
-      target: this.noteRequest.wordElement,
-      attachment: 'top center',
-      constraints: [
-        {
-          to: 'window',
-          attachment: 'together',
-          pin: true
-        }
-      ],
-      classPrefix: UIConstants.tetherClassPrefixNoHyphen
-    });
-  }*/
-
-  /*completeNoteEdit(note) {
-    if (!this.noteRequest) {
-      return;
-    }
-    let nr = this.noteRequest;
-    this.closeNotePopup();
-    nr.editNoteCallback(note);
-  }*/
 
   paraTracker(index, para) {
     return para._id;

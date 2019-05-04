@@ -15,8 +15,7 @@ import {Para} from '../models/para';
 
 @Component({
   selector: 'dict-entry',
-  templateUrl: './dict-entry.component.html',
-  styleUrls: ['./dict-entry.component.css']
+  templateUrl: './dict-entry.component.html'
 })
 export class DictEntryComponent implements OnInit, OnChanges, AfterViewChecked {
   @Input() entry: DictEntry;

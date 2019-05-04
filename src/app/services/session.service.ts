@@ -111,7 +111,7 @@ export class SessionService {
   }
 
   handleError401(error: any): Observable<any> {
-    this.sessionEventEmitter.emit('requestLogin');
+    this.sessionEventEmitter.emit('RequestLogin');
     return EMPTY;
   }
 }

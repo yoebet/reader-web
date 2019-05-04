@@ -1,4 +1,5 @@
 .ui.container(*ngIf='book')
+  p &nbsp;
   .ui.content
     .ui.right.floated.sub.header
       button.ui.tiny.button((click)='showDetail()') 详情
@@ -38,3 +39,5 @@
       a([routerLink]="['/chaps', chap._id]")
         .pre-wrap {{chap.name}}
         .zhname.pre-wrap(*ngIf="showZh && chap.zhName") {{chap.zhName}}
+
+  p &nbsp;

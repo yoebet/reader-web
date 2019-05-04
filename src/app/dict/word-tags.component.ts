@@ -8,8 +8,7 @@ import {WordCategory} from '../models/word-category';
 
 @Component({
   selector: 'word-tags',
-  templateUrl: './word-tags.component.html',
-  styleUrls: ['./word-tags.component.css']
+  templateUrl: './word-tags.component.html'
 })
 export class WordTagsComponent implements OnInit {
   private _categories: any;

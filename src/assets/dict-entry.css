@@ -1,3 +1,9 @@
+.dict-entry {
+  max-height: 96vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 .ui.header.entry-header {
   margin-bottom: 0.4em;
 }
@@ -9,6 +15,7 @@
 
 .entry-word, .phonetics {
   display: inline;
+  vertical-align: text-bottom;
 }
 
 .phonetics {
@@ -47,11 +54,11 @@ span.pinyin {
 .ui.list.meaning-items {
   margin-top: 0;
   margin-left: 2em !important;
-  overflow: auto;
 }
 
 .ui.list.meaning-items.smi {
   max-height: 200px;
+  overflow: auto;
 }
 
 .ui.list.meaning-items .item sui-select-option {

@@ -9,8 +9,7 @@ import {DictZhService} from '../services/dict-zh.service';
 
 @Component({
   selector: 'dict-zh-entry',
-  templateUrl: './dict-zh-entry.component.html',
-  styleUrls: ['./dict-zh-entry.component.css']
+  templateUrl: './dict-zh-entry.component.html'
 })
 export class DictZhEntryComponent implements OnChanges {
   @Input() entry: DictZh;

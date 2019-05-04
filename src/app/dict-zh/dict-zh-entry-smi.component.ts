@@ -10,8 +10,7 @@ import {DictZhEntryComponent} from './dict-zh-entry.component';
 
 @Component({
   selector: 'dict-zh-entry-smi',
-  templateUrl: './dict-zh-entry-smi.component.html',
-  styleUrls: ['./dict-zh-entry-smi.component.css']
+  templateUrl: './dict-zh-entry-smi.component.html'
 })
 export class DictZhEntrySmiComponent extends DictZhEntryComponent implements OnInit, AfterViewChecked {
   @Input() initialSelectedItem: SelectedItem;

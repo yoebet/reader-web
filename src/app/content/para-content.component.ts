@@ -36,8 +36,7 @@ const SideTrans: Side = 'trans';
 
 @Component({
   selector: 'para-content',
-  templateUrl: './para-content.component.html',
-  styleUrls: ['./para-content.component.css']
+  templateUrl: './para-content.component.html'
 })
 export class ParaContentComponent implements OnInit, OnChanges {
   @ViewChild('contentText', {read: ViewContainerRef}) contentText: ViewContainerRef;
@@ -54,7 +53,6 @@ export class ParaContentComponent implements OnInit, OnChanges {
   @Input() annotation: Annotation;
   @Input() contentContext: ContentContext;
   @Output() dictRequest = new EventEmitter<DictRequest>();
-  // @Output() noteRequest = new EventEmitter<NoteRequest>();
 
   lookupDictSimple = false;
 
@@ -481,7 +479,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
 
   private setupSentenceHover() {
 
-    if (this.sentenceHoverSetup || !this.highlightSentence || !this.gotFocus) {
+    if (this.sentenceHoverSetup || !this.highlightSentence) {
       return;
     }
 
@@ -490,7 +488,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
     let component = this;
 
     let sentenceMouseover = function (event) {
-      if (!component.highlightSentence || !component.gotFocus) {
+      if (!component.highlightSentence) {
         return;
       }
       let el = this;
@@ -859,8 +857,6 @@ export class ParaContentComponent implements OnInit, OnChanges {
 
     if (textChanged) {
       this.clearHovers();
-    }
-    if (this.gotFocus) {
       this.setupHovers();
     }
   }

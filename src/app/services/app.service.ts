@@ -16,9 +16,9 @@ export class AppService {
 
     sessionService.sessionEventEmitter
       .subscribe(event => {
-        if (event === 'requestLogin') {
+        if (event === 'RequestLogin') {
           if (loginModal == null) {
-            loginModal = this.modalService.open<string, string, string>(new LoginModal('请重新登录'))
+            loginModal = this.modalService.open<string, string, string>(new LoginModal(/*'请重新登录'*/))
               .onDeny(d => loginModal = null)
               .onApprove(r => loginModal = null);
           }

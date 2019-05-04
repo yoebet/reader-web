@@ -12,8 +12,7 @@ import {WordCategoryService} from '../services/word-category.service';
 
 @Component({
   selector: 'user-word',
-  templateUrl: './user-word.component.html',
-  styleUrls: ['./user-word.component.css']
+  templateUrl: './user-word.component.html'
 })
 export class UserWordComponent implements OnInit {
   private _word: string;

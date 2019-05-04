@@ -1,4 +1,5 @@
 .ui.container
+  p &nbsp;
   .ui.header
     .ui.right.floated.header
       sui-checkbox([(ngModel)]='showZh') 中文
@@ -33,3 +34,5 @@
           a((click)='showDetail(book)', href='javascript:') 详情
       tr(*ngIf='!books||books.length===0')
         td(colspan='6') No Results.
+
+  p &nbsp;

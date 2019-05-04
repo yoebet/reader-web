@@ -33,7 +33,7 @@ sui-sidebar-container.reader.fit-bottom-menu
         //.item(*ngIf='currentUser')
           | {{currentUser.nickName}}
 
-    .ui.container.chap-content
+    .ui.chap-content
       .ui.list.items(*ngIf='chap')
         ng-template(ngFor='', let-para='', [ngForOf]="chap.paras", let-index="index", [ngForTrackBy]="paraTracker")
           .item.paragraph
@@ -46,12 +46,12 @@ sui-sidebar-container.reader.fit-bottom-menu
             [gotFocus]='para===selectedPara',
             [activeAlways]='true',
             [lookupDict]='lookupDict',
-            [highlightSentence]='para===selectedPara && highlightSentence',
+            [highlightSentence]='highlightSentence',
             [markNewWords]='markNewWords',
             [wordsHover]='wordsHover',
             [annotation]='(para===selectedPara)? currentAnnotation : null',
             [ngClass]='{"selected": para===selectedPara, "left-right": leftRight, "up-down": !leftRight}',
-            (click)='selectPara(para)',
+            (mouseover)='selectPara(para)',
             (dictRequest)="onDictRequest($event)")
 
       .ui.list.prev-next-nav(*ngIf='book&&allowSwitchChap')
@@ -81,18 +81,6 @@ sui-sidebar-container.reader.fit-bottom-menu
   (dictItemSelected)='onDictItemSelect($event)')
 ng-template(#dictSimple='')
 
-//#notePopup.ui.basic.popup.form
-  .ui.sub.header 注：
-  .field
-    textarea.note-textarea([(ngModel)]='noteRequestNote', spellcheck='false', #noteTextarea='')
-  .field
-    button.ui.mini.compact.button((click)='completeNoteEdit("")')
-      i.remove.icon
-      | 删除
-    .ui.right.floated.mini.compact.buttons
-      button.ui.button((click)='completeNoteEdit(null)') 取消
-      .or
-      button.ui.primary.button((click)='completeNoteEdit(noteTextarea.value)') 保存
 
 .ui.small.bottom.fixed.menu
   .item((click)='toggleSidebar(sidebar,"vocabulary")')

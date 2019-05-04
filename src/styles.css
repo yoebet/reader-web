@@ -112,8 +112,6 @@ sui-multi-select i.list.icon {
   overflow-y: auto;
 }
 
-/*
-.right-floated {
-  float: right;
+.ui.small.divider {
+  margin: 0.5rem 0;
 }
-*/
