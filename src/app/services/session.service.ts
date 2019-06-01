@@ -63,6 +63,7 @@ export class SessionService {
           if (opr && opr.ok === 1) {
             let ui = opr as any;
             this.updateCurrentUser(ui);
+            this.sessionEventEmitter.emit('Login');
           }
           return opr;
         }));

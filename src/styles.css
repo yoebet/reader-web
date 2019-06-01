@@ -115,3 +115,13 @@ sui-multi-select i.list.icon {
 .ui.small.divider {
   margin: 0.5rem 0;
 }
+
+.comments .footer {
+  font-size: 0.9em !important;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.comments .title {
+  font-weight: bold;
+  margin: .5em 0;
+}

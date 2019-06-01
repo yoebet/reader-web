@@ -17,4 +17,6 @@ export class Chap extends Model {
   paras: Para[];
 
   book: Book;
+
+  paraCommentsCountLoaded = false;
 }

@@ -36,11 +36,11 @@
 
 /* Colors */
 
-.paragraph > .selected.para-content {
+.paragraph .selected.para-content {
   /*border-color: rgba(9, 187, 7, 0.5);*/
 }
 
-.paragraph > .selected.para-no {
+.paragraph .selected.para-no {
   color: rgba(9, 187, 7, 1);
 }
 

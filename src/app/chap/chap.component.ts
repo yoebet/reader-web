@@ -15,12 +15,12 @@ import * as Drop from 'tether-drop';
 import {SuiSidebar} from 'ng2-semantic-ui/dist';
 import {SuiModalService} from 'ng2-semantic-ui';
 
-
 import {UIConstants} from '../config';
 import {AnnotationSet} from '../anno/annotation-set';
 import {AnnotatorHelper} from '../anno/annotator-helper';
 import {ContentContext} from '../content-types/content-context';
 import {DictRequest, SelectedItem, UserWordChange} from '../content-types/dict-request';
+import {User} from '../models/user';
 import {Book} from '../models/book';
 import {Chap} from '../models/chap';
 import {Para} from '../models/para';
@@ -28,6 +28,7 @@ import {OpResult} from '../models/op-result';
 import {UserWord} from '../models/user-word';
 import {DictEntry} from '../models/dict-entry';
 import {Annotation} from '../models/annotation';
+import {SessionService} from '../services/session.service';
 import {BookService} from '../services/book.service';
 import {ChapService} from '../services/chap.service';
 import {ParaService} from '../services/para.service';
@@ -38,8 +39,7 @@ import {AnnotationsService} from '../services/annotations.service';
 import {UserVocabularyService} from '../services/user-vocabulary.service';
 import {DictSimpleComponent} from '../dict/dict-simple.component';
 import {LoginModal} from '../account/login-popup.component';
-import {SessionService} from '../services/session.service';
-import {User} from '../models/user';
+import {ParaCommentsModal} from '../content/para-comments.component';
 
 @Component({
   selector: 'chap-detail',
@@ -59,6 +59,7 @@ export class ChapComponent implements OnInit {
   markNewWords = true;
   lookupDict = false;
   loadZhPhrases = false;
+  showCommentsCount = true;
 
   allowSwitchChap = true;
   hideWindowUrl = false;
@@ -135,6 +136,7 @@ export class ChapComponent implements OnInit {
         }
         this.contentContext.combinedWordsMapObs = this.vocabularyService.getCombinedWordsMap();
         this.loadBook(chap.bookId);
+        this.checkCommentsCount();
       });
 
     this.userWordService.loadAll().subscribe();
@@ -253,6 +255,7 @@ export class ChapComponent implements OnInit {
           window.history.pushState({}, '', `chaps/${chap._id}`);
         }
         this.setupNavigation();
+        this.checkCommentsCount();
       });
   }
 
@@ -424,7 +427,7 @@ export class ChapComponent implements OnInit {
         attachment: 'top center',
         constraints: [
           {
-            to: 'window',
+            to: 'scrollParent',
             attachment: 'together',
             pin: true
           }
@@ -565,6 +568,40 @@ export class ChapComponent implements OnInit {
 
   showEntryPopup($event, entry) {
     this.showDictSimplePopup($event.target, entry);
+  }
+
+
+  private checkCommentsCount() {
+    if (!this.showCommentsCount) {
+      return;
+    }
+    let chap = this.chap;
+    if (chap && !chap.paraCommentsCountLoaded) {
+      this.chapService.loadCommentsCount(chap)
+        .subscribe(total => {
+          console.log(`total comments: ${total}`);
+        });
+    }
+  }
+
+  private doShowComments(para) {
+    this.selectPara(para);
+    this.modalService
+      .open(new ParaCommentsModal(para));
+  }
+
+  showComments(para) {
+    if (para.commentsCount === 0) {
+      return;
+    }
+    if (para.comments) {
+      this.doShowComments(para);
+    } else {
+      this.paraService.loadComments(para)
+        .subscribe(cs => {
+          this.doShowComments(para);
+        });
+    }
   }
 
   paraTracker(index, para) {

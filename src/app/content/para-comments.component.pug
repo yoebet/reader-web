@@ -1,0 +1,13 @@
+.ui.header.sentences-align-header 评论
+.ui.content
+  .ui.divided.list.comments(*ngIf='comments')
+    .ui.item(*ngFor='let comment of comments')
+      //quoted-text([paraQuote]='{paraId: comment.paraId, sentenceId: comment.sentenceId}', [textTrans] = 'false', [showTitle]='false')
+      .title(*ngIf='comment.title') {{comment.title}}
+      .ui.content {{comment.content}}
+      .ui.right.floated.horizontal.list.footer
+        .item {{comment.userNickName}}
+        .item(*ngIf='comment.userName') {{comment | createdDateString:'minute'}}
+
+.actions
+  button.ui.tiny.button((click)="close()") 关闭
