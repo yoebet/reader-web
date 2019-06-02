@@ -8,6 +8,7 @@ import {switchMap} from 'rxjs/operators';
 import {Book} from '../models/book';
 import {BookService} from '../services/book.service';
 import {SessionService} from '../services/session.service';
+import {AnnotationsService} from '../services/annotations.service';
 import {BookInfoModal} from './book-info.component';
 
 @Component({
@@ -24,6 +25,7 @@ export class BookComponent implements OnInit {
 
   constructor(private sessionService: SessionService,
               private bookService: BookService,
+              private annoService: AnnotationsService,
               private route: ActivatedRoute,
               private router: Router,
               private location: Location,
@@ -41,6 +43,12 @@ export class BookComponent implements OnInit {
       if (!this.book.chaps) {
         this.book.chaps = [];
       }
+      let afId = this.book.annotationFamilyId;
+      if (!afId) {
+        return;
+      }
+      this.annoService.getAnnotationSet(afId)
+        .subscribe();
     });
   }
 

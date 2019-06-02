@@ -1,5 +1,6 @@
 import {DataAttrNames, DataAttrValues, UIConstants} from '../config';
 import {ZhPhrases} from './zh-phrases';
+import {ElAnnos} from './el-annos';
 
 export class AnnotatorHelper {
 
@@ -366,4 +367,66 @@ export class AnnotatorHelper {
 
     return true;
   }
+
+  static parseAnnotations(wordEl, annotationSet): ElAnnos {
+    let annos = new ElAnnos();
+    if (!wordEl) {
+      return annos;
+    }
+    annos.word = wordEl.textContent;
+
+    let dataset = wordEl.dataset;
+    for (let name in dataset) {
+      let value = dataset[name];
+      if (name === DataAttrNames.mean) {
+        let mean = value;
+        let forWord = wordEl.dataset[DataAttrNames.word];
+        if (!forWord) {
+          forWord = annos.word;
+        }
+        let pos = wordEl.dataset[DataAttrNames.pos] || '';
+        let text = mean;
+        if (pos) {
+          text = `${pos} ${mean}`;
+        }
+        annos.meaning = {pos, mean, word: forWord, text};
+        continue;
+      }
+      if (name === DataAttrNames.note) {
+        annos.note = value;
+        continue;
+      }
+      let text = annotationSet.annotationOutput(name, value);
+      if (!text) {
+        continue;
+      }
+      let item = {dataName: name, dataValue: value, text};
+      annos.items.push(item);
+    }
+
+    return annos;
+  }
+
+  static anyAnno(wordEl, annotationSet): boolean {
+    if (!wordEl) {
+      return false;
+    }
+    let dataset = wordEl.dataset;
+    for (let name in dataset) {
+      let value = dataset[name];
+      if (name === DataAttrNames.mean) {
+        return true;
+      }
+      if (name === DataAttrNames.note) {
+        return true;
+      }
+      let text = annotationSet.annotationOutput(name, value);
+      if (text) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
 }

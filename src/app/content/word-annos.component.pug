@@ -1,12 +1,12 @@
 .ui.small.header {{head}}
-.ui.list
-  .item(*ngFor='let item of items')
+.ui.list(*ngIf='annos')
+  .item(*ngFor='let item of annos.items')
     span.yo([ngClass]='item.dataName') {{item.text}}
-  .item(*ngIf='meaning')
+  .item(*ngIf='annos.meaning')
     .item-head 释义：
     .item-text
-      ng-template([ngIf]='word!==meaning.word') ({{meaning.word}}) &nbsp;
-      | {{meaning.text}}
-  .item(*ngIf='note')
+      ng-template([ngIf]='annos.word!==annos.meaning.word') ({{annos.meaning.word}}) &nbsp;
+      | {{annos.meaning.text}}
+  .item(*ngIf='annos.note')
     .item-head 注：
-    .item-text.pre-wrap {{note}}
+    .item-text.pre-wrap {{annos.note}}
