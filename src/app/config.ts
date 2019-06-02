@@ -26,12 +26,12 @@ const DataAttrNames = {
 };
 
 const ValuePhras = ['phra1', 'phra2', 'phra3'];
-const ValueGroups = ['group1', 'group2', 'group3'];
 
 const DataAttrValues = {
   phraPattern: /^phra\d$/,
+  groupPattern: /^group\d$/,
   assocPhra1: ValuePhras[0],
-  assocGroups: ValuePhras.concat(['trunk', 'antec']).concat(ValueGroups),
+  assocGroups: ValuePhras.concat(['trunk', 'antec', 'group1', 'group2', 'group3']),
   uwfBeyond: '0'
 };
 

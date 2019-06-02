@@ -64,47 +64,20 @@ export class AnnotationSet {
 
     }
 
-    // this.printStyles();
   }
 
-
-  private printStyles() {
-
-    let styles = [];
-
-    for (let group of this.groups) {
-      let {name, nameEn, cssClass, tagName, dataName} = group;
-      styles.push(`\n/* *** ${name} ${nameEn} *** */\n`);
-      let selector = '';// '.' + cssClass;
-      // let before = selector + ':before';
-      // let after = selector + ':after';
-      if (tagName) {
-        tagName = tagName.toLowerCase();
-        selector = tagName + ', ' + selector;
-        // before = tagName + ':before' + ', ' + before;
-        // after = tagName + ':after' + ', ' + after;
-      }
-      styles.push(`${selector} {\n  border-bottom: 1px dashed grey;\n}\n`);
-      // styles.push(`${before} {\n}\n`);
-      // styles.push(`${after} {\n}\n`);
-      // for (let annotation: Annotation of group.annotations) {
-      //   let {name, nameEn, dataValue} = annotation;
-      //   styles.push(`/* ${nameEn} ${nameEn} */`);
-      // }
-    }
-    console.log(styles.join('\n'));
-  }
-
-
-  findAnnotation(dataName: string, dataValue: string): Annotation {
-    let annKey = `${dataName}.${dataValue}`;
-    return this.annotationsMap.get(annKey);
-  }
 
   annotationOutput(dataName: string, dataValue: string) {
-    // if (dataName === DataAttrNames.assoc && DataAttrValues.phraPattern.test(dataValue)) {
-    //   return '词组';
-    // }
+    if (dataName === DataAttrNames.assoc) {
+      if (DataAttrValues.phraPattern.test(dataValue)) {
+        // return '词组';
+        return null;
+      }
+      if (DataAttrValues.groupPattern.test(dataValue)) {
+        // return '关联';
+        return null;
+      }
+    }
     let annKey = `${dataName}.${dataValue}`;
     let ann = this.annotationsMap.get(annKey);
     if (!ann) {
@@ -127,7 +100,9 @@ export class HighlightGroups {
   private static groupSelectors: string[] = DataAttrValues.assocGroups
     .map(group => `[data-${DataAttrNames.assoc}=${group}]`);
 
-  static HighlightSelectors = HighlightGroups.groupSelectors.join(', ');
+  // static HighlightSelectors = HighlightGroups.groupSelectors.join(', ');
+
+  static HighlightSelectors = `[data-${DataAttrNames.assoc}]`;
 
   static matchGroup(element): string {
     for (let selector of HighlightGroups.groupSelectors) {

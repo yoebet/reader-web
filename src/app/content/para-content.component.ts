@@ -580,7 +580,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
 
   private setupAssociationHover() {
 
-    if (this.associationsHoverSetup || !this.gotFocus) {
+    if (this.associationsHoverSetup || !this.active) {
       return;
     }
 
@@ -616,19 +616,13 @@ export class ParaContentComponent implements OnInit, OnChanges {
       this.wordAnnosComponentRef = this.wordAnnos.createComponent(factory);
     }
     let wacr = this.wordAnnosComponentRef;
-    wacr.instance.onTagRemoved = this.destroyAnnotatedWordsPopup.bind(this);
 
-    let side = this.getTheSide(textEl);
-    let notifyChange = () => {
-      this.notifyChange(side);
-    };
     let component = this;
 
     let content = function () {
       wacr.instance.paraTextEl = textEl;
       wacr.instance.annotationSet = component.annotationSet;
       wacr.instance.enabled = component.wordsHover;
-      wacr.instance.notifyChange = notifyChange;
       wacr.instance.wordEl = wordEl;
       return wacr.location.nativeElement;
     };

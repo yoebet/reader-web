@@ -6,7 +6,7 @@
   .field
     input(type="text", #name="", placeholder="账号")
   .field
-    input(type="password", #pass="", placeholder="密码")
+    input(type="password", #pass="", placeholder="密码", (keyup)='onPassKeyup(name.value, pass.value, $event)')
 
 .actions
   .ui.tiny.button((click)='cancel()') 取消

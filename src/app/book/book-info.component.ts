@@ -36,7 +36,7 @@ export class BookInfoModal extends ComponentModalConfig<Book> {
   constructor(book: Book) {
     super(BookInfoComponent, book, false);
     this.size = ModalSize.Tiny;
-    // this.isFullScreen = true;
+    this.isClosable = true;
     this.mustScroll = false;
     // this.isBasic = true;
   }

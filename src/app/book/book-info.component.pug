@@ -33,9 +33,6 @@
     tr
       td 简介
       td {{book.introduction}}
-    tr
-      td 详情
-      td {{book.description}}
     tr(*ngIf='!book.isPrivate')
       td 定价
       td
@@ -45,9 +42,6 @@
     tr
       td 标签
       td {{book.tags}}
-    tr(*ngIf='!book.isPrivate')
-      td 推荐语
-      td {{book.slogan}}
     tr
       td 主编辑
       td {{book.chiefEditorName}}

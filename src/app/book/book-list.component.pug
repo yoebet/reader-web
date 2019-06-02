@@ -11,9 +11,6 @@
         th
         th 代号
         th 书名
-        th 作者
-        th 类别
-        th 状态
         th
     tbody
       tr(*ngFor='let book of books; trackBy: bookTracker')
@@ -25,14 +22,9 @@
           a([routerLink]="['/books', book._id]")
             .enname {{book.name}}
             .zhname(*ngIf='showZh && book.zhName') {{book.zhName}}
-        td
-          .enname {{book.author}}
-          .zhname(*ngIf='showZh && book.zhAuthor') {{book.zhAuthor}}
-        td {{categoryNames[book.category]}}
-        td([ngClass]='{"status-r": book.status==="R"}') {{statusNames[book.status]}}
         td.right.aligned
           a((click)='showDetail(book)', href='javascript:') 详情
       tr(*ngIf='!books||books.length===0')
-        td(colspan='6') No Results.
+        td(colspan='4') No Results.
 
   p &nbsp;

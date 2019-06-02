@@ -1,8 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 
 import {AnnotationSet} from '../anno/annotation-set';
-import {UIConstants, DataAttrNames} from '../config';
-import {AnnotatorHelper} from '../anno/annotator-helper';
+import {DataAttrNames} from '../config';
 
 @Component({
   selector: 'word-annos',
@@ -14,8 +13,6 @@ export class WordAnnosComponent implements OnInit {
   @Input() paraTextEl: HTMLElement;
   @Input() enabled: boolean;
   @Input() annotationSet: AnnotationSet;
-  @Input() onTagRemoved: (el: HTMLElement) => void;
-  @Input() notifyChange: () => void;
   word: string;
   head: string;
   items: any[];
@@ -79,70 +76,10 @@ export class WordAnnosComponent implements OnInit {
       }
       let item = {dataName: name, dataValue: value, text};
       this.items.push(item);
-
-      /*if (name === DataAttrNames.assoc/!* && DataAttrValues.phraPattern.test(value)*!/) {
-        let group = value;
-
-        let stEl = this.findSentence(this.wordEl);
-        if (!stEl) {
-          stEl = this.paraTextEl;
-        }
-        let groupSelector = `[data-${DataAttrNames.assoc}=${group}]`;
-        let groupEls = stEl.querySelectorAll(groupSelector);
-        let els = Array.from(groupEls);
-        item.phrase = els.map((el: Element) => el.textContent).join(' ');
-      }*/
     }
 
     if (this.head.length > 20) {
       this.head = this.head.substring(0, 20) + '...';
-    }
-  }
-
-  private findSentence(node): any {
-    do {
-      if (node instanceof Element) {
-        let el = node as Element;
-        if (el === this.paraTextEl) {
-          return null;
-        }
-        if (el.matches(UIConstants.sentenceTagName)) {
-          return el;
-        }
-      }
-      node = node.parentNode;
-    } while (node);
-    return null;
-  }
-
-  dropAnno(item) {
-    let element = this._wordEl;
-    let dataset = element.dataset;
-    if (item === 'meaning') {
-      delete dataset[DataAttrNames.pos];
-      delete dataset[DataAttrNames.word];
-      delete dataset[DataAttrNames.mean];
-      this.meaning = null;
-    } else if (item === 'note') {
-      delete dataset[DataAttrNames.note];
-      this.note = null;
-    } else {
-      let dataName = item.dataName;
-      if (!dataName) {
-        return;
-      }
-      delete dataset[dataName];
-      element.classList.remove(dataName);
-      this.items = this.items.filter(it => it !== item);
-    }
-
-    this.notifyChange();
-
-    if (!this.note && !this.meaning && (!this.items || this.items.length == 0)) {
-      let {removed} = AnnotatorHelper.removeDropTagIfDummy(element);
-      if (removed) {
-        this.onTagRemoved(element);
-      }
     }
   }
 
