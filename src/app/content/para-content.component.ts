@@ -108,6 +108,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
 
     if (this.activeAlways) {
       this.setupAssociationHover();
+      //TODO: if (!this.annotationSet)
       this.setupAnnotationsPopup();
     }
   }
@@ -608,6 +609,13 @@ export class ParaContentComponent implements OnInit, OnChanges {
   private setupPopup(wordEl, textEl) {
     if (this.wordsPopupMap.has(wordEl)) {
       return;
+    }
+
+    if (this.annotationSet) {
+      let anyAnno = AnnotatorHelper.anyAnno(wordEl, this.annotationSet);
+      if (!anyAnno) {
+        return;
+      }
     }
 
     if (!this.wordAnnosComponentRef) {

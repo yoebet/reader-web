@@ -56,14 +56,18 @@ export class SessionService {
     return this.doLogin({name, pass});
   }
 
+  onLoginSuccess(ui) {
+    this.updateCurrentUser(ui);
+    this.sessionEventEmitter.emit('Login');
+  }
+
   private doLogin(form): Observable<OpResult> {
     return this.http.post(this.loginUrl, form, this.getHttpOptions())
       .pipe(
         map((opr: OpResult) => {
           if (opr && opr.ok === 1) {
             let ui = opr as any;
-            this.updateCurrentUser(ui);
-            this.sessionEventEmitter.emit('Login');
+            this.onLoginSuccess(ui);
           }
           return opr;
         }));

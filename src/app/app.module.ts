@@ -14,6 +14,7 @@ import {ParaService} from './services/para.service';
 import {DictService} from './services/dict.service';
 import {DictZhService} from './services/dict-zh.service';
 import {SessionService} from './services/session.service';
+import {WxAuthService} from './services/wx-auth.service';
 import {UserBookService} from './services/user-book.service';
 import {UserWordService} from './services/user-word.service';
 import {WordCategoryService} from './services/word-category.service';
@@ -85,6 +86,7 @@ import {LoginPopupComponent} from './account/login-popup.component';
     DictService,
     DictZhService,
     SessionService,
+    WxAuthService,
     UserBookService,
     UserWordService,
     WordCategoryService,

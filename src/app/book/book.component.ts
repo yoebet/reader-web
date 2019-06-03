@@ -3,11 +3,14 @@ import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Location} from '@angular/common';
 
 import {SuiModalService} from 'ng2-semantic-ui';
-import {switchMap} from 'rxjs/operators';
+
+import {Observable} from 'rxjs/index';
+import {map} from 'rxjs/operators';
 
 import {Book} from '../models/book';
 import {BookService} from '../services/book.service';
 import {SessionService} from '../services/session.service';
+import {WxAuthService} from '../services/wx-auth.service';
 import {AnnotationsService} from '../services/annotations.service';
 import {BookInfoModal} from './book-info.component';
 
@@ -24,6 +27,7 @@ export class BookComponent implements OnInit {
   categoryNames = Book.CategoryNames;
 
   constructor(private sessionService: SessionService,
+              private wxAuthService: WxAuthService,
               private bookService: BookService,
               private annoService: AnnotationsService,
               private route: ActivatedRoute,
@@ -32,10 +36,41 @@ export class BookComponent implements OnInit {
               public modalService: SuiModalService) {
   }
 
+  private fetchTheBookId(): Observable<string> {
+    return this.route.paramMap.pipe(
+      map((params: ParamMap) => {
+          return params.get('id');
+        }
+      ));
+  }
+
   ngOnInit(): void {
-    this.route.paramMap.pipe(switchMap((params: ParamMap) =>
-      this.bookService.getDetail(params.get('id'))
-    )).subscribe(book => {
+    this.fetchTheBookId()
+      .subscribe(bookId => {
+
+        this.route.queryParamMap.subscribe(params => {
+          console.log(params);
+          // let state = params.get('state');
+          let code = params.get('code');
+          if (code) {
+            window.history.pushState({}, '', `books/${bookId}`);
+            // this.wxAuthService.requestAccessToken(code)
+            this.wxAuthService.requestAccessTokenAndLogin(code)
+              .subscribe(result => {
+                console.log(result);
+                if (result.ok === 0) {
+                  // alert(result.message || '微信登录失败');
+                  return;
+                }
+              });
+          }
+        });
+        this.loadBook(bookId);
+      });
+  }
+
+  private loadBook(bookId) {
+    this.bookService.getDetail(bookId).subscribe(book => {
       if (!book) {
         return;
       }

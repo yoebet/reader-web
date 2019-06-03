@@ -162,11 +162,6 @@ export class ChapComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchTheChapId().subscribe(chapId => {
-      let cu = this.sessionService.currentUser;
-      if (cu) {
-        this.initialLoadContent(chapId);
-        return;
-      }
       this.route.queryParamMap.subscribe(params => {
         // console.log(params);
         let tempToken = params.get('tt');
@@ -181,6 +176,12 @@ export class ChapComponent implements OnInit {
                 alert(msg);
               }
             });
+          return;
+        }
+
+        let cu = this.sessionService.currentUser;
+        if (cu) {
+          this.initialLoadContent(chapId);
           return;
         }
 
