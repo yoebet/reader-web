@@ -2,38 +2,60 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 
 import {SuiModalService} from 'ng2-semantic-ui';
 
-import {BookImagesBase, BookImageNotSet} from '../config';
+import {StaticResource} from '../config';
 import {Book} from '../models/book';
 import {BookService} from '../services/book.service';
 import {BookInfoModal} from './book-info.component';
+import {AccountSupportComponent} from '../account/account-support.component';
+import {WxAuthService} from '../services/wx-auth.service';
+import {SessionService} from '../services/session.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'book-list',
   templateUrl: './book-list.component.html',
   styleUrls: ['./book-list.component.css']
 })
-export class BookListComponent implements OnInit {
+export class BookListComponent extends AccountSupportComponent implements OnInit {
   @ViewChild('newBookCode') newBookCodeEl: ElementRef;
   @ViewChild('newBookName') newBookNameEl: ElementRef;
   books: Book[] = [];
   showZh = true;
 
-  statusNames = Book.StatusNames;
-  categoryNames = Book.CategoryNames;
+  // statusNames = Book.StatusNames;
+  // categoryNames = Book.CategoryNames;
 
-  bookImagesBase = BookImagesBase;
-  bookImageNotSet = BookImageNotSet;
+  bookImagesBase = StaticResource.BookImagesBase;
+  bookImageNotSet = StaticResource.BookImageNotSet;
 
-  constructor(private bookService: BookService,
-              private modalService: SuiModalService) {
+  constructor(protected sessionService: SessionService,
+              protected wxAuthService: WxAuthService,
+              protected bookService: BookService,
+              protected modalService: SuiModalService,
+              protected route: ActivatedRoute) {
+    super(sessionService, wxAuthService, modalService, route);
+    this.requireLogin = false;
   }
 
   ngOnInit(): void {
-    this.bookService
-      .list()
-      .subscribe(books => this.books = books);
+    this.checkLoginAndLoad();
   }
 
+  protected buildCurrentUrl(): string {
+    return `books`;
+  }
+
+  protected loadContent() {
+    this.bookService.list()
+      .subscribe(books => {
+        this.books = books;
+        this.contentLoaded = true;
+      });
+  }
+
+  protected onLoginCancel() {
+    this.loadContent();
+  }
 
   showDetail(book: Book) {
     this.modalService.open(new BookInfoModal(book));

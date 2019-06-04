@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 
-import {combineLatest as observableCombineLatest, of as observableOf, Observable, EMPTY} from 'rxjs';
+import {combineLatest, of as observableOf, Observable, EMPTY} from 'rxjs';
 import {map, share, catchError} from 'rxjs/operators';
 
 import {groupBy} from 'lodash';
@@ -129,7 +129,7 @@ export class UserVocabularyService {
       return observableOf(this.combinedWordsMap);
     }
 
-    return observableCombineLatest(
+    return combineLatest(
       this.getBaseVocabularyMap(),
       this.userWordService.getUserWordsMap(),
       this.dictService.loadBaseForms()
@@ -152,7 +152,7 @@ export class UserVocabularyService {
 
   statistic(): Observable<Object> {
     return Observable.create(observer => {
-      observableCombineLatest(
+      combineLatest(
         this.getBaseVocabularyMap(),
         this.userWordService.list())
         .subscribe(([baseVocabularyMap, userWords]) => {

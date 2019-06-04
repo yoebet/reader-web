@@ -3,13 +3,13 @@ import {Model} from './model';
 export class User extends Model {
   name: string;
   nickName: string;
-  pass: string;
   role: string;
   status: string;
 
   accessToken?: string;
+  avatarSetting?: any; // {type: 'img/char', imgUrl: 'xxx', ...}
 
-  static Roles = ['', 'A', 'E'];
+  // static Roles = ['', 'A', 'E'];
 }
 
 export class UserIdName {

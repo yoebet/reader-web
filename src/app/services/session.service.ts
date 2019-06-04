@@ -89,10 +89,7 @@ export class SessionService {
 
   private updateCurrentUser(ui) {
     let cu = new User();
-    cu.name = ui.name;
-    cu.nickName = ui.nickName;
-    cu.role = ui.role;
-    cu.accessToken = ui.accessToken;
+    Object.assign(cu, ui);
     if (cu.accessToken) {
       let storage = window.localStorage;
       storage.setItem(HeaderNames.UserName, ui.name);

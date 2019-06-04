@@ -125,3 +125,10 @@ sui-multi-select i.list.icon {
   font-weight: bold;
   margin: .5em 0;
 }
+
+.ui.menu .item img.avatar {
+  margin-top: -0.25em;
+  margin-bottom: -0.25em;
+  width: 1.5em;
+  height: 1.5em;
+}

@@ -1,5 +1,11 @@
 .ui.container
-  p &nbsp;
+  .ui.secondary.small.menu
+    a.item(*ngIf='!currentUser', (click)='openLoginDialog()') （未登录）
+    .item(*ngIf='currentUser')
+      img.ui.avatar.image(*ngIf='currentUser.avatarSetting&&currentUser.avatarSetting.imgUrl', [src]='avatarsBase+"/"+currentUser.avatarSetting.imgUrl')
+      | {{currentUser.nickName}} &nbsp;&nbsp;
+    a.item(*ngIf='currentUser', (click)='openLoginDialog()') 重新登录
+
   .ui.header
     .ui.right.floated.header
       sui-checkbox([(ngModel)]='showZh') 中文

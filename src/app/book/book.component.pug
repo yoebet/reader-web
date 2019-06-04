@@ -1,6 +1,12 @@
-.ui.container(*ngIf='book')
-  p &nbsp;
-  .ui.content
+.ui.container
+  .ui.secondary.small.menu
+    a.item(*ngIf='!currentUser', (click)='openLoginDialog()') （未登录）
+    .item(*ngIf='currentUser')
+      img.ui.avatar.image(*ngIf='currentUser.avatarSetting&&currentUser.avatarSetting.imgUrl', [src]='avatarsBase+"/"+currentUser.avatarSetting.imgUrl')
+      | {{currentUser.nickName}} &nbsp;&nbsp;
+    a.item(*ngIf='currentUser', (click)='openLoginDialog()') 重新登录
+
+  .ui.content(*ngIf='book')
     .ui.right.floated.sub.header
       button.ui.tiny.button((click)='showDetail()') 详情
     .name-author

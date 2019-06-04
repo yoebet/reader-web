@@ -51,7 +51,16 @@ const staticBase = environment.staticBase;
 const ImagesBase = `${staticBase}/images`;
 const BookImagesBase = `${ImagesBase}/book`;
 const BookImageNotSet = `${BookImagesBase}/missing.png`;
+const UserAvatarsBase = `${staticBase}/avatars`;
+const AppPackagesBase = `${staticBase}/packages`;
 
+
+const StaticResource = {
+  BookImagesBase,
+  BookImageNotSet,
+  UserAvatarsBase,
+  AppPackagesBase
+};
 
 const HeaderPrefix = 'X-';
 
@@ -73,8 +82,7 @@ export {
   DataAttrNames,
   DataAttrValues,
   SpecialAnnotations,
-  BookImagesBase,
-  BookImageNotSet,
+  StaticResource,
   HeaderNames,
   HeaderValues,
   DefaultHttpHeaders

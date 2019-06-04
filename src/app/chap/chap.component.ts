@@ -3,11 +3,8 @@ import {
   ComponentRef, HostListener,
   OnInit, ViewChild, ViewContainerRef
 } from '@angular/core';
-import {ActivatedRoute, ParamMap} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {PopStateEvent} from '@angular/common/src/location/location';
-
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
 
 import * as Tether from 'tether';
 import * as Drop from 'tether-drop';
@@ -20,15 +17,14 @@ import {AnnotationSet} from '../anno/annotation-set';
 import {AnnotatorHelper} from '../anno/annotator-helper';
 import {ContentContext} from '../content-types/content-context';
 import {DictRequest, SelectedItem, UserWordChange} from '../content-types/dict-request';
-import {User} from '../models/user';
 import {Book} from '../models/book';
 import {Chap} from '../models/chap';
 import {Para} from '../models/para';
-import {OpResult} from '../models/op-result';
 import {UserWord} from '../models/user-word';
 import {DictEntry} from '../models/dict-entry';
 import {Annotation} from '../models/annotation';
 import {SessionService} from '../services/session.service';
+import {WxAuthService} from '../services/wx-auth.service';
 import {BookService} from '../services/book.service';
 import {ChapService} from '../services/chap.service';
 import {ParaService} from '../services/para.service';
@@ -38,16 +34,18 @@ import {UserWordService} from '../services/user-word.service';
 import {AnnotationsService} from '../services/annotations.service';
 import {UserVocabularyService} from '../services/user-vocabulary.service';
 import {DictSimpleComponent} from '../dict/dict-simple.component';
-import {LoginModal} from '../account/login-popup.component';
 import {ParaCommentsModal} from '../content/para-comments.component';
+import {AccountSupportComponent} from '../account/account-support.component';
+
 
 @Component({
   selector: 'chap-detail',
   templateUrl: './chap.component.html',
   styleUrls: ['./chap.component.css']
 })
-export class ChapComponent implements OnInit {
+export class ChapComponent extends AccountSupportComponent implements OnInit {
   @ViewChild('dictSimple', {read: ViewContainerRef}) dictSimple: ViewContainerRef;
+  @ViewChild('sidebar', {read: SuiSidebar}) sidebar: SuiSidebar;
   book: Book;
   chap: Chap;
 
@@ -82,22 +80,20 @@ export class ChapComponent implements OnInit {
   simpleDictComponentRef: ComponentRef<DictSimpleComponent>;
 
 
-  get currentUser(): User {
-    return this.sessionService.currentUser;
-  }
-
-  constructor(private sessionService: SessionService,
-              private bookService: BookService,
-              private chapService: ChapService,
-              private paraService: ParaService,
-              private dictService: DictService,
-              private dictZhService: DictZhService,
-              private userWordService: UserWordService,
-              private annoService: AnnotationsService,
-              private vocabularyService: UserVocabularyService,
-              private modalService: SuiModalService,
-              private resolver: ComponentFactoryResolver,
-              private route: ActivatedRoute) {
+  constructor(protected sessionService: SessionService,
+              protected wxAuthService: WxAuthService,
+              protected bookService: BookService,
+              protected chapService: ChapService,
+              protected paraService: ParaService,
+              protected dictService: DictService,
+              protected dictZhService: DictZhService,
+              protected userWordService: UserWordService,
+              protected annoService: AnnotationsService,
+              protected vocabularyService: UserVocabularyService,
+              protected modalService: SuiModalService,
+              protected resolver: ComponentFactoryResolver,
+              protected route: ActivatedRoute) {
+    super(sessionService, wxAuthService, modalService, route);
   }
 
 
@@ -109,92 +105,9 @@ export class ChapComponent implements OnInit {
     return this.userWordService.latestAdded;
   }
 
-  clearDictLookupHistory() {
-    this.dictService.clearHistory();
-  }
-
-  private initialLoadContent(chapId) {
-    this.chapService.getDetail(chapId)
-      .subscribe(chap => {
-        if (this.hideWindowUrl) {
-          window.history.pushState({}, '', `/`);
-        }
-        console.log(chap);
-        if (!chap) {
-          return;
-        }
-        if (!chap.paras) {
-          chap.paras = [];
-        } else {
-          for (let para of chap.paras) {
-            para.chap = chap;
-          }
-        }
-        this.chap = chap;
-        if (!this.contentContext) {
-          this.contentContext = new ContentContext();
-        }
-        this.contentContext.combinedWordsMapObs = this.vocabularyService.getCombinedWordsMap();
-        this.loadBook(chap.bookId);
-        this.checkCommentsCount();
-      });
-
-    this.userWordService.loadAll().subscribe();
-  }
-
-  private fetchTheChapId(): Observable<string> {
-    return this.route.paramMap.pipe(
-      map((params: ParamMap) => {
-          return params.get('id');
-        }
-      ));
-  }
-
-  private loginThenInit(chapId) {
-    this.modalService.open<string, string, string>(new LoginModal(/*'请登录'*/))
-      .onDeny(d => {
-
-      })
-      .onApprove(r => {
-        this.initialLoadContent(chapId);
-      });
-  }
-
   ngOnInit(): void {
-    this.fetchTheChapId().subscribe(chapId => {
-      this.route.queryParamMap.subscribe(params => {
-        // console.log(params);
-        let tempToken = params.get('tt');
-        if (tempToken) {
-          this.sessionService.loginByTempToken(tempToken)
-            .subscribe((opr: OpResult) => {
-              if (opr && opr.ok === 1) {
-                window.history.pushState({}, '', `chaps/${chapId}`);
-                this.initialLoadContent(chapId);
-              } else {
-                let msg = opr.message || '登录失败';
-                alert(msg);
-              }
-            });
-          return;
-        }
 
-        let cu = this.sessionService.currentUser;
-        if (cu) {
-          this.initialLoadContent(chapId);
-          return;
-        }
-
-        this.sessionService.checkLogin()
-          .subscribe(cu => {
-            if (cu) {
-              this.initialLoadContent(chapId);
-              return;
-            }
-            this.loginThenInit(chapId);
-          });
-      });
-    });
+    this.checkLoginAndLoad();
 
     document.addEventListener('click', (event) => {
       if (this.dictRequest && this.dictTether) {
@@ -214,6 +127,64 @@ export class ChapComponent implements OnInit {
         event.stopPropagation();
       }
     }, true);
+  }
+
+  protected loadContent() {
+    if (!this.pathParams) {
+      return;
+    }
+    let chapId = this.pathParams.get('id');
+    this.chapService.getDetail(chapId)
+      .subscribe(chap => {
+        if (this.hideWindowUrl) {
+          window.history.pushState({}, '', `/`);
+        }
+        console.log(chap);
+        if (!chap) {
+          return;
+        }
+        this.processChap(chap);
+        this.chap = chap;
+        this.contentLoaded = true;
+
+        if (!this.contentContext) {
+          this.contentContext = new ContentContext();
+        }
+        this.contentContext.combinedWordsMapObs = this.vocabularyService.getCombinedWordsMap();
+        this.loadBook(chap.bookId);
+        this.checkCommentsCount();
+      });
+
+    this.userWordService.loadAll().subscribe();
+  }
+
+  private processChap(chap) {
+    if (this.book) {
+      chap.book = this.book;
+    }
+    if (!chap.paras) {
+      chap.paras = [];
+      return;
+    }
+    for (let para of chap.paras) {
+      para.chap = chap;
+    }
+  }
+
+  protected buildCurrentUrl(): string {
+    let chapId;
+    if (this.pathParams) {
+      chapId = this.pathParams.get('id');
+    }
+    if (!chapId && this.chap) {
+      chapId = this.chap._id;
+    }
+    return `chaps/${chapId}`;
+  }
+
+  protected onLoginCancel() {
+    this.sidebarContent = 'vocabulary';
+    this.sidebar.open();
   }
 
   private setupNavigation() {
@@ -248,10 +219,12 @@ export class ChapComponent implements OnInit {
     if (this.chap && chap._id === this.chap._id) {
       return;
     }
-    // let last = this.chap;
     this.chapService.getDetail(chap._id)
       .subscribe(chapDetail => {
+        this.processChap(chapDetail);
         this.chap = chapDetail;
+        this.contentLoaded = true;
+
         if (!this.hideWindowUrl) {
           window.history.pushState({}, '', `chaps/${chap._id}`);
         }
@@ -272,6 +245,9 @@ export class ChapComponent implements OnInit {
         return;
       }
       this.book = book;
+      if (this.chap) {
+        this.chap.book = book;
+      }
 
       this.contentContext.contentLang = book.contentLang;
       this.contentContext.transLang = book.transLang;
@@ -604,6 +580,11 @@ export class ChapComponent implements OnInit {
         });
     }
   }
+
+  clearDictLookupHistory() {
+    this.dictService.clearHistory();
+  }
+
 
   paraTracker(index, para) {
     return para._id;

@@ -6,23 +6,30 @@ sui-sidebar-container.reader.fit-bottom-menu
       [ngClass]='{active: c._id===chap._id}')
         .pre-wrap {{c.name}}
         .zhname.pre-wrap(*ngIf="c.zhName") {{c.zhName}}
-    sui-accordion.inverted(*ngIf='sidebarContent==="vocabulary"', [closeOthers]='false')
-      sui-accordion-panel.item([isOpen]='true')
-        .column-header(title='')
-          i.dropdown.icon
-          | 最新加入
-        .ui.relaxed.list.word-list(content='')
-          a.item(*ngFor='let uw of latestAdded', (click)='lookupUserWord($event,uw)')
-            | {{uw.word}}
-      sui-accordion-panel.item([isOpen]='true')
-        .column-header(title='')
-          i.dropdown.icon
-          | 查词历史
-        .ui.relaxed.list.word-list(content='')
-          a.item(*ngFor='let entry of entryHistory', (click)='showEntryPopup($event,entry)')
-            | {{entry.word}}
-          .item
-            a.operation(*ngIf='entryHistory.length>0', (click)='clearDictLookupHistory()') ^^ 清空
+    .vocabulary(*ngIf='sidebarContent==="vocabulary"')
+      .ui.secondary.small.menu
+        a.item(*ngIf='!currentUser', (click)='openLoginDialog()') （未登录）
+        .item(*ngIf='currentUser')
+          img.ui.avatar.image(*ngIf='currentUser.avatarSetting&&currentUser.avatarSetting.imgUrl', [src]='avatarsBase+"/"+currentUser.avatarSetting.imgUrl')
+          | {{currentUser.nickName}} &nbsp;&nbsp;
+        a.item(*ngIf='currentUser', (click)='openLoginDialog()') 重新登录
+      sui-accordion.inverted([closeOthers]='false')
+        sui-accordion-panel.item([isOpen]='true')
+          .column-header(title='')
+            i.dropdown.icon
+            | 最新加入
+          .ui.relaxed.list.word-list(content='')
+            a.item(*ngFor='let uw of latestAdded', (click)='lookupUserWord($event,uw)')
+              | {{uw.word}}
+        sui-accordion-panel.item([isOpen]='true')
+          .column-header(title='')
+            i.dropdown.icon
+            | 查词历史
+          .ui.relaxed.list.word-list(content='')
+            a.item(*ngFor='let entry of entryHistory', (click)='showEntryPopup($event,entry)')
+              | {{entry.word}}
+            .item
+              a.operation(*ngIf='entryHistory.length>0', (click)='clearDictLookupHistory()') ^^ 清空
 
   sui-sidebar-sibling.fit-top-menu([isDimmedWhenVisible]='true')
     .ui.small.top.fixed.inverted.main.menu
