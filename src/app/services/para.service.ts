@@ -90,7 +90,7 @@ export class ParaService extends BaseService<Para> {
           para.comments = comments;
           return comments;
         }),
-        catchError(this.handleError));
+        catchError(this.handleErrorGET));
   }
 
 }

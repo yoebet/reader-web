@@ -41,7 +41,7 @@ export class BookComponent extends AccountSupportComponent implements OnInit {
     this.checkLoginAndLoad();
   }
 
-  protected buildCurrentUrl(): string {
+  protected buildCurrentUri(): string {
     let bookId;
     if (this.pathParams) {
       bookId = this.pathParams.get('id');
@@ -74,9 +74,6 @@ export class BookComponent extends AccountSupportComponent implements OnInit {
       });
   }
 
-  protected onLoginCancel() {
-    this.loadContent();
-  }
 
   showDetail() {
     this.modalService.open(new BookInfoModal(this.book));

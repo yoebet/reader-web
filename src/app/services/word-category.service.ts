@@ -84,7 +84,7 @@ export class WordCategoryService extends BaseService<WordCategory> {
       .pipe(
         map(wordBook => wordBook.words),
         tap(words => this.allWordsMap.set(code, words)),
-        catchError(this.handleError)
+        catchError(this.handleErrorGET)
       );
   }
 

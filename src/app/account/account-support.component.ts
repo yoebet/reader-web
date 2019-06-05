@@ -2,23 +2,30 @@ import {SuiModalService} from 'ng2-semantic-ui';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 
 import {combineLatest} from 'rxjs';
+import {ActiveModal} from 'ng2-semantic-ui/dist/modules/modal/classes/active-modal';
 
+import {environment} from '../../environments/environment';
 import {StaticResource} from '../config';
 import {SessionService} from '../services/session.service';
+import {WxAuthService} from '../services/wx-auth.service';
 import {User} from '../models/user';
 import {OpResult} from '../models/op-result';
-import {LoginModal} from './login-popup.component';
-import {WxAuthService} from '../services/wx-auth.service';
+import {LoginContext, LoginModal} from './login-popup.component';
 
+
+let loginModal: ActiveModal<LoginContext, string, string> = null;
 
 export abstract class AccountSupportComponent {
 
   avatarsBase = StaticResource.UserAvatarsBase;
+  webAppBase: string;
 
+  loadImmediately = true;
   contentLoaded = false;
-  requireLogin = true;
+  requireLogin = false;
   pathParams: ParamMap;
   queryParams: ParamMap;
+
 
   get currentUser(): User {
     return this.sessionService.currentUser;
@@ -29,12 +36,32 @@ export abstract class AccountSupportComponent {
                         protected modalService: SuiModalService,
                         protected route: ActivatedRoute) {
 
+    this.webAppBase = environment.webAppBase;
+    this.observeLoginRequest();
+  }
+
+
+  protected observeLoginRequest() {
+
+    this.sessionService.sessionEventEmitter
+      .subscribe(event => {
+        if (event === 'RequestLogin') {
+          if (loginModal == null) {
+            let lc = new LoginContext();
+            lc.wxRedirectUri = `${environment.webAppBase}/`;
+            loginModal = this.modalService
+              .open<LoginContext, string, string>(new LoginModal(lc))
+              .onDeny(d => loginModal = null)
+              .onApprove(r => loginModal = null);
+          }
+        }
+      });
   }
 
 
   protected abstract loadContent();
 
-  protected abstract buildCurrentUrl(): string;
+  protected abstract buildCurrentUri(): string;
 
 
   protected onLoginCancel() {
@@ -51,6 +78,9 @@ export abstract class AccountSupportComponent {
       .subscribe(([pathParams, queryParams]) => {
         this.pathParams = pathParams;
         this.queryParams = queryParams;
+        if (this.loadImmediately) {
+          this.loadContent();
+        }
         this.doCheckLoginAndLoad();
       });
   }
@@ -58,12 +88,12 @@ export abstract class AccountSupportComponent {
   protected doCheckLoginAndLoad() {
 
     if (this.queryParams) {
-      console.log(this.queryParams);
+      // console.log(this.queryParams);
 
       // let state = params.get('state');
       let code = this.queryParams.get('code');
-      if (code) {
-        let url = this.buildCurrentUrl();
+      if (code && code.length >= 24) {
+        let url = this.buildCurrentUri();
         window.history.pushState({}, '', url);
         // this.wxAuthService.requestAccessToken(code)
         this.wxAuthService.requestAccessTokenAndLogin(code)
@@ -85,7 +115,7 @@ export abstract class AccountSupportComponent {
         this.sessionService.loginByTempToken(tempToken)
           .subscribe((opr: OpResult) => {
             if (opr && opr.ok === 1) {
-              let url = this.buildCurrentUrl();
+              let url = this.buildCurrentUri();
               window.history.pushState({}, '', url);
               this.loadContent();
             } else {
@@ -117,13 +147,26 @@ export abstract class AccountSupportComponent {
   }
 
   openLoginDialog() {
-    this.modalService.open<string, string, string>(new LoginModal(/*'请登录'*/))
+    if (loginModal) {
+      return;
+    }
+    let lc = new LoginContext();
+    let curi = this.buildCurrentUri();
+    lc.wxRedirectUri = `${this.webAppBase}/${curi}`;
+    loginModal = this.modalService
+      .open<LoginContext, string, string>(new LoginModal(lc))
       .onDeny(d => {
+        loginModal = null;
         this.onLoginCancel();
       })
       .onApprove(r => {
+        loginModal = null;
         this.onLoginSuccess();
       });
+  }
+
+  logout() {
+    this.sessionService.logoutLocally();
   }
 
 }

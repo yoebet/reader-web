@@ -34,9 +34,8 @@ export class BookInfoComponent implements OnInit {
 
 export class BookInfoModal extends ComponentModalConfig<Book> {
   constructor(book: Book) {
-    super(BookInfoComponent, book, false);
+    super(BookInfoComponent, book, true);
     this.size = ModalSize.Tiny;
-    this.isClosable = true;
     this.mustScroll = false;
     // this.isBasic = true;
   }

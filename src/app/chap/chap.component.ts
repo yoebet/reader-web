@@ -62,7 +62,7 @@ export class ChapComponent extends AccountSupportComponent implements OnInit {
   allowSwitchChap = true;
   hideWindowUrl = false;
 
-  sidebarContent = 'vocabulary';//chap-list
+  sidebarContent: 'vocabulary' | 'chap-list' = 'vocabulary';
 
   prevChap: Chap;
   nextChap: Chap;
@@ -94,6 +94,7 @@ export class ChapComponent extends AccountSupportComponent implements OnInit {
               protected resolver: ComponentFactoryResolver,
               protected route: ActivatedRoute) {
     super(sessionService, wxAuthService, modalService, route);
+    this.requireLogin = true;
   }
 
 
@@ -120,6 +121,9 @@ export class ChapComponent extends AccountSupportComponent implements OnInit {
             }
           }
           if (dictPopup.contains(target)) {
+            return;
+          }
+          if (target.closest('.ui.modal')) {
             return;
           }
         }
@@ -171,7 +175,7 @@ export class ChapComponent extends AccountSupportComponent implements OnInit {
     }
   }
 
-  protected buildCurrentUrl(): string {
+  protected buildCurrentUri(): string {
     let chapId;
     if (this.pathParams) {
       chapId = this.pathParams.get('id');

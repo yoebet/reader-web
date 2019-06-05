@@ -1,10 +1,13 @@
 .ui.container
   .ui.secondary.small.menu
-    a.item(*ngIf='!currentUser', (click)='openLoginDialog()') （未登录）
-    .item(*ngIf='currentUser')
-      img.ui.avatar.image(*ngIf='currentUser.avatarSetting&&currentUser.avatarSetting.imgUrl', [src]='avatarsBase+"/"+currentUser.avatarSetting.imgUrl')
-      | {{currentUser.nickName}} &nbsp;&nbsp;
-    a.item(*ngIf='currentUser', (click)='openLoginDialog()') 重新登录
+    .right.menu
+      a.item(*ngIf='!currentUser', (click)='openLoginDialog()') （未登录）
+      .item(*ngIf='currentUser')
+        img.ui.avatar.image(*ngIf='currentUser.avatarSetting&&currentUser.avatarSetting.imgUrl',
+        [src]='avatarsBase+"/"+currentUser.avatarSetting.imgUrl')
+        | {{currentUser.nickName}}
+        a(*ngIf='currentUser', (click)='openLoginDialog()') &nbsp;&nbsp;切换
+        //a(*ngIf='currentUser', (click)='logout()') &nbsp;&nbsp;退出
 
   .ui.header
     .ui.right.floated.header

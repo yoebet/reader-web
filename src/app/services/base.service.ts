@@ -11,7 +11,8 @@ export class BaseService<M extends Model> {
 
   protected baseUrl: string;
 
-  protected handleError = (err) => this._handleError(err);
+  protected handleError = (err) => this._handleError(err, false);
+  protected handleErrorGET = (err) => this._handleError(err, true);
 
 
   constructor(protected http: HttpClient,
@@ -24,18 +25,18 @@ export class BaseService<M extends Model> {
 
   list(url: string = null): Observable<M[]> {
     return this.http.get<M[]>(url || this.baseUrl, this.getHttpOptions())
-      .pipe(catchError(this.handleError));
+      .pipe(catchError(this.handleErrorGET));
   }
 
   getOne(id: string): Observable<M> {
     const url = `${this.baseUrl}/${id}`;
     return this.http.get<M>(url, this.getHttpOptions())
-      .pipe(catchError(this.handleError));
+      .pipe(catchError(this.handleErrorGET));
   }
 
   getOneByUrl(url: string): Observable<M> {
     return this.http.get<M>(url, this.getHttpOptions())
-      .pipe(catchError(this.handleError));
+      .pipe(catchError(this.handleErrorGET));
   }
 
   getDetail(id: string): Observable<M> {
@@ -112,7 +113,7 @@ export class BaseService<M extends Model> {
     return null;
   }
 
-  private _handleError(error: any/*, caught*/): Observable<any> {
+  private _handleError(error: any, getMethod: boolean): Observable<any> {
     /*
     error : {
       error: `{"ok":0,"message":"code is Required"}`
@@ -123,6 +124,9 @@ export class BaseService<M extends Model> {
       url: '...'/null
     }
     */
+    if (getMethod) {
+      return EMPTY;
+    }
     switch (error.status) {
       case 400:
         return this.handleError400(error);

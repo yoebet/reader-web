@@ -1,13 +1,28 @@
 .ui.small.blue.header
+  .ui.right.floated.horizontal.tiny.link.list
+    a.item((click)='loginMethod="wx"', [ngClass]='{active: loginMethod==="wx"}') 微信登录
+    a.item((click)='loginMethod="pass"', [ngClass]='{active: loginMethod==="pass"}') 密码登录
   | 登录
 
-.ui.content.tiny.form.login
-  .ui.small.message(*ngIf='loginMessage') {{loginMessage}}
-  .field
-    input(type="text", #name="", placeholder="账号")
-  .field
-    input(type="password", #pass="", placeholder="密码", (keyup)='onPassKeyup(name.value, pass.value, $event)')
+ng-template([ngIf]='loginMethod=="pass"')
+  .ui.content.tiny.form.login
+    .ui.small.message(*ngIf='loginMessage') {{loginMessage}}
+    .field
+      input(type="text", #name="", placeholder="账号")
+    .field
+      input(type="password", #pass="", placeholder="密码", (keyup)='onPassKeyup(name.value, pass.value, $event)')
+  .actions
+    .ui.tiny.button((click)='cancel()') 取消
+    .ui.tiny.primary.button(*ngIf='loginMethod==="pass"', (click)='login(name.value, pass.value)')
+      i.icon.keyboard.outline
+      | 登录
 
-.actions
-  .ui.tiny.button((click)='cancel()') 取消
-  .ui.tiny.primary.button((click)='login(name.value, pass.value)') 登录
+ng-template([ngIf]='loginMethod=="wx"')
+  .ui.content.tiny.form.login
+    img.wx_logo(src='images/icon32_wx_logo.png')
+
+  .actions
+    .ui.tiny.button((click)='cancel()') 取消
+    .ui.tiny.wechat.button(*ngIf='loginMethod==="wx"', (click)='wxLogin()')
+      i.icon.wechat
+      | 登录

@@ -12,7 +12,7 @@ import {OpResult} from '../models/op-result';
 @Injectable()
 export class SessionService {
 
-  private loginUrl: string;
+  private baseUrl: string;
 
   currentUser: User;
 
@@ -20,7 +20,7 @@ export class SessionService {
 
   constructor(private http: HttpClient) {
     let apiBase = environment.apiBase || '';
-    this.loginUrl = `${apiBase}/login`;
+    this.baseUrl = `${apiBase}/login`;
   }
 
 
@@ -62,7 +62,7 @@ export class SessionService {
   }
 
   private doLogin(form): Observable<OpResult> {
-    return this.http.post(this.loginUrl, form, this.getHttpOptions())
+    return this.http.post(this.baseUrl, form, this.getHttpOptions())
       .pipe(
         map((opr: OpResult) => {
           if (opr && opr.ok === 1) {
@@ -74,17 +74,23 @@ export class SessionService {
   }
 
   logout(): Observable<OpResult> {
-    return this.http.delete(this.loginUrl, this.getHttpOptions())
+    return this.http.delete(this.baseUrl, this.getHttpOptions())
       .pipe(
         map((opr: OpResult) => {
           if (opr && opr.ok === 1) {
-            this.currentUser = null;
-            let storage = window.localStorage;
-            storage.removeItem(HeaderNames.UserName);
-            storage.removeItem(HeaderNames.UserToken);
+            this.logoutLocally();
           }
           return opr;
         }));
+  }
+
+
+  logoutLocally() {
+    this.currentUser = null;
+    let storage = window.localStorage;
+    storage.removeItem(HeaderNames.UserName);
+    storage.removeItem(HeaderNames.UserToken);
+    this.sessionEventEmitter.emit('Logout');
   }
 
   private updateCurrentUser(ui) {
@@ -99,7 +105,7 @@ export class SessionService {
   }
 
   checkLogin(): Observable<User> {
-    let url = `${this.loginUrl}/userinfo`;
+    let url = `${this.baseUrl}/userinfo`;
     return this.http.get<any>(url, this.getHttpOptions())
       .pipe(
         map(ui => {
@@ -113,6 +119,8 @@ export class SessionService {
   }
 
   handleError401(error: any): Observable<any> {
+    console.log(error);
+    window['ee'] = error;
     this.sessionEventEmitter.emit('RequestLogin');
     return EMPTY;
   }

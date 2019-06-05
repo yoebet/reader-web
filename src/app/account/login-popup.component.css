@@ -1,0 +1,8 @@
+.form.login {
+  min-height: 6em;
+}
+
+.ui.button.wechat {
+  color: white;
+  background: rgb(9, 187, 7);
+}

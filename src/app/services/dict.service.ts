@@ -91,7 +91,7 @@ export class DictService extends BaseService<DictEntry> {
     let url = `${this.baseUrl}/${word}/complete`;
     let obs = this.http.get<PosMeanings[]>(url, this.getHttpOptions())
       .pipe(
-        catchError(this.handleError));
+        catchError(this.handleErrorGET));
     if (!cachedEntry) {
       return obs;
     }
@@ -134,7 +134,7 @@ export class DictService extends BaseService<DictEntry> {
       let url = `${this.baseUrl}/baseForms/${scope}`;
       this.http.get<any[]>(url, this.getHttpOptions())
         .pipe(
-          catchError(this.handleError)
+          catchError(this.handleErrorGET)
         ).subscribe((words: string[][]) => {
           this.baseFormsMap = new Map();
           for (let [word, base] of words) {

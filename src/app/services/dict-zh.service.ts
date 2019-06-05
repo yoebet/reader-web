@@ -96,7 +96,7 @@ export class DictZhService extends BaseService<DictZh> {
         this.phrases = new ZhPhrases(words);
         return this.phrases;
       }),
-      catchError(this.handleError),);
+      catchError(this.handleErrorGET));
   }
 
 }

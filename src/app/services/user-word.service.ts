@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 
-import {of as observableOf, Observable} from 'rxjs';
+import {of as observableOf, Observable, EMPTY} from 'rxjs';
 import {catchError, map, tap, share} from 'rxjs/operators';
 
 import {sortedIndexBy} from 'lodash';
@@ -213,23 +213,5 @@ export class UserWordService extends BaseService<UserWord> {
         }
       }));
   }
-
-  /*sync(userWords: UserWord[]): Observable<OpResult> {
-    const url = `${this.baseUrl}/sync`;
-    userWords = userWords.map(userWord => {
-      let {word, familiarity} = userWord;
-      let uw: any = {word, familiarity};
-      if (!userWord._id) {
-        for (let attr of ['bookId', 'chapId', 'paraId']) {
-          if (userWord[attr]) {
-            uw[attr] = userWord[attr];
-          }
-        }
-      }
-      return uw;
-    });
-    return this.http.post<OpResult>(url, userWords, this.getHttpOptions())
-      .catch(this.handleError);
-  }*/
 
 }

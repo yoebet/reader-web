@@ -41,7 +41,7 @@ export class BookListComponent extends AccountSupportComponent implements OnInit
     this.checkLoginAndLoad();
   }
 
-  protected buildCurrentUrl(): string {
+  protected buildCurrentUri(): string {
     return `books`;
   }
 
@@ -51,10 +51,6 @@ export class BookListComponent extends AccountSupportComponent implements OnInit
         this.books = books;
         this.contentLoaded = true;
       });
-  }
-
-  protected onLoginCancel() {
-    this.loadContent();
   }
 
   showDetail(book: Book) {

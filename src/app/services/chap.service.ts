@@ -28,6 +28,7 @@ export class ChapService extends BaseService<Chap> {
     let url = `${this.baseUrl}/${chap._id}/paraCommentsCount`;
     return this.http.get<ParaIdCount[]>(url, this.getHttpOptions())
       .pipe(
+        catchError(this.handleErrorGET),
         map((idCounts: ParaIdCount[]) => {
           let parasMap = new Map();
           for (let p of chap.paras) {
@@ -45,8 +46,7 @@ export class ChapService extends BaseService<Chap> {
           }
           chap.paraCommentsCountLoaded = true;
           return total;
-        }),
-        catchError(this.handleError));
+        }));
   }
 
 }
