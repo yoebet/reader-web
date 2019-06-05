@@ -11,29 +11,22 @@
 
   .ui.header
     .ui.right.floated.header
-      sui-checkbox([(ngModel)]='showZh') 中文
+      //sui-checkbox([(ngModel)]='showZh') 中文
     | 图书
+  .ui.hidden.divider
 
-  table.ui.striped.table
-    thead
-      tr
-        th
-        th 代号
-        th 书名
-        th
-    tbody
-      tr(*ngFor='let book of books; trackBy: bookTracker')
-        td
-          img.ui.tiny.image(*ngIf='book.image', [src]='bookImagesBase+"/"+book.image.file')
-          img.ui.tiny.image.disabled(*ngIf='!book.image', [src]='bookImageNotSet')
-        td {{book.code}}
-        td
-          a([routerLink]="['/books', book._id]")
-            .enname {{book.name}}
-            .zhname(*ngIf='showZh && book.zhName') {{book.zhName}}
-        td.right.aligned
-          a((click)='showDetail(book)', href='javascript:') 详情
-      tr(*ngIf='!books||books.length===0')
-        td(colspan='4') No Results.
+  .ui.stackable.cards
+    .ui.centered.card(*ngFor='let book of books; trackBy: bookTracker')
+      .content
+        a([routerLink]="['/books', book._id]")
+          img.ui.image(*ngIf='book.image', [src]='bookImagesBase+"/"+book.image.file')
+          img.ui.image.disabled(*ngIf='!book.image', [src]='bookImageNotSet')
+        a.book-title([routerLink]="['/books', book._id]")
+          .enname {{book.name}}
+          .zhname(*ngIf='showZh && book.zhName') {{book.zhName}}
+      .extra.content
+        | 代号 &nbsp;
+        span.book-code {{book.code}}
+        a.right.floated((click)='showDetail(book)', href='javascript:') 详情
 
   p &nbsp;

@@ -1,7 +1,16 @@
 a .zhname {
-  margin-top: 0.3em;
+  margin-top: 0.4em;
 }
 
 .status-r {
   color: #16ab39;
+}
+
+a.book-title {
+  margin-top: 0.9em;
+  display: block;
+}
+
+.book-code {
+  font-weight: bold;
 }
