@@ -22,6 +22,23 @@ export class UserPreferenceService extends BaseService<UserPreference> {
     super(http, sessionService);
     let apiBase = environment.apiBase || '';
     this.baseUrl = `${apiBase}/user_preferences`;
+
+    this.sessionService.sessionEventEmitter
+      .subscribe(event => {
+        if (event === 'Login') {
+          console.log('Login: UserPreferenceService');
+          this.clearCache();
+          return;
+        }
+        if (event === 'Logout') {
+          console.log('Logout: UserPreferenceService');
+          this.clearCache();
+        }
+      });
+  }
+
+  clearCache() {
+    this.userPreference = null;
   }
 
   get(): Observable<UserPreference> {

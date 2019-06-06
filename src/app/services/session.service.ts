@@ -120,7 +120,6 @@ export class SessionService {
 
   handleError401(error: any): Observable<any> {
     console.log(error);
-    window['ee'] = error;
     this.sessionEventEmitter.emit('RequestLogin');
     return EMPTY;
   }

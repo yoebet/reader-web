@@ -28,11 +28,6 @@ export class DictService extends BaseService<DictEntry> {
     this.staticBase = environment.staticBase;
   }
 
-  clearCache() {
-    this.entryCache.clear();
-    this._entryHistory = [];
-  }
-
   get entryHistory(): DictEntry[] {
     return this._entryHistory;
   }

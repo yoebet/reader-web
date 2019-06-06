@@ -28,6 +28,19 @@ export class UserWordService extends BaseService<UserWord> {
     super(http, sessionService);
     let apiBase = environment.apiBase || '';
     this.baseUrl = `${apiBase}/user_words`;
+
+    this.sessionService.sessionEventEmitter
+      .subscribe(event => {
+        if (event === 'Login') {
+          console.log('Login: UserWordService');
+          this.clearCache();
+          return;
+        }
+        if (event === 'Logout') {
+          console.log('Logout: UserWordService');
+          this.clearCache();
+        }
+      });
   }
 
   clearCache() {

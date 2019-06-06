@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 
 import {SuiModalService} from 'ng2-semantic-ui';
 
@@ -16,7 +16,7 @@ import {ActivatedRoute} from '@angular/router';
   templateUrl: './book-list.component.html',
   styleUrls: ['./book-list.component.css']
 })
-export class BookListComponent extends AccountSupportComponent implements OnInit {
+export class BookListComponent extends AccountSupportComponent {
   @ViewChild('newBookCode') newBookCodeEl: ElementRef;
   @ViewChild('newBookName') newBookNameEl: ElementRef;
   books: Book[] = [];
@@ -38,6 +38,7 @@ export class BookListComponent extends AccountSupportComponent implements OnInit
   }
 
   ngOnInit(): void {
+    super.ngOnInit();
     this.checkLoginAndLoad();
   }
 

@@ -10,7 +10,7 @@ export const environment = {
   staticBase: ServerRoot,
   // staticBase: `${ServerRoot}/api-b`,
   httpHeaders: {
-    'X-UT': 'grMmqX5wDJsQKDs2oF7KxK'
+    'X-XS': 'grMmqX5wDJsQKDs2oF7KxK'
   }
 };
 

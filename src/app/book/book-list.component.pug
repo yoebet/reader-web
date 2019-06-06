@@ -7,7 +7,7 @@
         [src]='avatarsBase+"/"+currentUser.avatarSetting.imgUrl')
         | {{currentUser.nickName}}
         a(*ngIf='currentUser', (click)='openLoginDialog()') &nbsp;&nbsp;切换
-        //a(*ngIf='currentUser', (click)='logout()') &nbsp;&nbsp;退出
+        a(*ngIf='currentUser', (click)='logout()') &nbsp;&nbsp;退出
 
   .ui.header
     .ui.right.floated.header

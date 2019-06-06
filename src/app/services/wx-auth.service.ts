@@ -34,7 +34,7 @@ export class WxAuthService extends BaseService<any> {
           if (opr && opr.ok === 1) {
             let ui = opr as any;
             this.sessionService.onLoginSuccess(ui);
-            alert(ui.nickName);
+            // alert(ui.nickName);
           }
           return opr;
         }),

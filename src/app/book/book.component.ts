@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Location} from '@angular/common';
 
@@ -18,7 +18,7 @@ import {AccountSupportComponent} from '../account/account-support.component';
   templateUrl: './book.component.html',
   styleUrls: ['./book.component.css']
 })
-export class BookComponent extends AccountSupportComponent implements OnInit {
+export class BookComponent extends AccountSupportComponent {
   book: Book;
   showZh = true;
 
@@ -38,6 +38,7 @@ export class BookComponent extends AccountSupportComponent implements OnInit {
 
 
   ngOnInit(): void {
+    super.ngOnInit();
     this.checkLoginAndLoad();
   }
 

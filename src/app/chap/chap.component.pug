@@ -32,6 +32,9 @@ sui-sidebar-container.reader.fit-bottom-menu
             .item
               a.operation(*ngIf='entryHistory.length>0', (click)='clearDictLookupHistory()') ^^ 清空
 
+    p &nbsp;
+    p &nbsp;
+
   sui-sidebar-sibling.fit-top-menu([isDimmedWhenVisible]='true')
     .ui.small.top.fixed.inverted.main.menu
       .item.chap-name(*ngIf='chap') {{chap.name}}
@@ -41,29 +44,30 @@ sui-sidebar-container.reader.fit-bottom-menu
 
     .ui.chap-content
       .ui.list.items(*ngIf='chap')
-        ng-template(ngFor='', let-para='', [ngForOf]="chap.paras", let-index="index", [ngForTrackBy]="paraTracker")
-          .item.paragraph
-            .para-no((click)='selectPara2(para)', [ngClass]='{"selected": para===selectedPara}')
-              .value {{index+1}}
-            .para
-              para-content.para-content(
-              [para]='para',
-              [contentContext]='contentContext',
-              [showTrans]='showTrans',
-              [gotFocus]='para===selectedPara',
-              [activeAlways]='true',
-              [lookupDict]='lookupDict',
-              [highlightSentence]='highlightSentence',
-              [markNewWords]='markNewWords',
-              [wordsHover]='wordsHover',
-              [annotation]='(para===selectedPara)? currentAnnotation : null',
-              [ngClass]='{"selected": para===selectedPara, "left-right": leftRight, "up-down": !leftRight}',
-              (mouseover)='selectPara(para)',
-              (dictRequest)="onDictRequest($event)")
-              .ui.right.floated.selection.horizontal.list.para-op(*ngIf='showCommentsCount&&para.commentsCount>0')
-                .item((click)='showComments(para)')
-                  i.comment.icon
-                  | 评论({{para.commentsCount}})
+        .item.paragraph(*ngFor='let para of chap.paras; index as idx; trackBy: paraTracker')
+          .para-no((click)='selectPara2(para)', [ngClass]='{"selected": para===selectedPara}')
+            .value {{idx+1}}
+          .para
+            para-content.para-content(
+            [para]='para',
+            [contentContext]='contentContext',
+            [showTrans]='showTrans',
+            [gotFocus]='para===selectedPara',
+            [activeAlways]='true',
+            [lookupDict]='lookupDict',
+            [highlightSentence]='highlightSentence',
+            [markNewWords]='markNewWords',
+            [wordsHover]='wordsHover',
+            [annotation]='(para===selectedPara)? currentAnnotation : null',
+            [ngClass]='{"selected": para===selectedPara, "left-right": leftRight, "up-down": !leftRight}',
+            (mouseover)='selectPara(para)',
+            (dictRequest)="onDictRequest($event)")
+            .ui.right.floated.selection.horizontal.list.para-op(*ngIf='showCommentsCount&&para.commentsCount>0')
+              .item((click)='showComments(para)')
+                i.comment.icon
+                | 评论({{para.commentsCount}})
+
+      p &nbsp;
 
       .ui.list.prev-next-nav(*ngIf='book&&allowSwitchChap')
         a.item.prev-nav([ngClass]='{disabled: !prevChap}', (click)='switchChap(prevChap)')
@@ -73,6 +77,9 @@ sui-sidebar-container.reader.fit-bottom-menu
           i.right.arrow.icon
           span.pre-wrap {{nextChap? nextChap.name:'（无）'}}
       p &nbsp;
+      p &nbsp;
+      p &nbsp;
+
 
 #dictPopup.ui.basic.popup(*ngIf='dictRequest')
   dict-entry(*ngIf='dictRequest.dictLang==="en"',

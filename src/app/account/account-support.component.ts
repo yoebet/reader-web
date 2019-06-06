@@ -1,7 +1,8 @@
+import {OnDestroy, OnInit} from '@angular/core';
 import {SuiModalService} from 'ng2-semantic-ui';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 
-import {combineLatest} from 'rxjs';
+import {combineLatest, Subscription} from 'rxjs';
 import {ActiveModal} from 'ng2-semantic-ui/dist/modules/modal/classes/active-modal';
 
 import {environment} from '../../environments/environment';
@@ -15,7 +16,7 @@ import {LoginContext, LoginModal} from './login-popup.component';
 
 let loginModal: ActiveModal<LoginContext, string, string> = null;
 
-export abstract class AccountSupportComponent {
+export abstract class AccountSupportComponent implements OnInit, OnDestroy {
 
   avatarsBase = StaticResource.UserAvatarsBase;
   webAppBase: string;
@@ -25,6 +26,8 @@ export abstract class AccountSupportComponent {
   requireLogin = false;
   pathParams: ParamMap;
   queryParams: ParamMap;
+
+  sessionSubscription: Subscription;
 
 
   get currentUser(): User {
@@ -37,25 +40,41 @@ export abstract class AccountSupportComponent {
                         protected route: ActivatedRoute) {
 
     this.webAppBase = environment.webAppBase;
-    this.observeLoginRequest();
+
+  }
+
+  ngOnInit(): void {
+    // console.log(`ngOnInit: ${this.constructor.name}`);
+    if (!this.sessionSubscription) {
+      this.sessionSubscription = this.sessionService.sessionEventEmitter
+        .subscribe(event => {
+          if (event === 'RequestLogin') {
+            if (loginModal == null) {
+              let lc = new LoginContext();
+              lc.wxRedirectUri = `${environment.webAppBase}/`;
+              loginModal = this.modalService
+                .open<LoginContext, string, string>(new LoginModal(lc))
+                .onDeny(d => loginModal = null)
+                .onApprove(r => loginModal = null);
+            }
+          } else if (event === 'Login' || event === 'Logout') {
+            this.onUserChanged(event);
+          }
+        });
+    }
+  }
+
+  ngOnDestroy(): void {
+    // console.log(`ngOnDestroy: ${this.constructor.name}`);
+    if (this.sessionSubscription) {
+      this.sessionSubscription.unsubscribe();
+      this.sessionSubscription = null;
+    }
   }
 
 
-  protected observeLoginRequest() {
-
-    this.sessionService.sessionEventEmitter
-      .subscribe(event => {
-        if (event === 'RequestLogin') {
-          if (loginModal == null) {
-            let lc = new LoginContext();
-            lc.wxRedirectUri = `${environment.webAppBase}/`;
-            loginModal = this.modalService
-              .open<LoginContext, string, string>(new LoginModal(lc))
-              .onDeny(d => loginModal = null)
-              .onApprove(r => loginModal = null);
-          }
-        }
-      });
+  protected onUserChanged(event) {
+    // console.log(`${event}: ${this.constructor.name}`);
   }
 
 

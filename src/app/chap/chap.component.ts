@@ -1,7 +1,6 @@
 import {
   Component, ComponentFactory, ComponentFactoryResolver,
-  ComponentRef, HostListener,
-  OnInit, ViewChild, ViewContainerRef
+  ComponentRef, HostListener, ViewChild, ViewContainerRef
 } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {PopStateEvent} from '@angular/common/src/location/location';
@@ -43,7 +42,7 @@ import {AccountSupportComponent} from '../account/account-support.component';
   templateUrl: './chap.component.html',
   styleUrls: ['./chap.component.css']
 })
-export class ChapComponent extends AccountSupportComponent implements OnInit {
+export class ChapComponent extends AccountSupportComponent {
   @ViewChild('dictSimple', {read: ViewContainerRef}) dictSimple: ViewContainerRef;
   @ViewChild('sidebar', {read: SuiSidebar}) sidebar: SuiSidebar;
   book: Book;
@@ -107,6 +106,7 @@ export class ChapComponent extends AccountSupportComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    super.ngOnInit();
 
     this.checkLoginAndLoad();
 
@@ -160,6 +160,11 @@ export class ChapComponent extends AccountSupportComponent implements OnInit {
       });
 
     this.userWordService.loadAll().subscribe();
+  }
+
+  protected onUserChanged(event) {
+    this.vocabularyService.invalidateBaseVocabularyMap();
+    this.loadContent();
   }
 
   private processChap(chap) {
