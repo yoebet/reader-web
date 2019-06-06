@@ -53,6 +53,10 @@
   flex-shrink: 1;
 }
 
+.ui.menu .item.chap-name:before {
+  visibility: hidden;
+}
+
 .ui.chap-content {
   margin-left: .5em !important;
   margin-right: .5em !important;

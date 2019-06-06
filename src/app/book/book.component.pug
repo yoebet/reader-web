@@ -1,33 +1,25 @@
 .ui.container
   .ui.secondary.small.menu
     .right.menu
-      a.item(*ngIf='!currentUser', (click)='openLoginDialog()') （未登录）
+      a.item(*ngIf='!currentUser', (click)='openLoginDialog()', href='javascript:') （未登录）
       .item(*ngIf='currentUser')
         img.ui.avatar.image(*ngIf='currentUser.avatarSetting&&currentUser.avatarSetting.imgUrl',
         [src]='avatarsBase+"/"+currentUser.avatarSetting.imgUrl')
         | {{currentUser.nickName}} &nbsp;&nbsp;
-        a(*ngIf='currentUser', (click)='openLoginDialog()') 切换
+        a(*ngIf='currentUser', (click)='openLoginDialog()', href='javascript:') 切换
 
-  .ui.content(*ngIf='book')
-    .ui.right.floated.sub.header
-      button.ui.tiny.button((click)='showDetail()') 详情
-    .name-author
-      .book-name {{book.name}}
-      .author(*ngIf='book.author')
-        span.author-by by
-        | {{book.author}}
-    .zh-name-author(*ngIf='book.zhName')
-      .book-name {{book.zhName}}
-      .author(*ngIf='book.zhAuthor')
-        span.author-by by
-        | {{book.zhAuthor}}
-    .props
-      .prop
-        span.prop-name 代号
-        | {{book.code}}
-      .prop
-        span.prop-name 分类
-        | {{categoryNames[book.category]}}
+  .ui.stackable.cards(*ngIf='book')
+    .ui.centered.card
+      .content
+        img.ui.image(*ngIf='book.image', [src]='bookImagesBase+"/"+book.image.file')
+        img.ui.image.disabled(*ngIf='!book.image', [src]='bookImageNotSet')
+        .book-title
+          .enname {{book.name}}
+          .zhname(*ngIf='showZh && book.zhName') {{book.zhName}}
+      .extra.content
+        | 代号 &nbsp;
+        span.book-code {{book.code}}
+        a.right.floated((click)='showDetail(book)', href='javascript:') 详情
 
   .ui.hidden.clearing.divider
 

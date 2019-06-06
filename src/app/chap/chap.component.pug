@@ -9,7 +9,7 @@ sui-sidebar-container.reader.fit-bottom-menu
 
     .vocabulary(*ngIf='sidebarContent==="vocabulary"')
       .ui.secondary.small.menu
-        a.item(*ngIf='!currentUser', (click)='openLoginDialog()') （未登录）
+        a.item(*ngIf='!currentUser', (click)='openLoginDialog()', href='javascript:') （未登录）
         .item(*ngIf='currentUser')
           img.ui.avatar.image(*ngIf='currentUser.avatarSetting&&currentUser.avatarSetting.imgUrl',
           [src]='avatarsBase+"/"+currentUser.avatarSetting.imgUrl')
@@ -100,7 +100,7 @@ sui-sidebar-container.reader.fit-bottom-menu
 ng-template(#dictSimple='')
 
 
-.ui.small.bottom.fixed.menu
+.ui.small.bottom.fixed.inverted.menu
   .item((click)='toggleSidebar(sidebar,"vocabulary")')
     | &nbsp;
     i.ul.list.icon

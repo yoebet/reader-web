@@ -34,7 +34,6 @@ export class BookListComponent extends AccountSupportComponent {
               protected modalService: SuiModalService,
               protected route: ActivatedRoute) {
     super(sessionService, wxAuthService, modalService, route);
-    this.requireLogin = false;
   }
 
   ngOnInit(): void {

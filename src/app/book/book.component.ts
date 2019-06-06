@@ -4,6 +4,7 @@ import {Location} from '@angular/common';
 
 import {SuiModalService} from 'ng2-semantic-ui';
 
+import {StaticResource} from '../config';
 import {Book} from '../models/book';
 import {BookService} from '../services/book.service';
 import {SessionService} from '../services/session.service';
@@ -24,6 +25,9 @@ export class BookComponent extends AccountSupportComponent {
 
   statusNames = Book.StatusNames;
   categoryNames = Book.CategoryNames;
+
+  bookImagesBase = StaticResource.BookImagesBase;
+  bookImageNotSet = StaticResource.BookImageNotSet;
 
   constructor(protected sessionService: SessionService,
               protected wxAuthService: WxAuthService,
