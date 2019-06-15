@@ -6,3 +6,7 @@
   color: white;
   background: rgb(9, 187, 7);
 }
+
+.list.login-methods {
+  font-weight: normal;
+}

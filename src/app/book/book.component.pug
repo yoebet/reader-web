@@ -15,7 +15,7 @@
         img.ui.image.disabled(*ngIf='!book.image', [src]='bookImageNotSet')
         .book-title
           .enname {{book.name}}
-          .zhname(*ngIf='showZh && book.zhName') {{book.zhName}}
+          .zhname(*ngIf='book.zhName') {{book.zhName}}
       .extra.content
         | 代号 &nbsp;
         span.book-code {{book.code}}

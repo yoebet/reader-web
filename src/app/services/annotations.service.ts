@@ -20,7 +20,7 @@ export class AnnotationsService extends BaseService<AnnotationFamily> {
               protected sessionService: SessionService) {
     super(http, sessionService);
     let apiBase = environment.apiBase || '';
-    this.baseUrl = `${apiBase}/annotation_families`;
+    this.baseUrl = `${apiBase}/anno_families`;
   }
 
   getAnnotationSet(familyId: string): Observable<AnnotationSet> {

@@ -1,7 +1,7 @@
 import {Injectable, EventEmitter} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 
-import {Observable, EMPTY} from 'rxjs';
+import {Observable, EMPTY, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 import {environment} from '../../environments/environment';
@@ -105,8 +105,14 @@ export class SessionService {
   }
 
   checkLogin(): Observable<User> {
+    let ho = this.getHttpOptions();
+    let UN = HeaderNames.UserName;
+    if (!ho.headers.get(UN)) {
+      this.currentUser = null;
+      return of(null);
+    }
     let url = `${this.baseUrl}/userinfo`;
-    return this.http.get<any>(url, this.getHttpOptions())
+    return this.http.get<any>(url, ho)
       .pipe(
         map(ui => {
           if (ui && ui.login) {

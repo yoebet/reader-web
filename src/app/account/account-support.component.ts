@@ -40,7 +40,6 @@ export abstract class AccountSupportComponent implements OnInit, OnDestroy {
                         protected route: ActivatedRoute) {
 
     this.webAppBase = environment.webAppBase;
-
   }
 
   ngOnInit(): void {
