@@ -5,14 +5,17 @@ import {environment} from '../../environments/environment';
 import {Observable, of} from 'rxjs';
 import {tap} from 'rxjs/operators';
 
-import {Book} from '../models/book';
 import {BaseService} from './base.service';
 import {SessionService} from './session.service';
+import {Book} from '../models/book';
+import {ChapContentPack} from '../models/chap';
 
 @Injectable()
 export class BookService extends BaseService<Book> {
 
   booksMap: Map<string, Book> = new Map<string, Book>();
+
+  chapContentPacksMap: Map<string, ChapContentPack> = new Map<string, ChapContentPack>();
 
   constructor(protected http: HttpClient,
               protected sessionService: SessionService) {
@@ -29,6 +32,16 @@ export class BookService extends BaseService<Book> {
     return super.getDetail(bookId)
       .pipe(tap(b => {
         this.booksMap.set(b._id, b);
+        let chaps = b.chaps;
+        if (chaps) {
+          for (let chap of chaps) {
+            let contentPack = chap.contentPack;
+            if (contentPack) {
+              contentPack.bookId = bookId;
+              this.chapContentPacksMap.set(chap._id, contentPack);
+            }
+          }
+        }
       }));
   }
 

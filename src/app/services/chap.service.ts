@@ -5,19 +5,35 @@ import {environment} from '../../environments/environment';
 import {Observable, of} from 'rxjs';
 import {map, catchError} from 'rxjs/operators';
 
-import {Chap} from '../models/chap';
+import {StaticResource} from '../config';
+import {Chap, ChapContentPack} from '../models/chap';
 import {ParaIdCount} from '../models/para';
 import {BaseService} from './base.service';
 import {SessionService} from './session.service';
+import {BookService} from './book.service';
+
+const ChapPacksBase = StaticResource.ChapPacksBase;
 
 @Injectable()
 export class ChapService extends BaseService<Chap> {
 
   constructor(protected http: HttpClient,
+              protected bookService: BookService,
               protected sessionService: SessionService) {
     super(http, sessionService);
     let apiBase = environment.apiBase || '';
     this.baseUrl = `${apiBase}/chaps`;
+  }
+
+
+  getDetail(id: string): Observable<Chap> {
+    let pack: ChapContentPack = this.bookService.chapContentPacksMap.get(id);
+    if (pack) {
+      const url = `${ChapPacksBase}/${pack.bookId}/${pack.srcFile}`;
+      return this.http.get<Chap>(url, this.getHttpOptions())
+        .pipe(catchError(e => super.getDetail(id)));
+    }
+    return super.getDetail(id);
   }
 
   loadCommentsCount(chap: Chap): Observable<number> {

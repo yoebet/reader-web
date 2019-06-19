@@ -33,7 +33,7 @@
     tr
       td 简介
       td {{book.introduction}}
-    tr(*ngIf='!book.isPrivate')
+    //tr(*ngIf='!book.isPrivate')
       td 定价
       td
         //| {{book.isFree? '免费':book.price}}

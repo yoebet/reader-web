@@ -135,7 +135,9 @@ export abstract class AccountSupportComponent implements OnInit, OnDestroy {
             if (opr && opr.ok === 1) {
               let url = this.buildCurrentUri();
               window.history.pushState({}, '', url);
-              this.loadContent();
+              if (!this.loadImmediately) {
+                this.loadContent();
+              }
             } else {
               let msg = opr.message || '登录失败';
               alert(msg);
@@ -147,14 +149,18 @@ export abstract class AccountSupportComponent implements OnInit, OnDestroy {
 
     let cu = this.sessionService.currentUser;
     if (cu) {
-      this.loadContent();
+      if (!this.loadImmediately) {
+        this.loadContent();
+      }
       return;
     }
 
     this.sessionService.checkLogin()
       .subscribe(cu => {
         if (cu) {
-          this.loadContent();
+          if (!this.loadImmediately) {
+            this.loadContent();
+          }
           return;
         }
         if (!this.requireLogin) {

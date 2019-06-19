@@ -11,9 +11,21 @@
   padding: 1em 0;
 }
 
+.fit-top-menu {
+  padding-top: 39px;
+}
+
+.fit-bottom-menu {
+  margin-bottom: 39px;
+}
+
 @media only screen and (max-width: 767px) {
   .ui.small.bottom.fixed.menu {
     font-size: 0.8rem;
+  }
+
+  .fit-bottom-menu {
+    margin-bottom: 34px;
   }
 }
 
@@ -37,12 +49,9 @@
   margin-top: 0.3em;
 }
 
-.fit-top-menu {
-  padding-top: 39px;
-}
-
-.fit-bottom-menu {
-  margin-bottom: 39px;
+.vocabulary .ui.menu {
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .ui.top.fixed.menu .item.chap-name {

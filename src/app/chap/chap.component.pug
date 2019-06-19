@@ -44,7 +44,7 @@ sui-sidebar-container.reader.fit-bottom-menu
 
     .ui.chap-content
       .ui.list.items(*ngIf='chap')
-        .item.paragraph(*ngFor='let para of chap.paras; index as idx; trackBy: paraTracker')
+        .item.paragraph(*ngFor='let para of chap.paras; index as idx; trackBy: paraTracker', class='chap_p{{idx}}')
           .para-no((click)='selectPara2(para)', [ngClass]='{"selected": para===selectedPara}')
             .value {{idx+1}}
           .para

@@ -178,6 +178,23 @@ export class ChapComponent extends AccountSupportComponent {
     for (let para of chap.paras) {
       para.chap = chap;
     }
+
+    let pns = this.queryParams.get('pn');
+    if (pns) {
+      let pn = parseInt(pns);
+      if (!isNaN(pn) && pn > 0) {
+        let para = chap.paras[pn - 1];
+        if (para) {
+          this.selectedPara = para;
+          setTimeout(() => {
+            let paraEl = document.querySelector(`.item.paragraph.chap_p${pn}`);
+            if (paraEl) {
+              paraEl.scrollIntoView(false);
+            }
+          }, 50);
+        }
+      }
+    }
   }
 
   protected buildCurrentUri(): string {
