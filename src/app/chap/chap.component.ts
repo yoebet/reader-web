@@ -167,6 +167,32 @@ export class ChapComponent extends AccountSupportComponent {
     this.loadContent();
   }
 
+  gotoPercent(percent: number) {
+    if (!this.chap) {
+      return;
+    }
+    let paras = this.chap.paras;
+    if (!paras || paras.length === 0) {
+      return;
+    }
+    let pn = parseInt(paras.length * percent / 100.0);
+    console.log(pn);
+    if (pn === 0) {
+      pn = 1;
+    } else if (pn > paras.length) {
+      pn = paras.length;
+    }
+    this.selectedPara = paras[pn - 1];
+    this.selectPno(pn);
+  }
+
+  private selectPno(pn) {
+    let paraEl = document.querySelector(`.item.paragraph.chap_p${pn}`);
+    if (paraEl) {
+      paraEl.scrollIntoView(false);
+    }
+  }
+
   private processChap(chap) {
     if (this.book) {
       chap.book = this.book;
@@ -175,22 +201,24 @@ export class ChapComponent extends AccountSupportComponent {
       chap.paras = [];
       return;
     }
-    for (let para of chap.paras) {
+
+    let paras = chap.paras;
+    for (let para of paras) {
       para.chap = chap;
     }
 
     let pns = this.queryParams.get('pn');
     if (pns) {
-      let pn = parseInt(pns);
+      let pn = parseInt(pns);// 1 based
       if (!isNaN(pn) && pn > 0) {
-        let para = chap.paras[pn - 1];
+        if (pn > paras.length) {
+          pn = paras.length;
+        }
+        let para = paras[pn - 1];
         if (para) {
-          this.selectedPara = para;
           setTimeout(() => {
-            let paraEl = document.querySelector(`.item.paragraph.chap_p${pn}`);
-            if (paraEl) {
-              paraEl.scrollIntoView(false);
-            }
+            this.selectedPara = para;
+            this.selectPno(pn);
           }, 50);
         }
       }

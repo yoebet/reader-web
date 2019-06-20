@@ -1,40 +1,59 @@
 /* You can add global styles to this file, and also import other style files */
-@import url('assets/semantic/reset.css');
-@import url('assets/semantic/site.css');
-@import url('assets/semantic/button.css');
-@import url('assets/semantic/container.css');
-@import url('assets/semantic/divider.css');
-@import url('assets/semantic/header.css');
-@import url('assets/semantic/input.css');
-@import url('assets/semantic/checkbox.css');
-@import url('assets/semantic/list.css');
-@import url('assets/semantic/icon.css');
-@import url('assets/semantic/form.css');
-@import url('assets/semantic/menu.css');
-@import url('assets/semantic/item.css');
-@import url('assets/semantic/card.css');
-@import url('assets/semantic/popup.css');
-@import url('assets/semantic/search.css');
-@import url('assets/semantic/statistic.css');
-@import url('assets/semantic/transition.css');
-@import url('assets/semantic/segment.css');
-@import url('assets/semantic/dropdown.css');
-@import url('assets/semantic/grid.css');
-@import url('assets/semantic/label.css');
-@import url('assets/semantic/dimmer.css');
-@import url('assets/semantic/modal.css');
-@import url('assets/semantic/tab.css');
-@import url('assets/semantic/accordion.css');
-@import url('assets/semantic/table.css');
-@import url('assets/semantic/message.css');
-@import url('assets/semantic/image.css');
-@import url('assets/semantic/sidebar.css');
-@import url('assets/annos-popup.css');
-@import url('assets/dict-popup.css');
-@import url('assets/dict-entry.css');
-@import url('assets/para-text.css');
-@import url('assets/annotations.css');
-@import url('assets/vocabulary.css');
+@import url('styles/semantic/reset.css');
+@import url('styles/semantic/site.css');
+@import url('styles/semantic/button.css');
+@import url('styles/semantic/container.css');
+@import url('styles/semantic/divider.css');
+@import url('styles/semantic/header.css');
+@import url('styles/semantic/input.css');
+@import url('styles/semantic/checkbox.css');
+@import url('styles/semantic/list.css');
+@import url('styles/semantic/icon.css');
+@import url('styles/semantic/form.css');
+@import url('styles/semantic/menu.css');
+@import url('styles/semantic/item.css');
+@import url('styles/semantic/card.css');
+@import url('styles/semantic/popup.css');
+@import url('styles/semantic/search.css');
+@import url('styles/semantic/statistic.css');
+@import url('styles/semantic/transition.css');
+@import url('styles/semantic/segment.css');
+@import url('styles/semantic/dropdown.css');
+@import url('styles/semantic/grid.css');
+@import url('styles/semantic/label.css');
+@import url('styles/semantic/dimmer.css');
+@import url('styles/semantic/modal.css');
+@import url('styles/semantic/tab.css');
+@import url('styles/semantic/accordion.css');
+@import url('styles/semantic/table.css');
+@import url('styles/semantic/message.css');
+@import url('styles/semantic/image.css');
+@import url('styles/semantic/sidebar.css');
+@import url('styles/annos-popup.css');
+@import url('styles/dict-popup.css');
+@import url('styles/dict-entry.css');
+@import url('styles/para-text.css');
+@import url('styles/annotations.css');
+@import url('styles/vocabulary.css');
+
+#footer {
+  margin-top: 2em;
+  border-top: 1px solid #DDDDDD;
+  box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.08) inset;
+  background-color: #FAFAFA;
+  padding: 0.5em 0.5em;
+  color: rgba(0, 0, 0, .4);
+  font-size: 0.8em;
+}
+
+#footer .ui.horizontal.list {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+#footer .link {
+  color: rgba(0, 0, 0, .6);
+}
 
 .pre-wrap {
   white-space: pre-wrap;

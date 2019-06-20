@@ -30,6 +30,7 @@ import {ApproximateNumberPipe} from './pipes/approximate-number.pipe';
 import {WordFamiliarityPipe} from './pipes/word-familiarity.pipe';
 
 import {AppComponent} from './app.component';
+import {AppFooterComponent} from './app-footer.component';
 import {BookListComponent} from './book/book-list.component';
 import {BookComponent} from './book/book.component';
 import {BookInfoComponent} from './book/book-info.component';
@@ -56,6 +57,7 @@ import {LoginPopupComponent} from './account/login-popup.component';
   ],
   declarations: [
     AppComponent,
+    AppFooterComponent,
     BookListComponent,
     BookComponent,
     BookInfoComponent,

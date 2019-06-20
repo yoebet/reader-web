@@ -36,7 +36,7 @@ export class BookService extends BaseService<Book> {
         if (chaps) {
           for (let chap of chaps) {
             let contentPack = chap.contentPack;
-            if (contentPack) {
+            if (contentPack && contentPack.srcFile) {
               contentPack.bookId = bookId;
               this.chapContentPacksMap.set(chap._id, contentPack);
             }

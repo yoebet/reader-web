@@ -44,7 +44,7 @@ sui-sidebar-container.reader.fit-bottom-menu
 
     .ui.chap-content
       .ui.list.items(*ngIf='chap')
-        .item.paragraph(*ngFor='let para of chap.paras; index as idx; trackBy: paraTracker', class='chap_p{{idx}}')
+        .item.paragraph(*ngFor='let para of chap.paras; index as idx; trackBy: paraTracker', class='chap_p{{idx+1}}')
           .para-no((click)='selectPara2(para)', [ngClass]='{"selected": para===selectedPara}')
             .value {{idx+1}}
           .para
@@ -76,9 +76,12 @@ sui-sidebar-container.reader.fit-bottom-menu
         a.item.next-nav([ngClass]='{disabled: !nextChap}', (click)='switchChap(nextChap)')
           i.right.arrow.icon
           span.pre-wrap {{nextChap? nextChap.name:'（无）'}}
-      p &nbsp;
-      p &nbsp;
-      p &nbsp;
+
+    p &nbsp;
+    p &nbsp;
+
+    app-footer
+
 
 
 #dictPopup.ui.basic.popup(*ngIf='dictRequest')
@@ -117,6 +120,24 @@ ng-template(#dictSimple='')
   .item([ngClass]='{active: showTrans}', (click)='showTrans=!showTrans')
     i.translate.icon
     | 中文
-  .item([ngClass]='{active: leftRight, disabled: !showTrans}', (click)='leftRight=showTrans? !leftRight:leftRight')
-    i.columns.icon
-    | 左右
+  //.right.menu
+  .item.ui.right.bottom.pointing.dropdown(suiDropdown='')
+    | &nbsp;
+    i.ellipsis.vertical.icon
+    | &nbsp;
+    .menu(suiDropdownMenu='')
+      .item([ngClass]='{active: leftRight, disabled: !showTrans}', (click)='leftRight=showTrans? !leftRight:leftRight')
+        i.columns.icon
+        | 左右对照
+      .divider
+      .item.right.pointing(suiDropdown='')
+        span.text 转到
+        i.up.dropdown.icon
+        .left.menu(suiDropdownMenu='')
+          .item((click)='gotoPercent(0)') 开头
+          .item((click)='gotoPercent(20)') 20%
+          .item((click)='gotoPercent(40)') 40%
+          .item((click)='gotoPercent(50)') 正中
+          .item((click)='gotoPercent(60)') 60%
+          .item((click)='gotoPercent(80)') 80%
+          .item((click)='gotoPercent(100)') 末尾

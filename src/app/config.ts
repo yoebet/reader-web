@@ -52,8 +52,9 @@ const ImagesBase = `${staticBase}/images`;
 const BookImagesBase = `${ImagesBase}/book`;
 const BookImageNotSet = `${BookImagesBase}/missing.png`;
 const UserAvatarsBase = `${staticBase}/avatars`;
-const AppPackagesBase = `${staticBase}/packages`;
+const AppPackagesBase = `${staticBase}/apks`;
 const ChapPacksBase = `${staticBase}/book-chaps`;
+const AppManualIndexPage = `${staticBase}/app-man/index.html`;
 
 
 const StaticResource = {
@@ -61,7 +62,8 @@ const StaticResource = {
   BookImageNotSet,
   UserAvatarsBase,
   AppPackagesBase,
-  ChapPacksBase
+  ChapPacksBase,
+  AppManualIndexPage
 };
 
 const HeaderPrefix = 'X-';

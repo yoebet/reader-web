@@ -1,4 +1,4 @@
-const ServerRoot = 'http://yuwen-reading.net';
+const ServerRoot = 'http://cs.yuwen-reading.net';
 
 export const environment = {
   production: true,
