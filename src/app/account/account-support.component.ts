@@ -6,7 +6,7 @@ import {combineLatest, Subscription} from 'rxjs';
 import {ActiveModal} from 'ng2-semantic-ui/dist/modules/modal/classes/active-modal';
 
 import {environment} from '../../environments/environment';
-import {StaticResource} from '../config';
+import {StaticResource, LocalStorageKey} from '../config';
 import {SessionService} from '../services/session.service';
 import {WxAuthService} from '../services/wx-auth.service';
 import {User} from '../models/user';
@@ -108,17 +108,37 @@ export abstract class AccountSupportComponent implements OnInit, OnDestroy {
     if (this.queryParams) {
       // console.log(this.queryParams);
 
-      // let state = params.get('state');
+      let storage = window.localStorage;
+
+      let state = this.queryParams.get('state');
       let code = this.queryParams.get('code');
+      let rc = this.queryParams.get('rc');
+
+      if (!rc && state) {
+        let ps = state.split('-');
+        for (let p of ps) {
+          if (p.startsWith('rc')) {
+            rc = p.substr(2);
+            break;
+          }
+        }
+      }
+
       if (code && code.length >= 24) {
         let url = this.buildCurrentUri();
         window.history.pushState({}, '', url);
-        // this.wxAuthService.requestAccessToken(code)
-        this.wxAuthService.requestAccessTokenAndLogin(code)
+
+        if (!rc) {
+          rc = storage.getItem(LocalStorageKey.frc);
+        }
+        this.wxAuthService.requestAccessTokenAndLogin(code, rc)
           .subscribe(result => {
             console.log(result);
             let scope = result.wxAuthScope;
             if (result.ok === 0) {
+              if (rc) {
+                storage.setItem(LocalStorageKey.frc, rc);
+              }
               if (scope === 'snsapi_userinfo') {
                 alert(result.message || '微信登录失败');
               }
@@ -126,6 +146,10 @@ export abstract class AccountSupportComponent implements OnInit, OnDestroy {
             }
           });
         return;
+      }
+
+      if (rc) {
+        storage.setItem(LocalStorageKey.frc, rc);
       }
 
       let tempToken = this.queryParams.get('tt');

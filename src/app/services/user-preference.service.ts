@@ -25,13 +25,7 @@ export class UserPreferenceService extends BaseService<UserPreference> {
 
     this.sessionService.sessionEventEmitter
       .subscribe(event => {
-        if (event === 'Login') {
-          console.log('Login: UserPreferenceService');
-          this.clearCache();
-          return;
-        }
-        if (event === 'Logout') {
-          console.log('Logout: UserPreferenceService');
+        if (event === 'Login' || event === 'Logout') {
           this.clearCache();
         }
       });

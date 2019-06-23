@@ -59,7 +59,6 @@ export class ChapComponent extends AccountSupportComponent {
   showCommentsCount = true;
 
   allowSwitchChap = true;
-  hideWindowUrl = false;
 
   sidebarContent: 'vocabulary' | 'chap-list' = 'vocabulary';
 
@@ -140,9 +139,6 @@ export class ChapComponent extends AccountSupportComponent {
     let chapId = this.pathParams.get('id');
     this.chapService.getDetail(chapId)
       .subscribe(chap => {
-        if (this.hideWindowUrl) {
-          window.history.pushState({}, '', `/`);
-        }
         console.log(chap);
         if (!chap) {
           return;
@@ -175,8 +171,7 @@ export class ChapComponent extends AccountSupportComponent {
     if (!paras || paras.length === 0) {
       return;
     }
-    let pn = parseInt(paras.length * percent / 100.0);
-    console.log(pn);
+    let pn = Math.round(paras.length * percent / 100.0);
     if (pn === 0) {
       pn = 1;
     } else if (pn > paras.length) {
@@ -233,7 +228,12 @@ export class ChapComponent extends AccountSupportComponent {
     if (!chapId && this.chap) {
       chapId = this.chap._id;
     }
-    return `chaps/${chapId}`;
+    let uri = `chaps/${chapId}`;
+    let pn = this.queryParams.get('pn');
+    if (pn) {
+      uri = `${uri}?pn=${pn}`;
+    }
+    return uri;
   }
 
   protected onLoginCancel() {
@@ -279,9 +279,7 @@ export class ChapComponent extends AccountSupportComponent {
         this.chap = chapDetail;
         this.contentLoaded = true;
 
-        if (!this.hideWindowUrl) {
-          window.history.pushState({}, '', `chaps/${chap._id}`);
-        }
+        window.history.pushState({}, '', `chaps/${chap._id}`);
         this.setupNavigation();
         this.checkCommentsCount();
       });

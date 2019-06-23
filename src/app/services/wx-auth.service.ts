@@ -20,9 +20,9 @@ export class WxAuthService extends BaseService<any> {
     this.baseUrl = `${apiBase}/wx_auth`;
   }
 
-  requestAccessTokenAndLogin(code: string): Observable<any> {
+  requestAccessTokenAndLogin(code: string, frc?: string): Observable<any> {
     let url = `${this.baseUrl}/requestAccessTokenAndLogin`;
-    return this.http.post<any>(url, {code}, this.getHttpOptions())
+    return this.http.post<any>(url, {code, frc}, this.getHttpOptions())
       .pipe(
         map((opr: OpResult) => {
           if (opr && opr.ok === 1) {

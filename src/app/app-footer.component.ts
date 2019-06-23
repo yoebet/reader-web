@@ -24,6 +24,10 @@ export class AppFooterComponent implements OnInit {
       .subscribe((release: AppRelease) => {
         this.appRelease = release;
 
+        if (!release) {
+          return;
+        }
+
         let apkBase = StaticResource.AppPackagesBase;
         let pi = release.packageInfo;
         if (!pi) {

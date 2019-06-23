@@ -725,7 +725,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
         let codeOrUW = wordsMap.get(tWord);
 
         if (!codeOrUW) {
-          if (/[A-Z]/.test(word)
+          if (/[A-Z0-9]/.test(word)
             || text.charAt(offset + word.length) === '’'
             || (offset > 0 && text.charAt(offset - 1) === '-')) {
             codeOrUW = 'ignore';

@@ -79,6 +79,10 @@ const HeaderValues = {
   Client_Agent: 'M'*/
 };
 
+const LocalStorageKey = {
+  frc: 'FRC'
+};
+
 const DefaultHttpHeaders = environment.httpHeaders || {};
 
 export {
@@ -89,5 +93,6 @@ export {
   StaticResource,
   HeaderNames,
   HeaderValues,
-  DefaultHttpHeaders
+  DefaultHttpHeaders,
+  LocalStorageKey
 };
