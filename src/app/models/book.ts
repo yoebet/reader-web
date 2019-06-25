@@ -36,15 +36,13 @@ export class Book extends Model {
 
   image: BookImage;
 
-  contentPacks: { [name: string]: BookContentPack };
-
   chaps: Chap[];
 
 
   static CategoryNames = {
-    Nov: '小说名著',
-    Tex: '英语教材',
-    Kid: '儿童文学',
+    Nov: '小说',
+    Tex: '教材',
+    Kid: '儿童',
     His: '历史',
     Poe: '诗歌',
     Oth: '其他'
@@ -81,12 +79,6 @@ export class Book extends Model {
     return {value: k, label: Book.StatusNames[k]}
   });
 
-  static BookContentPackRoles = {
-    Editor: 'e',
-    Reader: 'r',
-    Public: 'p'
-  };
-
 }
 
 export class BookImage {
@@ -94,15 +86,6 @@ export class BookImage {
   type: string;
   size: number;
   uploadedAt: Date;
-}
-
-export class BookContentPack {
-  role?: string;
-  // file: string;
-  // hash: string;
-  size: number;
-  chaps: number;
-  builtAt: Date;
 }
 
 export class PrivilegedUsers {

@@ -21,6 +21,7 @@ export class BookListComponent extends AccountSupportComponent {
   @ViewChild('newBookName') newBookNameEl: ElementRef;
   books: Book[] = [];
   showZh = true;
+  category: string;
 
   // statusNames = Book.StatusNames;
   // categoryNames = Book.CategoryNames;
@@ -42,15 +43,30 @@ export class BookListComponent extends AccountSupportComponent {
   }
 
   protected buildCurrentUri(): string {
+    if (this.pathParams) {
+      let cat = this.pathParams.get('cat');
+      if (cat) {
+        return `books/cat/${cat}`;
+      }
+    }
     return `books`;
   }
 
   protected loadContent() {
-    this.bookService.list()
-      .subscribe(books => {
-        this.books = books;
-        this.contentLoaded = true;
-      });
+    if (this.pathParams) {
+      this.category = this.pathParams.get('cat');
+    }
+    let obs;
+    let service = this.bookService;
+    if (this.category) {
+      obs = service.listByCat(this.category);
+    } else {
+      obs = service.list();
+    }
+    obs.subscribe(books => {
+      this.books = books;
+      this.contentLoaded = true;
+    });
   }
 
   showDetail(book: Book) {

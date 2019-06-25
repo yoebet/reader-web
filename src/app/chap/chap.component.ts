@@ -236,10 +236,10 @@ export class ChapComponent extends AccountSupportComponent {
     return uri;
   }
 
-  protected onLoginCancel() {
+  /*protected onLoginCancel() {
     this.sidebarContent = 'vocabulary';
     this.sidebar.open();
-  }
+  }*/
 
   private setupNavigation() {
     this.prevChap = null;

@@ -24,6 +24,11 @@ export class BookService extends BaseService<Book> {
     this.baseUrl = `${apiBase}/books`;
   }
 
+  listByCat(cat: string): Observable<Book[]> {
+    let url = `${this.baseUrl}?cat=${cat}`;
+    return super.list(url);
+  }
+
   getDetail(bookId: string): Observable<Book> {
     let book = this.booksMap.get(bookId);
     if (book) {

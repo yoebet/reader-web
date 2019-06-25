@@ -7,6 +7,7 @@ import {ChapComponent} from './chap/chap.component';
 
 const routes: Routes = [
   {path: 'books', component: BookListComponent},
+  {path: 'books/cat/:cat', component: BookListComponent},
   {path: 'books/:id', component: BookComponent},
   {path: 'chaps/:id', component: ChapComponent}
 ];
