@@ -1,0 +1,20 @@
+/*.helper > .item > .header {
+  color: rgb(9, 187, 7);
+}*/
+
+.list.helper-group > .item {
+  line-height: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.ui.list .list.icon {
+  padding: unset !important;
+}
+
+.list > .item > i.icon {
+  display: inline-block;
+}
+
+i.content.icon {
+  line-height: unset !important;
+}

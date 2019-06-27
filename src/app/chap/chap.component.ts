@@ -35,6 +35,7 @@ import {UserVocabularyService} from '../services/user-vocabulary.service';
 import {DictSimpleComponent} from '../dict/dict-simple.component';
 import {ParaCommentsModal} from '../content/para-comments.component';
 import {AccountSupportComponent} from '../account/account-support.component';
+import {ReaderHelperModal} from './reader-helper.component';
 
 
 @Component({
@@ -164,6 +165,7 @@ export class ChapComponent extends AccountSupportComponent {
   }
 
   gotoPercent(percent: number) {
+    console.log(percent)
     if (!this.chap) {
       return;
     }
@@ -635,6 +637,10 @@ export class ChapComponent extends AccountSupportComponent {
 
   clearDictLookupHistory() {
     this.dictService.clearHistory();
+  }
+
+  showHelper() {
+    this.modalService.open(new ReaderHelperModal());
   }
 
 

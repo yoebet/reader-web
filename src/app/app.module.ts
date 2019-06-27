@@ -35,6 +35,7 @@ import {BookListComponent} from './book/book-list.component';
 import {BookComponent} from './book/book.component';
 import {BookInfoComponent} from './book/book-info.component';
 import {ChapComponent} from './chap/chap.component';
+import {ReaderHelperComponent} from './chap/reader-helper.component';
 import {ParaContentComponent} from './content/para-content.component';
 import {ParaCommentsComponent} from './content/para-comments.component';
 import {WordAnnosComponent} from './content/word-annos.component';
@@ -62,6 +63,7 @@ import {LoginPopupComponent} from './account/login-popup.component';
     BookComponent,
     BookInfoComponent,
     ChapComponent,
+    ReaderHelperComponent,
     ParaContentComponent,
     ParaCommentsComponent,
     WordAnnosComponent,
@@ -102,6 +104,7 @@ import {LoginPopupComponent} from './account/login-popup.component';
     WordAnnosComponent,
     DictSimpleComponent,
     LoginPopupComponent,
+    ReaderHelperComponent,
     ParaCommentsComponent
   ],
   bootstrap: [AppComponent]

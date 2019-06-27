@@ -123,25 +123,39 @@ ng-template(#dictSimple='')
       .item([ngClass]='{active: leftRight, disabled: !showTrans}', (click)='leftRight=showTrans? !leftRight:leftRight')
         i.columns.icon
         | 左右对照
+      ng-template([ngIf]='chap&&chap.paras.length>5')
+        .divider
+        .item((click)='gotoPercent(0)')
+          i.angle.double.up.icon
+          | 开头
+        .item((click)='gotoPercent(100)')
+          i.angle.double.down.icon
+          | 末尾
+        .item.right.pointing(suiDropdown='')
+          i.map.marker.alternate.icon
+          span.text 转到
+          i.up.dropdown.icon
+          .left.menu(suiDropdownMenu='')
+            .item(*ngIf='chap.paras.length>=20', (click)='gotoPercent(10)') 10%
+            .item((click)='gotoPercent(20)') 20%
+            .item(*ngIf='chap.paras.length>=20', (click)='gotoPercent(30)') 30%
+            .item((click)='gotoPercent(40)') 40%
+            .item(*ngIf='chap.paras.length>=20', (click)='gotoPercent(50)') 正中
+            .item((click)='gotoPercent(60)') 60%
+            .item(*ngIf='chap.paras.length>=20', (click)='gotoPercent(70)') 70%
+            .item((click)='gotoPercent(80)') 80%
+            .item(*ngIf='chap.paras.length>=20', (click)='gotoPercent(90)') 90%
       .divider
-      .item.right.pointing(*ngIf='chap&&chap.paras.length>5', suiDropdown='')
-        span.text 转到
-        i.up.dropdown.icon
-        .left.menu(suiDropdownMenu='')
-          .item((click)='gotoPercent(0)') 开头
-          .item(*ngIf='chap.paras.length>=20', (click)='gotoPercent(10)') 10%
-          .item((click)='gotoPercent(20)') 20%
-          .item(*ngIf='chap.paras.length>=20', (click)='gotoPercent(30)') 30%
-          .item((click)='gotoPercent(40)') 40%
-          .item(*ngIf='chap.paras.length>=20', (click)='gotoPercent(50)') 正中
-          .item((click)='gotoPercent(60)') 60%
-          .item(*ngIf='chap.paras.length>=20', (click)='gotoPercent(70)') 70%
-          .item((click)='gotoPercent(80)') 80%
-          .item(*ngIf='chap.paras.length>=20', (click)='gotoPercent(90)') 90%
-          .item((click)='gotoPercent(100)') 末尾
+      .item((click)='showHelper()')
+        i.help.icon
+        | 帮助
       .divider
-      a.item(*ngIf='!currentUser', (click)='openLoginDialog()', href='javascript:') （未登录）
-      .item(*ngIf='currentUser')
-        img.ui.avatar.image(*ngIf='currentUser.avatarSetting&&currentUser.avatarSetting.imgUrl',
-        [src]='avatarsBase+"/"+currentUser.avatarSetting.imgUrl')
-        | {{currentUser.nickName}}
+      ng-template([ngIf]='currentUser')
+        .item
+          img.ui.avatar.image(*ngIf='currentUser.avatarSetting&&currentUser.avatarSetting.imgUrl',
+          [src]='avatarsBase+"/"+currentUser.avatarSetting.imgUrl')
+          | {{currentUser.nickName}}
+      ng-template([ngIf]='!currentUser')
+        a.item(*ngIf='!currentUser', (click)='openLoginDialog()', href='javascript:')
+          i.circle.user.icon
+          | （未登录）

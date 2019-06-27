@@ -77,11 +77,11 @@
 }
 
 .ui.bottom.fixed.menu .item.active {
-  color: rgb(9, 187, 7);
+  color: rgb(9, 187, 7) !important;
 }
 
 .ui.bottom.fixed.menu .item.active.disabled {
-  color: rgba(9, 187, 7, 0.5);
+  color: rgba(9, 187, 7, 0.5) !important;
 }
 
 .item.paragraph {
