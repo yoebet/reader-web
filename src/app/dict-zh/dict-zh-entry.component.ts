@@ -1,16 +1,12 @@
 import {
   Input, OnChanges,
-  SimpleChanges, ChangeDetectorRef, Component
+  SimpleChanges, ChangeDetectorRef
 } from '@angular/core';
 import {last} from 'lodash';
 
 import {DictZh} from '../models/dict-zh';
 import {DictZhService} from '../services/dict-zh.service';
 
-@Component({
-  selector: 'dict-zh-entry',
-  templateUrl: './dict-zh-entry.component.html'
-})
 export class DictZhEntryComponent implements OnChanges {
   @Input() entry: DictZh;
   @Input() relatedWords: string[];

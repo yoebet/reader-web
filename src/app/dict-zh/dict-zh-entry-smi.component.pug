@@ -29,10 +29,4 @@
               | {{item.exp}}
   .ui.fields
     .ui.clearing.divider
-    .ui.right.floated.mini.buttons
-      button.ui.button((click)='cancelSelect()') 取消
-      .or
-      button.ui.primary.button([ngClass]='{disabled: !selectedChanged}',
-      (click)='doneSelect()') 确定
-    .selected-tip 选择
-    .selected-meaning(*ngIf='selectedItem&&selectedItem.meaning') {{selectedItem.meaning}}
+    button.ui.right.floated.mini.button((click)='cancelSelect()') 关闭

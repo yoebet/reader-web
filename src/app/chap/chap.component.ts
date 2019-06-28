@@ -61,6 +61,8 @@ export class ChapComponent extends AccountSupportComponent {
 
   allowSwitchChap = true;
 
+  chapListScrolled = false;
+
   sidebarContent: 'vocabulary' | 'chap-list' = 'vocabulary';
 
   prevChap: Chap;
@@ -165,7 +167,6 @@ export class ChapComponent extends AccountSupportComponent {
   }
 
   gotoPercent(percent: number) {
-    console.log(percent)
     if (!this.chap) {
       return;
     }
@@ -186,7 +187,7 @@ export class ChapComponent extends AccountSupportComponent {
   private selectPno(pn) {
     let paraEl = document.querySelector(`.item.paragraph.chap_p${pn}`);
     if (paraEl) {
-      paraEl.scrollIntoView(false);
+      paraEl.scrollIntoView({block: 'center'});
     }
   }
 
@@ -243,7 +244,24 @@ export class ChapComponent extends AccountSupportComponent {
     this.sidebar.open();
   }*/
 
-  private setupNavigation() {
+  private doScrollChapList(chapIndex) {
+    let selector = `.chap-list a.item.chap_title${chapIndex}`;
+    let chapTitleEl = document.querySelector(selector);
+    if (!chapTitleEl) {
+      setTimeout(() => {
+        chapTitleEl = document.querySelector(selector);
+        if (chapTitleEl) {
+          chapTitleEl.scrollIntoView({block: 'center'});
+          this.chapListScrolled = true;
+        }
+      }, 50);
+      return;
+    }
+    chapTitleEl.scrollIntoView({block: 'center'});
+    this.chapListScrolled = true;
+  }
+
+  private setupNavigation(scrollChapList = true) {
     this.prevChap = null;
     this.nextChap = null;
     if (!this.book) {
@@ -263,9 +281,12 @@ export class ChapComponent extends AccountSupportComponent {
     if (ci < chaps.length - 1) {
       this.nextChap = chaps[ci + 1];
     }
+    if (scrollChapList) {
+      this.doScrollChapList(ci);
+    }
   }
 
-  switchChap(chap) {
+  switchChap(chap, scrollChapList = true) {
     if (!chap) {
       return;
     }
@@ -282,7 +303,10 @@ export class ChapComponent extends AccountSupportComponent {
         this.contentLoaded = true;
 
         window.history.pushState({}, '', `chaps/${chap._id}`);
-        this.setupNavigation();
+        if (scrollChapList) {
+          this.chapListScrolled = false;
+        }
+        this.setupNavigation(scrollChapList);
         this.checkCommentsCount();
       });
   }
@@ -369,6 +393,23 @@ export class ChapComponent extends AccountSupportComponent {
     }
     this.sidebarContent = which;
     sidebar.open();
+    if (which === 'chap-list') {
+      if (this.chapListScrolled) {
+        return;
+      }
+      if (!this.book) {
+        return;
+      }
+      let chaps = this.book.chaps;
+      if (!chaps || chaps.length === 0) {
+        return;
+      }
+      let ci = chaps.findIndex(c => c._id === this.chap._id);
+      if (ci === -1) {
+        return;
+      }
+      this.doScrollChapList(ci);
+    }
   }
 
   selectPara(para): void {
