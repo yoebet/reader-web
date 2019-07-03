@@ -311,50 +311,6 @@ export class ParaContentComponent implements OnInit, OnChanges {
     }
   }
 
-  /*addANote(side: Side, triggerMethod = null) {
-    let ann = AnnotationSet.addNoteAnnotation;
-    let ar: AnnotateResult = this.getAnnotator(side, ann).annotate();
-    if (!ar || !ar.wordEl) {
-      return;
-    }
-    let dataName = DataAttrNames.note;
-    let element: any = ar.wordEl;
-    let oriNote = element.dataset[dataName];
-
-    let editNoteCallback = (note: string) => {
-      let changed = false;
-      if (note === null || note === oriNote) {
-        // cancel
-        AnnotatorHelper.removeDropTagIfDummy(element);
-      } else {
-        if (note === '') {
-          // element.removeAttribute('data-note');
-          delete element.dataset[dataName];
-          let {removed} = AnnotatorHelper.removeDropTagIfDummy(element);
-          if (removed) {
-            this.destroyAnnotatedWordsPopup(element);
-          }
-        } else {
-          element.dataset[dataName] = note;
-          changed = true;
-        }
-      }
-      if (changed) {
-        this.notifyChange(side);
-        if (this.wordsHoverSetup) {
-          let textEl = this.getTextEl(side);
-          this.setupPopup(element, textEl);
-        }
-      }
-    };
-
-    let nr = new NoteRequest();
-    nr.wordElement = element;
-    nr.note = oriNote || '';
-    nr.editNoteCallback = editNoteCallback;
-    this.noteRequest.emit(nr);
-  }*/
-
   private doAnnotate(side: Side, triggerMethod = null) {
     if (this.annotation.nameEn === SpecialAnnotations.SelectMeaning.nameEn) {
       this.selectWordMeaning(side, triggerMethod);
@@ -389,8 +345,8 @@ export class ParaContentComponent implements OnInit, OnChanges {
   }
 
   onMouseup($event, side: Side) {
-    $event.stopPropagation();
-    $event.preventDefault();
+    // $event.stopPropagation();
+    // $event.preventDefault();
     // console.log($event);
     if ($event.which === 3) {
       return;

@@ -173,7 +173,7 @@ export abstract class AccountSupportComponent implements OnInit, OnDestroy {
 
     let cu = this.sessionService.currentUser;
     if (cu) {
-      if (!this.loadImmediately) {
+      if (!this.contentLoaded) {
         this.loadContent();
       }
       return;
@@ -182,7 +182,7 @@ export abstract class AccountSupportComponent implements OnInit, OnDestroy {
     this.sessionService.checkLogin()
       .subscribe(cu => {
         if (cu) {
-          if (!this.loadImmediately) {
+          if (!this.contentLoaded) {
             this.loadContent();
           }
           return;

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AppRelease} from './models/app-release';
+// import {AppRelease} from './models/app-release';
 import {AppService} from './services/app.service';
 
 import {StaticResource} from './config';
@@ -10,9 +10,11 @@ import {StaticResource} from './config';
 })
 export class AppFooterComponent implements OnInit {
 
-  appRelease: AppRelease;
-  appDownloadUrl: string;
-  appManualUrl: string = StaticResource.AppManualIndexPage;
+  // appRelease: AppRelease;
+  // appDownloadUrl: string;
+  // appManualUrl: string = StaticResource.AppManualPage;
+  wxQrCodeUrl: string = StaticResource.WxQrCodeUrl;
+  appHomePage: string = StaticResource.AppHomePage;
 
 
   constructor(private appService: AppService) {
@@ -20,7 +22,7 @@ export class AppFooterComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.appService.getAppRelease()
+    /*this.appService.getAppRelease()
       .subscribe((release: AppRelease) => {
         this.appRelease = release;
 
@@ -34,6 +36,6 @@ export class AppFooterComponent implements OnInit {
           return;
         }
         this.appDownloadUrl = `${apkBase}/${pi.file}`;
-      });
+      });*/
   }
 }

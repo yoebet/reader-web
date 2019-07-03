@@ -11,7 +11,7 @@ import * as Drop from 'tether-drop';
 import {SuiSidebar} from 'ng2-semantic-ui/dist';
 import {SuiModalService} from 'ng2-semantic-ui';
 
-import {UIConstants} from '../config';
+import {UIConstants, ReaderStyles, LocalStorageKey} from '../config';
 import {AnnotationSet} from '../anno/annotation-set';
 import {AnnotatorHelper} from '../anno/annotator-helper';
 import {ContentContext} from '../content-types/content-context';
@@ -21,7 +21,6 @@ import {Chap} from '../models/chap';
 import {Para} from '../models/para';
 import {UserWord} from '../models/user-word';
 import {DictEntry} from '../models/dict-entry';
-import {Annotation} from '../models/annotation';
 import {SessionService} from '../services/session.service';
 import {WxAuthService} from '../services/wx-auth.service';
 import {BookService} from '../services/book.service';
@@ -65,13 +64,13 @@ export class ChapComponent extends AccountSupportComponent {
 
   sidebarContent: 'vocabulary' | 'chap-list' = 'vocabulary';
 
+  readerBgCssClass = ReaderStyles.ReaderBgDefault;
+
   prevChap: Chap;
   nextChap: Chap;
 
   annotationSet: AnnotationSet;
   contentContext: ContentContext;
-
-  currentAnnotation: Annotation = null;
 
   dictRequest: DictRequest = null;
   dictTether = null;
@@ -96,6 +95,18 @@ export class ChapComponent extends AccountSupportComponent {
               protected route: ActivatedRoute) {
     super(sessionService, wxAuthService, modalService, route);
     this.requireLogin = true;
+
+    const LSK = LocalStorageKey;
+    let storage = window.localStorage;
+    let readerBg = storage.getItem(LSK.readerBG);
+    if (readerBg) {
+      this.readerBgCssClass = readerBg;
+    }
+    this.lookupDict = this.getStorageBoolean(storage, LSK.readerLookupDict, this.lookupDict);
+    this.markNewWords = this.getStorageBoolean(storage, LSK.readerMarkNewWords, this.markNewWords);
+    this.wordsHover = this.getStorageBoolean(storage, LSK.readerWordsHover, this.wordsHover);
+    this.showTrans = this.getStorageBoolean(storage, LSK.readerShowTrans, this.showTrans);
+    this.leftRight = this.getStorageBoolean(storage, LSK.readerLeftRight, this.leftRight);
   }
 
 
@@ -105,6 +116,14 @@ export class ChapComponent extends AccountSupportComponent {
 
   get latestAdded(): UserWord[] {
     return this.userWordService.latestAdded;
+  }
+
+  private getStorageBoolean(storage, key, defaultValue: boolean): boolean {
+    let value = storage.getItem(key);
+    if (value == null) {
+      return defaultValue;
+    }
+    return value === '1';
   }
 
   ngOnInit(): void {
@@ -133,6 +152,21 @@ export class ChapComponent extends AccountSupportComponent {
         event.stopPropagation();
       }
     }, true);
+  }
+
+
+  ngOnDestroy(): void {
+    super.ngOnDestroy();
+
+    let storage = window.localStorage;
+
+    const LSK = LocalStorageKey;
+    storage.setItem(LSK.readerBG, this.readerBgCssClass);
+    storage.setItem(LSK.readerLookupDict, this.lookupDict ? '1' : '0');
+    storage.setItem(LSK.readerMarkNewWords, this.markNewWords ? '1' : '0');
+    storage.setItem(LSK.readerWordsHover, this.wordsHover ? '1' : '0');
+    storage.setItem(LSK.readerShowTrans, this.showTrans ? '1' : '0');
+    storage.setItem(LSK.readerLeftRight, this.leftRight ? '1' : '0');
   }
 
   protected loadContent() {
@@ -238,11 +272,6 @@ export class ChapComponent extends AccountSupportComponent {
     }
     return uri;
   }
-
-  /*protected onLoginCancel() {
-    this.sidebarContent = 'vocabulary';
-    this.sidebar.open();
-  }*/
 
   private doScrollChapList(chapIndex) {
     let selector = `.chap-list a.item.chap_title${chapIndex}`;
@@ -367,10 +396,6 @@ export class ChapComponent extends AccountSupportComponent {
         this.onDictItemSelect(null);
         $event.stopPropagation();
         return;
-      }
-      if (this.currentAnnotation) {
-        this.currentAnnotation = null;
-        $event.stopPropagation();
       }
     }
   }
@@ -682,6 +707,10 @@ export class ChapComponent extends AccountSupportComponent {
 
   showHelper() {
     this.modalService.open(new ReaderHelperModal());
+  }
+
+  setBackground(cssClass: string) {
+    this.readerBgCssClass = cssClass;
   }
 
 

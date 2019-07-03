@@ -1,4 +1,4 @@
-sui-sidebar-container.reader.fit-bottom-menu
+sui-sidebar-container.fit-bottom-menu.reader([ngClass]='readerBgCssClass')
   sui-sidebar.inverted.vertical.small(transition='overlay', #sidebar="")
     .chap-list(*ngIf='sidebarContent==="chap-list" && allowSwitchChap')
       a.item(*ngFor='let c of book&&book.chaps; index as idx',
@@ -146,6 +146,16 @@ ng-template(#dictSimple='')
             .item((click)='gotoPercent(70)') 70%
             .item((click)='gotoPercent(80)') 80%
             .item((click)='gotoPercent(90)') 90%
+      .divider
+      .item.right.pointing(suiDropdown='')
+        i.adjust.icon
+        span.text 背景
+        i.up.dropdown.icon
+        .left.menu(suiDropdownMenu='')
+          .item.reader-bg-wh((click)='setBackground("reader-bg-wh")') A
+          .item.reader-bg-ly((click)='setBackground("reader-bg-ly")') B
+          .item.reader-bg-br((click)='setBackground("reader-bg-br")') C
+          .item.reader-bg-gr((click)='setBackground("reader-bg-gr")') D
       .divider
       .item((click)='showHelper()')
         i.help.icon

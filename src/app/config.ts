@@ -15,6 +15,11 @@ const UIConstants = {
 };
 
 
+const ReaderBgCssClasses = ['reader-bg-wh', 'reader-bg-ly', 'reader-bg-br', 'reader-bg-gr'];
+
+const ReaderStyles = {ReaderBgCssClasses, ReaderBgDefault: 'reader-bg-ly'};
+
+
 const DataAttrNames = {
   // mid: 'mid',
   pos: 'pos',
@@ -54,7 +59,9 @@ const BookImageNotSet = `${BookImagesBase}/missing.png`;
 const UserAvatarsBase = `${staticBase}/avatars`;
 const AppPackagesBase = `${staticBase}/apks`;
 const ChapPacksBase = `${staticBase}/book-chaps`;
-const AppManualIndexPage = `${staticBase}/app-man/index.html`;
+const AppHomePage = `${staticBase}/app`;
+const AppManualPage = `${staticBase}/app-man`;
+const WxQrCodeUrl = `${staticBase}/wxmp/qrcode_344.jpg`;
 
 
 const StaticResource = {
@@ -63,7 +70,9 @@ const StaticResource = {
   UserAvatarsBase,
   AppPackagesBase,
   ChapPacksBase,
-  AppManualIndexPage
+  AppHomePage,
+  AppManualPage,
+  WxQrCodeUrl
 };
 
 const HeaderPrefix = 'X-';
@@ -80,7 +89,13 @@ const HeaderValues = {
 };
 
 const LocalStorageKey = {
-  frc: 'FRC'
+  frc: 'FRC',
+  readerBG: 'RBG',
+  readerLookupDict: 'RLD',
+  readerMarkNewWords: 'RNW',
+  readerWordsHover: 'RWH',
+  readerShowTrans: 'RST',
+  readerLeftRight: 'RLR'
 };
 
 const DefaultHttpHeaders = environment.httpHeaders || {};
@@ -90,6 +105,7 @@ export {
   DataAttrNames,
   DataAttrValues,
   SpecialAnnotations,
+  ReaderStyles,
   StaticResource,
   HeaderNames,
   HeaderValues,
