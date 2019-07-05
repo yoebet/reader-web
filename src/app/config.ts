@@ -59,7 +59,7 @@ const BookImageNotSet = `${BookImagesBase}/missing.png`;
 const UserAvatarsBase = `${staticBase}/avatars`;
 const AppPackagesBase = `${staticBase}/apks`;
 const ChapPacksBase = `${staticBase}/book-chaps`;
-const AppHomePage = `${staticBase}/app`;
+const AppHomePage = `${staticBase}/`;
 const AppManualPage = `${staticBase}/app-man`;
 const WxQrCodeUrl = `${staticBase}/wxmp/qrcode_344.jpg`;
 

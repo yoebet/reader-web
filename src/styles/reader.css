@@ -1,0 +1,19 @@
+.reader-bg-wh, .ui.menu .ui.dropdown .left.menu > .item.reader-bg-wh {
+  background-color: white !important;
+}
+
+.reader-bg-ly, .ui.menu .ui.dropdown .left.menu > .item.reader-bg-ly {
+  background-color: #F3F2EE !important;
+}
+
+.reader-bg-br, .ui.menu .ui.dropdown .left.menu > .item.reader-bg-br {
+  background-color: #E3D1AFA0 !important;
+}
+
+.reader-bg-gr, .ui.menu .ui.dropdown .left.menu > .item.reader-bg-gr {
+  background-color: #BCD9C4A0 !important;
+}
+
+.ui.content.comments {
+  background: whitesmoke;
+}

@@ -1,8 +1,8 @@
-import {Component} from "@angular/core";
-import {ComponentModalConfig, SuiModal, ModalSize} from "ng2-semantic-ui";
+import {Component} from '@angular/core';
+import {ComponentModalConfig, SuiModal, ModalSize} from 'ng2-semantic-ui';
 
-import {Para} from "../models/para";
-import {ParaComment} from "../models/para-comment";
+import {Para} from '../models/para';
+import {ParaComment} from '../models/para-comment';
 
 @Component({
   selector: 'para-comments',

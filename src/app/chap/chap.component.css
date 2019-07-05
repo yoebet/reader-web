@@ -1,22 +1,30 @@
 .pushable.reader {
-  height: initial;
+  height: 100vh;
+  box-sizing: border-box !important;
+  overflow: hidden;
 }
 
 .pushable.reader > .pusher.dimmed:after {
   position: fixed;
 }
 
+.pushable.reader > .sidebar, .pushable.reader > .pusher {
+  height: 100% !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
 .ui.left.sidebar {
+  top: 39px;
   width: 260px;
-  padding: 1em 0;
 }
 
 .fit-top-menu {
-  padding-top: 39px;
+  padding-top: 39px !important;
 }
 
 .fit-bottom-menu {
-  margin-bottom: 39px;
+  padding-bottom: 39px !important;
 }
 
 @media only screen and (max-width: 767px) {
@@ -25,7 +33,7 @@
   }
 
   .fit-bottom-menu {
-    margin-bottom: 34px;
+    padding-bottom: 34px !important;
   }
 }
 
@@ -37,7 +45,7 @@
 
 @media only screen and (min-width: 1200px) {
   .ui.left.sidebar {
-    width: 460px;
+    width: 480px;
   }
 }
 
@@ -140,21 +148,4 @@
 
 .para-op .item {
   font-size: 0.9em !important;
-}
-
-
-.reader-bg-wh, .ui.menu .ui.dropdown .left.menu > .item.reader-bg-wh {
-  background-color: white !important;
-}
-
-.reader-bg-ly, .ui.menu .ui.dropdown .left.menu > .item.reader-bg-ly {
-  background-color: #F3F2EE !important;
-}
-
-.reader-bg-br, .ui.menu .ui.dropdown .left.menu > .item.reader-bg-br {
-  background-color: #E3D1AFA0 !important;
-}
-
-.reader-bg-gr, .ui.menu .ui.dropdown .left.menu > .item.reader-bg-gr {
-  background-color: #BCD9C4A0 !important;
 }

@@ -1,4 +1,10 @@
-sui-sidebar-container.fit-bottom-menu.reader([ngClass]='readerBgCssClass')
+.ui.small.top.fixed.inverted.main.menu
+  .item.chap-name(*ngIf='chap') {{chap.name}}
+  .right.menu
+    .item((click)='toggleSidebar(sidebar,"chap-list")')
+      i.content.icon
+
+sui-sidebar-container.fit-bottom-menu.reader.fit-top-menu([ngClass]='readerBgCssClass')
   sui-sidebar.inverted.vertical.small(transition='overlay', #sidebar="")
     .chap-list(*ngIf='sidebarContent==="chap-list" && allowSwitchChap')
       a.item(*ngFor='let c of book&&book.chaps; index as idx',
@@ -30,13 +36,7 @@ sui-sidebar-container.fit-bottom-menu.reader([ngClass]='readerBgCssClass')
     p &nbsp;
     p &nbsp;
 
-  sui-sidebar-sibling.fit-top-menu([isDimmedWhenVisible]='true')
-    .ui.small.top.fixed.inverted.main.menu
-      .item.chap-name(*ngIf='chap') {{chap.name}}
-      .right.menu
-        .item((click)='toggleSidebar(sidebar,"chap-list")')
-          i.content.icon
-
+  sui-sidebar-sibling([isDimmedWhenVisible]='true')
     .ui.chap-content
       .ui.list.items(*ngIf='chap')
         .item.paragraph(*ngFor='let para of chap.paras; index as idx; trackBy: paraTracker', class='chap_p{{idx+1}}')
@@ -77,27 +77,6 @@ sui-sidebar-container.fit-bottom-menu.reader([ngClass]='readerBgCssClass')
 
     app-footer
 
-
-
-#dictPopup.ui.basic.popup(*ngIf='dictRequest')
-  dict-entry(*ngIf='dictRequest.dictLang==="en"',
-  [entry]='dictRequest.dictEntry',
-  [initialSelectedItem]='dictRequest.initialSelected',
-  [relatedWords]='dictRequest.relatedWords',
-  [context]='dictRequest.context',
-  (viewReady)='onDictPopupReady()',
-  (userWordChanged)='onUserWordChange($event)',
-  (dictItemSelected)='onDictItemSelect($event)')
-  dict-zh-entry-smi(*ngIf='dictRequest.dictLang==="zh"',
-  [entry]='dictRequest.dictEntry',
-  [initialSelectedItem]='dictRequest.initialSelected',
-  [relatedWords]='dictRequest.relatedWords',
-  [context]='dictRequest.context',
-  (viewReady)='onDictPopupReady()',
-  (dictItemSelected)='onDictItemSelect($event)')
-ng-template(#dictSimple='')
-
-
 .ui.small.bottom.fixed.inverted.menu
   .item((click)='toggleSidebar(sidebar,"vocabulary")')
     | &nbsp;
@@ -115,7 +94,6 @@ ng-template(#dictSimple='')
   .item([ngClass]='{active: showTrans}', (click)='showTrans=!showTrans')
     i.translate.icon
     | 中文
-  //.right.menu
   .item.ui.right.bottom.pointing.dropdown(suiDropdown='')
     | &nbsp;
     i.ellipsis.vertical.icon
@@ -124,7 +102,7 @@ ng-template(#dictSimple='')
       .item([ngClass]='{active: leftRight, disabled: !showTrans}', (click)='leftRight=showTrans? !leftRight:leftRight')
         i.columns.icon
         | 左右对照
-      ng-template([ngIf]='chap&&chap.paras.length>9')
+      ng-template([ngIf]='chap&&chap.paras.length>1')
         .divider
         .item((click)='gotoPercent(0)')
           i.angle.double.up.icon
@@ -132,7 +110,7 @@ ng-template(#dictSimple='')
         .item((click)='gotoPercent(100)')
           i.angle.double.down.icon
           | 末尾
-        .item.right.pointing(suiDropdown='')
+        .item.right.pointing(suiDropdown='', *ngIf='chap.paras.length>9')
           i.map.marker.alternate.icon
           span.text 转到
           i.up.dropdown.icon
@@ -170,3 +148,23 @@ ng-template(#dictSimple='')
         a.item(*ngIf='!currentUser', (click)='openLoginDialog()', href='javascript:')
           i.circle.user.icon
           | （未登录）
+
+
+#dictPopup.ui.basic.popup(*ngIf='dictRequest')
+  dict-entry(*ngIf='dictRequest.dictLang==="en"',
+  [entry]='dictRequest.dictEntry',
+  [initialSelectedItem]='dictRequest.initialSelected',
+  [relatedWords]='dictRequest.relatedWords',
+  [context]='dictRequest.context',
+  (viewReady)='onDictPopupReady()',
+  (userWordChanged)='onUserWordChange($event)',
+  (dictItemSelected)='onDictItemSelect($event)')
+  dict-zh-entry-smi(*ngIf='dictRequest.dictLang==="zh"',
+  [entry]='dictRequest.dictEntry',
+  [initialSelectedItem]='dictRequest.initialSelected',
+  [relatedWords]='dictRequest.relatedWords',
+  [context]='dictRequest.context',
+  (viewReady)='onDictPopupReady()',
+  (dictItemSelected)='onDictItemSelect($event)')
+ng-template(#dictSimple='')
+
