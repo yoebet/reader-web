@@ -7,11 +7,11 @@
 }
 
 .reader-bg-br, .ui.menu .ui.dropdown .left.menu > .item.reader-bg-br {
-  background-color: #E3D1AFA0 !important;
+  background-color: rgba(227, 209, 175, 0.6) !important;
 }
 
 .reader-bg-gr, .ui.menu .ui.dropdown .left.menu > .item.reader-bg-gr {
-  background-color: #BCD9C4A0 !important;
+  background-color: rgba(188, 217, 196, 0.6) !important;
 }
 
 .ui.content.comments {

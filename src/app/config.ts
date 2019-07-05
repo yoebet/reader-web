@@ -15,9 +15,14 @@ const UIConstants = {
 };
 
 
-const ReaderBgCssClasses = ['reader-bg-wh', 'reader-bg-ly', 'reader-bg-br', 'reader-bg-gr'];
+const ReaderBgCandidates = [
+  {clazz: 'reader-bg-wh', label: 'A'},
+  {clazz: 'reader-bg-ly', label: 'B'},
+  {clazz: 'reader-bg-br', label: 'C'},
+  {clazz: 'reader-bg-gr', label: 'D'}
+];
 
-const ReaderStyles = {ReaderBgCssClasses, ReaderBgDefault: 'reader-bg-ly'};
+const ReaderStyles = {ReaderBgCandidates, ReaderBgDefault: 'reader-bg-ly'};
 
 
 const DataAttrNames = {

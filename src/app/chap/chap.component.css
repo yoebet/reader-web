@@ -45,7 +45,7 @@
 
 @media only screen and (min-width: 1200px) {
   .ui.left.sidebar {
-    width: 480px;
+    width: 460px;
   }
 }
 
@@ -98,7 +98,6 @@
 }
 
 .para-no {
-  /*min-width: 1.2em;*/
   padding-top: 0.6em;
   margin-right: 0.6em;
   align-self: center;
@@ -111,10 +110,6 @@
 
 .paragraph .para-no {
   cursor: pointer;
-}
-
-.prev-next-nav .item.next-nav {
-  /*margin-top: 0.8em;*/
 }
 
 .prev-next-nav .item > i.icon {

@@ -130,10 +130,10 @@ sui-sidebar-container.fit-bottom-menu.reader.fit-top-menu([ngClass]='readerBgCss
         span.text 背景
         i.up.dropdown.icon
         .left.menu(suiDropdownMenu='')
-          .item.reader-bg-wh((click)='setBackground("reader-bg-wh")') A
-          .item.reader-bg-ly((click)='setBackground("reader-bg-ly")') B
-          .item.reader-bg-br((click)='setBackground("reader-bg-br")') C
-          .item.reader-bg-gr((click)='setBackground("reader-bg-gr")') D
+          .item.reader-bg(*ngFor='let bg of readerBgCandidates',
+          class='{{bg.clazz}}',
+          [ngClass]='{active: readerBgCssClass===bg.clazz}',
+          (click)='setBackground(bg.clazz)') {{bg.label}}
       .divider
       .item((click)='showHelper()')
         i.help.icon

@@ -65,6 +65,7 @@ export class ChapComponent extends AccountSupportComponent {
   sidebarContent: 'vocabulary' | 'chap-list' = 'vocabulary';
 
   readerBgCssClass = ReaderStyles.ReaderBgDefault;
+  readerBgCandidates = ReaderStyles.ReaderBgCandidates;
 
   prevChap: Chap;
   nextChap: Chap;
