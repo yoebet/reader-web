@@ -302,26 +302,72 @@ export class Annotator {
     return ar;
   }
 
-  annotate(): AnnotateResult {
+  static getRangeFromEvent(event) {
+    // Firefox
+    if (event.rangeParent && document.createRange) {
+      let range = document.createRange();
+      range.setStart(event.rangeParent, event.rangeOffset);
+      range.setEnd(event.rangeParent, event.rangeOffset);
+      return range;
+    }
+    // Webkit
+    if (document.caretRangeFromPoint) {
+      return document.caretRangeFromPoint(event.clientX, event.clientY);
+    }
+    // Firefox for events without rangeParent
+    if (document['caretPositionFromPoint']) {
+      let caret = document['caretPositionFromPoint'](event.clientX, event.clientY);
+      let range = document.createRange();
+      range.setStart(caret.offsetNode, caret.offset);
+      range.setEnd(caret.offsetNode, caret.offset);
+      return range;
+    }
+    return null;
+  }
+
+
+  annotate(event?): AnnotateResult {
     if (!this.current) {
       return null;
     }
     let selection = window.getSelection();
-    let ar = this.doAnnotate(selection);
-    selection.removeAllRanges();
-    return ar;
+    if (selection) {
+      let ar = this.doAnnotate(selection);
+      selection.removeAllRanges();
+      if (ar) {
+        return ar;
+      }
+    }
+    if (event) {
+      let range: Range = Annotator.getRangeFromEvent(event);
+      if (!range) {
+        return null;
+      }
+      return this.doAnnotate(range);
+    }
+    return null;
   }
 
-  private doAnnotate(selection: Selection): AnnotateResult {
-    let node1 = selection.anchorNode;
-    let node2 = selection.focusNode;
+  private doAnnotate(selection: Selection | Range): AnnotateResult {
+
+    let node1, node2;
+    let offset1, offset2;
+
+    if (selection instanceof Selection) {
+      node1 = selection.anchorNode;
+      node2 = selection.focusNode;
+      offset1 = selection.anchorOffset;
+      offset2 = selection.focusOffset;
+    } else {
+      node1 = selection.startContainer;
+      node2 = selection.endContainer;
+      offset1 = selection.startOffset;
+      offset2 = selection.endOffset;
+    }
 
     if (!node1 || !node2) {
       return null;
     }
-
-    let offset1 = selection.anchorOffset;
-    let offset2 = selection.focusOffset;
 
     if (!this.wordAtCursorIfNoSelection) {
       if (node1 === node2 && offset1 === offset2) {

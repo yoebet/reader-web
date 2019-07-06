@@ -522,10 +522,11 @@ export class ChapComponent extends AccountSupportComponent {
       this.dictTether = new Tether({
         element: dictPopup,
         target: this.dictRequest.wordElement,
-        attachment: 'top center',
+        targetAttachment: 'bottom right',
+        attachment: 'top right',
         constraints: [
           {
-            to: 'scrollParent',
+            to: 'window',
             attachment: 'together',
             pin: true
           }

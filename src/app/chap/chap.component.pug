@@ -53,7 +53,6 @@ sui-sidebar-container.fit-bottom-menu.reader.fit-top-menu([ngClass]='readerBgCss
             [highlightSentence]='highlightSentence',
             [markNewWords]='markNewWords',
             [wordsHover]='wordsHover',
-            [annotation]='(para===selectedPara)? currentAnnotation : null',
             [ngClass]='{"selected": para===selectedPara, "left-right": leftRight, "up-down": !leftRight}',
             (mouseover)='selectPara(para)',
             (dictRequest)="onDictRequest($event)")

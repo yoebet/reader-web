@@ -170,9 +170,9 @@ export class ParaContentComponent implements OnInit, OnChanges {
     }
   }
 
-  selectWordMeaning(side: Side, triggerMethod = null) {
+  selectWordMeaning(side: Side, $event, triggerMethod = null) {
     let ann = AnnotationSet.selectMeaningAnnotation;
-    let ar: AnnotateResult = this.getAnnotator(side, ann).annotate();
+    let ar: AnnotateResult = this.getAnnotator(side, ann).annotate($event);
     if (!ar || !ar.wordEl) {
       return;
     }
@@ -311,16 +311,16 @@ export class ParaContentComponent implements OnInit, OnChanges {
     }
   }
 
-  private doAnnotate(side: Side, triggerMethod = null) {
+  private doAnnotate(side: Side, $event, triggerMethod = null) {
     if (this.annotation.nameEn === SpecialAnnotations.SelectMeaning.nameEn) {
-      this.selectWordMeaning(side, triggerMethod);
+      this.selectWordMeaning(side, $event, triggerMethod);
       return;
     }
     /*if (this.annotation.nameEn === SpecialAnnotations.AddANote.nameEn) {
       this.addANote(side, triggerMethod);
       return;
     }*/
-    let ar: AnnotateResult = this.getAnnotator(side).annotate();
+    let ar: AnnotateResult = this.getAnnotator(side).annotate($event);
     if (!ar) {
       return;
     }
@@ -345,9 +345,8 @@ export class ParaContentComponent implements OnInit, OnChanges {
   }
 
   onMouseup($event, side: Side) {
-    // $event.stopPropagation();
-    // $event.preventDefault();
-    // console.log($event);
+    $event.stopPropagation();
+    $event.preventDefault();
     if ($event.which === 3) {
       return;
     }
@@ -363,11 +362,11 @@ export class ParaContentComponent implements OnInit, OnChanges {
       triggerMethod = 'Ctrl_' + triggerMethod;
     }
     if (this.lookupDict) {
-      this.selectWordMeaning(side, triggerMethod);
+      this.selectWordMeaning(side, $event, triggerMethod);
       return;
     }
     if ($event.ctrlKey || $event.metaKey) {
-      this.selectWordMeaning(side, triggerMethod);
+      this.selectWordMeaning(side, $event, triggerMethod);
       return;
     }
     if (!this.gotFocus) {
@@ -376,11 +375,11 @@ export class ParaContentComponent implements OnInit, OnChanges {
     if (!this.annotation) {
       return;
     }
-    this.doAnnotate(side, triggerMethod);
+    this.doAnnotate(side, $event, triggerMethod);
   }
 
   onContextmenu($event, side: Side) {
-    this.selectWordMeaning(side, 'RightClick');
+    this.selectWordMeaning(side, $event, 'RightClick');
     $event.stopPropagation();
     $event.preventDefault();
   }
@@ -772,14 +771,6 @@ export class ParaContentComponent implements OnInit, OnChanges {
     this.setupAnnotationsPopup();
   }
 
-  private annotateCurrentCursor(side: Side) {
-    let annotator = this.getAnnotator(side);
-    let wacins = annotator.wordAtCursorIfNoSelection;
-    annotator.wordAtCursorIfNoSelection = false;
-    this.doAnnotate(side, 'Selection');
-    annotator.wordAtCursorIfNoSelection = wacins;
-  }
-
   ngOnChanges(changes: SimpleChanges) {
     let textChanged = false;
     if (changes.para) {
@@ -789,21 +780,6 @@ export class ParaContentComponent implements OnInit, OnChanges {
     if (this.showTrans && !this.transRendered) {
       this.refreshTrans();
       textChanged = true;
-    }
-    if (!textChanged && changes.annotation) {
-      if (this.gotFocus && this.annotation) {
-        let contentEl = this.contentText.element.nativeElement;
-        let transEl = this.transText.element.nativeElement;
-        let selection = window.getSelection();
-        let selected = AnnotatorHelper.checkSelectionContainer(selection, contentEl, transEl);
-        if (selected) {
-          if (selected === contentEl) {
-            this.annotateCurrentCursor(SideContent);
-          } else {
-            this.annotateCurrentCursor(SideTrans);
-          }
-        }
-      }
     }
 
     if (this.highlightedSentences && (!this.gotFocus || !this.sentenceHoverSetup || !this.highlightSentence)) {
