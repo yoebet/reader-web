@@ -30,6 +30,7 @@ const DataAttrNames = {
   pos: 'pos',
   word: 'word',
   mean: 'mean',
+  forPhraseGroup: 'fpg',
   note: 'note',
   assoc: 'assoc',//关联组
   wordFamiliarity: 'uwf'
@@ -50,10 +51,6 @@ const SpecialAnnotations = {
   SelectMeaning: {
     name: '选词义',
     nameEn: 'SelectMeaning'
-  },
-  AddANote: {
-    name: '加注解',
-    nameEn: 'AddANote'
   }
 };
 
@@ -83,8 +80,9 @@ const StaticResource = {
 const HeaderPrefix = 'X-';
 
 const HeaderNames = {
-  UserToken: HeaderPrefix + 'UT',
   UserName: HeaderPrefix + 'UN',
+  UserToken: HeaderPrefix + 'UT',
+  NameTokenDigest: HeaderPrefix + 'NTD',
   Client: HeaderPrefix + 'CL'
 };
 

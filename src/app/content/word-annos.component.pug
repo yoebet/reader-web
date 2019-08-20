@@ -5,8 +5,14 @@
   .item(*ngIf='annos.meaning')
     .item-head 释义：
     .item-text
-      ng-template([ngIf]='annos.word!==annos.meaning.word') ({{annos.meaning.word}}) &nbsp;
+      ng-template([ngIf]='head!==annos.meaning.word') ({{annos.meaning.word}}) &nbsp;
       | {{annos.meaning.text}}
+  .item(*ngIf='annos.phraseMeaning')
+    .item-head
+      | 词组 &nbsp;
+      ng-template([ngIf]='head!==annos.phraseMeaning.word') {{annos.phraseMeaning.word}}
+    .item-text
+      | {{annos.phraseMeaning.text}}
   .item(*ngIf='annos.note')
     .item-head 注：
     .item-text.pre-wrap {{annos.note}}

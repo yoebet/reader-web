@@ -90,7 +90,7 @@ y-o, .yo {
   border-bottom-color: darkgreen;
 }
 
-[data-mean] {
+[data-mean]:not([data-fpg]) {
   font-weight: bold;
 }
 

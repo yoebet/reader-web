@@ -7,8 +7,6 @@ export class AnnotationSet {
 
   static selectMeaningAnnotation: Annotation;
 
-  static addNoteAnnotation: Annotation;
-
   static emptySet = () => new AnnotationSet([]);
 
   readonly groups: AnnotationGroup[];
@@ -28,14 +26,6 @@ export class AnnotationSet {
     swm.group = groupSwm;
     AnnotationSet.selectMeaningAnnotation = swm;
 
-    let groupAan = new AnnotationGroup();
-    groupAan.dataName = DataAttrNames.note;
-    let aan = new Annotation();
-    let annAAConfig = SpecialAnnotations.AddANote;
-    aan.name = annAAConfig.name;
-    aan.nameEn = annAAConfig.nameEn;
-    aan.group = groupAan;
-    AnnotationSet.addNoteAnnotation = aan;
   }
 
   constructor(groups: AnnotationGroup[]) {
@@ -47,8 +37,7 @@ export class AnnotationSet {
 
 
     this.specialAnnotations = [
-      AnnotationSet.selectMeaningAnnotation,
-      AnnotationSet.addNoteAnnotation];
+      AnnotationSet.selectMeaningAnnotation];
 
     for (let group of this.groups) {
       group.annotations = group.annotations.map(oa => {

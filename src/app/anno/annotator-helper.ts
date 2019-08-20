@@ -368,17 +368,19 @@ export class AnnotatorHelper {
     return true;
   }
 
-  static parseAnnotations(wordEl, annotationSet): ElAnnos {
+  static parseAnnotations(wordEl, annotationSet, paraTextEl): ElAnnos {
     let annos = new ElAnnos();
     if (!wordEl) {
       return annos;
     }
     annos.word = wordEl.textContent;
 
+    let phraseWords = null;
+
     let dataset = wordEl.dataset;
     for (let name in dataset) {
       let value = dataset[name];
-      if (name === DataAttrNames.mean) {
+      if (name === DataAttrNames.mean && !dataset[DataAttrNames.forPhraseGroup]) {
         let mean = value;
         let forWord = wordEl.dataset[DataAttrNames.word];
         if (!forWord) {
@@ -392,6 +394,56 @@ export class AnnotatorHelper {
         annos.meaning = {pos, mean, word: forWord, text};
         continue;
       }
+
+      if (name === DataAttrNames.assoc) {
+
+        let group = value;
+
+        let stEl = AnnotatorHelper.findSentence(wordEl, paraTextEl);
+        if (!stEl) {
+          stEl = paraTextEl;
+        }
+        let groupSelector = `[data-${DataAttrNames.assoc}=${group}]`;
+        let groupEls = stEl.querySelectorAll(groupSelector);
+        let els = Array.from(groupEls);
+        let words = els.map((el: Element) => el.textContent).join(' ');
+        if (words.indexOf(' ') == -1) {
+          continue;
+        }
+
+        phraseWords = words;
+
+        if (DataAttrValues.phraPattern.test(group)) {
+
+          let mean = null;
+          let phraseWord = words;
+
+          for (let el0 of els) {
+            let el = el0 as HTMLElement;
+            let ds = el.dataset;
+            mean = ds[DataAttrNames.mean];
+            if (!mean) {
+              continue;
+            }
+            let phraseGroup = ds[DataAttrNames.forPhraseGroup];
+            let forWord = ds[DataAttrNames.word];
+            if (forWord !== words && phraseGroup !== group) {
+              continue;
+            }
+            if (forWord) {
+              phraseWord = forWord;
+            }
+            break;
+          }
+
+          if (mean) {
+            annos.phraseMeaning = {pos: '', mean, word: phraseWord, text: mean};
+          }
+          continue;
+        }
+
+      }
+
       if (name === DataAttrNames.note) {
         annos.note = value;
         continue;
@@ -402,6 +454,10 @@ export class AnnotatorHelper {
       }
       let item = {dataName: name, dataValue: value, text};
       annos.items.push(item);
+    }
+
+    if (phraseWords && !annos.note && !annos.meaning && !annos.phraseMeaning && annos.items.length === 0) {
+      annos.word = phraseWords;
     }
 
     return annos;

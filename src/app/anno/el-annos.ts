@@ -3,6 +3,7 @@ export class ElAnnos {
   items: AnnoItem[] = [];
   note: string = null;
   meaning: AnnoMeaning = null;
+  phraseMeaning: AnnoMeaning = null;
 }
 
 export class AnnoItem {
