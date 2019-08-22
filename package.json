@@ -22,6 +22,7 @@
     "@angular/router": "~7.2.0",
     "core-js": "^2.5.4",
     "lodash": "^4.17.11",
+    "md5": "^2.2.1",
     "moment": "^2.19.3",
     "ng2-semantic-ui": "^0.9.7",
     "rxjs": "~6.3.3",

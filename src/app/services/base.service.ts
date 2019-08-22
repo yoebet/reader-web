@@ -1,8 +1,9 @@
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
-import {Observable, EMPTY, throwError} from 'rxjs';
+import {Observable, EMPTY, of, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 
+import {HeaderNames} from '../config';
 import {Model} from '../models/model';
 import {OpResult} from '../models/op-result';
 import {SessionService} from './session.service';
@@ -23,8 +24,19 @@ export class BaseService<M extends Model> {
     return this.sessionService.getHttpOptions();
   }
 
-  list(url: string = null): Observable<M[]> {
-    return this.http.get<M[]>(url || this.baseUrl, this.getHttpOptions())
+  protected withCredential(httpOptions) {
+    let headers: HttpHeaders = httpOptions.headers;
+    let UN = HeaderNames.UserName;
+    let UT = HeaderNames.UserToken;
+    return headers.get(UN) && headers.get(UT);
+  }
+
+  list(url: string = null, requireCredential = false): Observable<M[]> {
+    let httpOptions = this.getHttpOptions();
+    if (requireCredential && !this.withCredential(httpOptions)) {
+      return of([]);
+    }
+    return this.http.get<M[]>(url || this.baseUrl, httpOptions)
       .pipe(catchError(this.handleErrorGET));
   }
 
@@ -34,8 +46,12 @@ export class BaseService<M extends Model> {
       .pipe(catchError(this.handleErrorGET));
   }
 
-  getOneByUrl(url: string): Observable<M> {
-    return this.http.get<M>(url, this.getHttpOptions())
+  getOneByUrl(url: string, requireCredential = false): Observable<M> {
+    let httpOptions = this.getHttpOptions();
+    if (requireCredential && !this.withCredential(httpOptions)) {
+      return EMPTY;
+    }
+    return this.http.get<M>(url, httpOptions)
       .pipe(catchError(this.handleErrorGET));
   }
 

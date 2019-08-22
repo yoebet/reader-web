@@ -1,4 +1,4 @@
-.dict-entry {
+#dictPopup.ui.popup {
   max-height: 96vh;
   overflow-y: auto;
   overflow-x: hidden;

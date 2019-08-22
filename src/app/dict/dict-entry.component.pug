@@ -57,7 +57,7 @@
         sui-checkbox([(ngModel)]='textShowTitle') 标题
         sui-checkbox([(ngModel)]='textTrans') 中文
       .clearing
-      ng-template([ngIf]='!userWordSource')
+      //ng-template([ngIf]='!userWordSource')
         .ui.right.floated.mini.button((click)='loadMoreParas()') 加载文本...
         .ui.clearing.hidden.divider
 
@@ -69,7 +69,7 @@
           word-text([entry]='entry', [para]='userWordSource.para', [textTrans]='textTrans', [showTitle]='textShowTitle')
           .ui.clearing.divider
 
-        ng-template([ngIf]='!userWordSource.moreParas')
+        //ng-template([ngIf]='!userWordSource.moreParas')
           .ui.right.floated.mini.button((click)='loadMoreParas()') 更多文本...
           .ui.clearing.hidden.divider
 

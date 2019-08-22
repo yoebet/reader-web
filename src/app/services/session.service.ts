@@ -4,6 +4,8 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable, EMPTY, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 
+import md5 from 'md5';
+
 import {environment} from '../../environments/environment';
 import {DefaultHttpHeaders, HeaderNames, HeaderValues} from '../config';
 import {User} from '../models/user';
@@ -18,27 +20,45 @@ export class SessionService {
 
   readonly sessionEventEmitter = new EventEmitter<string>();
 
+  private digestMap = new Map<string, string>();
+
   constructor(private http: HttpClient) {
     let apiBase = environment.apiBase || '';
     this.baseUrl = `${apiBase}/login`;
   }
 
+  private getMd5(str): string {
+    let hash = this.digestMap.get(str);
+    if (hash) {
+      return hash;
+    }
+    hash = md5(str);
+    this.digestMap.set(str, hash);
+    return hash;
+  }
 
   getHttpOptions() {
     let headers = new HttpHeaders(DefaultHttpHeaders)
       .set(HeaderNames.Client, HeaderValues.Client);
     let UN = HeaderNames.UserName;
     let UT = HeaderNames.UserToken;
+    // let NTD = HeaderNames.NameTokenDigest;
+
     let cu = this.currentUser;
     if (cu && cu.name && cu.accessToken) {
-      headers = headers.set(UN, cu.name)
-        .set(UT, cu.accessToken);
+      headers = headers.set(UN, cu.name);
+      headers = headers.set(UT, cu.accessToken);
+      // let digest = this.getMd5(`${cu.name}.${cu.accessToken}`);
+      // headers = headers.set(NTD, digest);
     } else {
       let storage = window.localStorage;
       let un = storage.getItem(UN);
       let ut = storage.getItem(UT);
       if (un && ut) {
-        headers = headers.set(UN, un).set(UT, ut);
+        headers = headers.set(UN, un);
+        headers = headers.set(UT, ut);
+        // let digest = this.getMd5(`${un}.${ut}`);
+        // headers = headers.set(NTD, digest);
       }
     }
     return {

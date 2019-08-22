@@ -124,7 +124,8 @@ export class DictEntryComponent implements OnInit, OnChanges, AfterViewChecked {
   }
 
   textTabActivated() {
-    this.setUserWordSource();
+    // this.setUserWordSource();
+    this.loadMoreParas();
   }
 
   loadCompleteMeanings() {

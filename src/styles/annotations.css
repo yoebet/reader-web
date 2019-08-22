@@ -7,14 +7,14 @@ y-o, .yo {
   /*border-bottom-style: dashed;*/
 }
 
-.pos, [data-pos] {
+.posc, [data-posc] {
   border-bottom-color: dimgrey;
 }
 
-/*.pos:before {
+/*.posc:before {
 }*/
 
-/*.pos:after {
+/*.posc:after {
 }*/
 
 /* *** 名词 Noun *** */

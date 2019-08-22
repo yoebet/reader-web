@@ -3,9 +3,8 @@ import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 
 import {of as observableOf, Observable} from 'rxjs';
-import {catchError, map, tap} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 
-import {OpResult} from '../models/op-result';
 import {UserPreference} from '../models/user-preference';
 import {BaseService} from './base.service';
 import {SessionService} from './session.service';
@@ -39,7 +38,7 @@ export class UserPreferenceService extends BaseService<UserPreference> {
     if (this.userPreference) {
       return observableOf(this.userPreference);
     }
-    return super.getOneByUrl(this.baseUrl).pipe(
+    return super.getOneByUrl(this.baseUrl, true).pipe(
       map((up: UserPreference) => {
         if (!up) up = new UserPreference();
         this.userPreference = up;
@@ -62,32 +61,4 @@ export class UserPreferenceService extends BaseService<UserPreference> {
     }));
   }
 
-  private setValue(code: string, value) {
-    let url = `${this.baseUrl}/code/${code}`;
-    return this.http.post<OpResult>(url, {[code]: value}, this.getHttpOptions())
-      .pipe(catchError(this.handleError));
-  }
-
-  setBaseVocabulary(categoryCode: string): Observable<OpResult> {
-    let obs = this.setValue('baseVocabulary', categoryCode);
-    return obs.pipe(tap(opr => {
-      if (opr && opr.ok === 1) {
-        if (this.userPreference) {
-          this.userPreference.baseVocabulary = categoryCode;
-        }
-        this.onBaseVocabularyChanged.emit(categoryCode);
-      }
-    }));
-  }
-
-  setWordTags(categoryCodes: string[]): Observable<OpResult> {
-    let obs = this.setValue('wordTags', categoryCodes);
-    return obs.pipe(tap(opr => {
-      if (opr && opr.ok === 1) {
-        if (this.userPreference) {
-          this.userPreference.wordTags = categoryCodes;
-        }
-      }
-    }));
-  }
 }

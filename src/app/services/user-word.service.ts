@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 
-import {of as observableOf, Observable, EMPTY} from 'rxjs';
+import {of as observableOf, Observable} from 'rxjs';
 import {catchError, map, tap, share} from 'rxjs/operators';
 
 import {sortedIndexBy} from 'lodash';
@@ -135,7 +135,7 @@ export class UserWordService extends BaseService<UserWord> {
     if (this.allWords$) {
       return this.allWords$;
     }
-    let obs = super.list().pipe(
+    let obs = super.list(this.baseUrl, true).pipe(
       map((userWords: UserWord[]) => {
         this.allWords = userWords;
         this.allWords$ = null;
