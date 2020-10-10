@@ -1,11 +1,11 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
+import {SafeHtml} from '@angular/platform-browser/src/security/dom_sanitization_service';
 
 import {UIConstants} from '../config';
 import {DictEntry} from '../models/dict-entry';
 import {Para} from '../models/para';
 import {ParaService} from '../services/para.service';
-import {SafeHtml} from "@angular/platform-browser/src/security/dom_sanitization_service";
 
 @Component({
   selector: 'word-text',
@@ -48,7 +48,7 @@ export class WordTextComponent implements OnChanges {
     let commonLength = first.length;
     for (let i = 1; i < strings.length; ++i) {
       let si = strings[i];
-      if(commonLength > si.length){
+      if (commonLength > si.length) {
         commonLength = si.length;
       }
       for (let j = 0; j < commonLength; ++j) {
@@ -94,6 +94,7 @@ export class WordTextComponent implements OnChanges {
     let textNode;
     let nodesToTry: any[] = [];
 
+    // tslint:disable-next-line:no-conditional-assignment
     while (textNode = nodeIterator.nextNode()) {
       let text = textNode.nodeValue;
       let element = textNode.parentNode;
@@ -121,7 +122,7 @@ export class WordTextComponent implements OnChanges {
     for (let pattern of patterns) {
       let nodes = nodesToTry;
       nodesToTry = [];
-      for (let textNode of nodes) {
+      for (textNode of nodes) {
         let text = textNode.nodeValue;
         let element = textNode.parentNode;
         let matcher = text.match(pattern);

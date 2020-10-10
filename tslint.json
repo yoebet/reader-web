@@ -60,6 +60,9 @@
       true,
       "single"
     ],
+    "prefer-const": false,
+    "radix": false,
+    "no-bitwise": false,
     "trailing-comma": false,
     "no-output-on-prefix": true,
     "use-input-property-decorator": true,

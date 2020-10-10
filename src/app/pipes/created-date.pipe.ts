@@ -1,6 +1,6 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {Model} from '../models/model'
+import {Model} from '../models/model';
 
 @Pipe({name: 'createdDate'})
 export class CreatedDatePipe implements PipeTransform {

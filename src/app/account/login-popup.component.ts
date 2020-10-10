@@ -30,12 +30,6 @@ export class LoginPopupComponent {
     this.wxRedirectUri = lc.wxRedirectUri;
   }
 
-  cancel() {
-    this.loginMessage = null;
-    this.modal.deny('');
-  }
-
-
   static buildWxAuthUrl(redirectUri,
                         scope: 'snsapi_userinfo' | 'snsapi_base' = 'snsapi_userinfo',
                         state = '10') {
@@ -44,13 +38,16 @@ export class LoginPopupComponent {
       + `&response_type=code&scope=${scope}&state=${state}#wechat_redirect`;
   }
 
+  cancel() {
+    this.loginMessage = null;
+    this.modal.deny('');
+  }
 
   wxLogin() {
     if (!this.wxRedirectUri) {
       return;
     }
-    let authUrl = LoginPopupComponent.buildWxAuthUrl(this.wxRedirectUri);
-    window.location.href = authUrl;
+    window.location.href = LoginPopupComponent.buildWxAuthUrl(this.wxRedirectUri);
   }
 
   login(name, pass) {

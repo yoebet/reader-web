@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 
+import {Observable} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import {Observable} from 'rxjs/internal/Observable';
 
+import {environment} from '../../environments/environment';
 import {BaseService} from './base.service';
 import {SessionService} from './session.service';
-import {environment} from '../../environments/environment';
 import {OpResult} from '../models/op-result';
 
 

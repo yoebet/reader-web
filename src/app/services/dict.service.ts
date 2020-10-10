@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {environment} from '../../environments/environment';
 
 import {Observable, of} from 'rxjs';
 import {map, catchError} from 'rxjs/operators';
 
+import {environment} from '../../environments/environment';
 import {DictEntry, DictFields, PosMeanings} from '../models/dict-entry';
 import {BaseService} from './base.service';
 import {SessionService} from './session.service';
@@ -14,7 +14,7 @@ export class DictService extends BaseService<DictEntry> {
 
   staticBase: string;
 
-  private _entryHistory: DictEntry[] = [];
+  private entryHistory0: DictEntry[] = [];
   private entryCache: Map<string, DictEntry> = new Map();
   private baseFormsMap: Map<string, string>;
 
@@ -29,15 +29,15 @@ export class DictService extends BaseService<DictEntry> {
   }
 
   get entryHistory(): DictEntry[] {
-    return this._entryHistory;
+    return this.entryHistory0;
   }
 
   clearHistory() {
-    this._entryHistory = [];
+    this.entryHistory0 = [];
   }
 
   private pushHistory(entry) {
-    let eh = this._entryHistory;
+    let eh = this.entryHistory0;
     let inHistory = eh.find(e => e.word === entry.word);
     if (!inHistory) {
       eh.push(entry);

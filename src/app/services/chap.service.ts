@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {environment} from '../../environments/environment';
 
 import {Observable, of} from 'rxjs';
 import {map, catchError} from 'rxjs/operators';
 
+import {environment} from '../../environments/environment';
 import {StaticResource} from '../config';
 import {Chap, ChapContentPack} from '../models/chap';
 import {ParaIdCount} from '../models/para';

@@ -3,14 +3,6 @@ import {Model} from './model';
 import * as moment from 'moment';
 
 export class UserWord extends Model {
-  word: string;
-  bookId: string;
-  chapId: string;
-  paraId: string;
-  familiarity: number = 1;
-  // lastTouch: string;
-  createdDateParts?: { year: number, month: number, dayOfMonth: number, weekOfYear: number, dayOfWeek: number, dateString: string };
-  createdMoment?: moment.Moment;
 
   static Familiarities = [
     {value: 1, label: '很陌生'},
@@ -21,6 +13,14 @@ export class UserWord extends Model {
   static FamiliarityLowest = 1;
   static FamiliarityHighest = 3;
 
+  word: string;
+  bookId: string;
+  chapId: string;
+  paraId: string;
+  familiarity = 1;
+  // lastTouch: string;
+  createdDateParts?: { year: number, month: number, dayOfMonth: number, weekOfYear: number, dayOfWeek: number, dateString: string };
+  createdMoment?: moment.Moment;
 
   static ensureCreatedDate(userWord) {
     if (userWord.createdMoment) {
@@ -31,8 +31,8 @@ export class UserWord extends Model {
     let date = userWord.createdMoment;
     let dayOfWeek = date.day();
     let weekOfYear = date.week();
-    let dayOfMonth = date.date();//1-31
-    let month = date.month();//0-11
+    let dayOfMonth = date.date(); // 1-31
+    let month = date.month(); // 0-11
     let year = date.year();
     let dateString = `${year}-${month + 1}-${dayOfMonth}`;
     userWord.createdDateParts = {year, month, dayOfMonth, weekOfYear, dayOfWeek, dateString};

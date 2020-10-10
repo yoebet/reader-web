@@ -15,6 +15,7 @@ import {WordCategoryService} from '../services/word-category.service';
   templateUrl: './user-word.component.html'
 })
 export class UserWordComponent implements OnInit {
+  // tslint:disable-next-line:variable-name
   private _word: string;
   @Input()
   set word(word: string) {

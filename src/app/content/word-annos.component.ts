@@ -10,6 +10,7 @@ import {ElAnnos} from '../anno/el-annos';
   styleUrls: ['./word-annos.component.css']
 })
 export class WordAnnosComponent implements OnInit {
+  // tslint:disable-next-line:variable-name
   @Input() _wordEl: HTMLElement;
   @Input() paraTextEl: HTMLElement;
   @Input() enabled: boolean;
@@ -24,8 +25,8 @@ export class WordAnnosComponent implements OnInit {
     this.initialized = true;
   }
 
-  set wordEl(_wordEl: HTMLElement) {
-    this._wordEl = _wordEl;
+  set wordEl(wordEl0: HTMLElement) {
+    this._wordEl = wordEl0;
     if (this.initialized && this.enabled && this.annotationSet) {
       this.annos = AnnotatorHelper.parseAnnotations(this._wordEl, this.annotationSet, this.paraTextEl);
 

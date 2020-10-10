@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {environment} from '../../environments/environment';
 
 import {Observable, of} from 'rxjs';
 import {tap} from 'rxjs/operators';
 
+import {environment} from '../../environments/environment';
 import {BaseService} from './base.service';
 import {SessionService} from './session.service';
 import {Book} from '../models/book';

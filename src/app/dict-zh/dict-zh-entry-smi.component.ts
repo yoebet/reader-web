@@ -77,6 +77,7 @@ export class DictZhEntrySmiComponent extends DictZhEntryComponent implements OnI
     this.cdr.detectChanges();
   }
 
+  // tslint:disable-next-line:use-life-cycle-interface
   ngOnChanges(changes: SimpleChanges) {
     if (changes.entry) {
       this.entryStack = [];

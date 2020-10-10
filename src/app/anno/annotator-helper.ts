@@ -171,7 +171,7 @@ export class AnnotatorHelper {
       element.removeAttribute('class');
     }
     if (!element.hasAttributes()) {
-      //remove tag
+      // remove tag
       let pp = element.parentNode;
       while (element.firstChild) {
         pp.insertBefore(element.firstChild, element);
@@ -200,7 +200,7 @@ export class AnnotatorHelper {
       }
     }
     if (!el.hasAttributes()) {
-      //remove tag
+      // remove tag
       let pp = el.parentNode;
       if (!pp) {
         return result;
@@ -379,6 +379,9 @@ export class AnnotatorHelper {
 
     let dataset = wordEl.dataset;
     for (let name in dataset) {
+      if (!dataset.hasOwnProperty(name)) {
+        continue;
+      }
       let value = dataset[name];
       if (name === DataAttrNames.mean && !dataset[DataAttrNames.forPhraseGroup]) {
         let mean = value;
@@ -387,11 +390,11 @@ export class AnnotatorHelper {
           forWord = annos.word;
         }
         let pos = wordEl.dataset[DataAttrNames.pos] || '';
-        let text = mean;
+        let text0 = mean;
         if (pos) {
-          text = `${pos} ${mean}`;
+          text0 = `${pos} ${mean}`;
         }
-        annos.meaning = {pos, mean, word: forWord, text};
+        annos.meaning = {pos, mean, word: forWord, text: text0};
         continue;
       }
 
@@ -407,7 +410,7 @@ export class AnnotatorHelper {
         let groupEls = stEl.querySelectorAll(groupSelector);
         let els = Array.from(groupEls);
         let words = els.map((el: Element) => el.textContent).join(' ');
-        if (words.indexOf(' ') == -1) {
+        if (words.indexOf(' ') === -1) {
           continue;
         }
 
@@ -469,6 +472,9 @@ export class AnnotatorHelper {
     }
     let dataset = wordEl.dataset;
     for (let name in dataset) {
+      if (!dataset.hasOwnProperty(name)) {
+        continue;
+      }
       let value = dataset[name];
       if (name === DataAttrNames.mean) {
         return true;

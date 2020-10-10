@@ -1,10 +1,12 @@
 import {Injectable} from '@angular/core';
-import {BaseService} from './base.service';
-import {environment} from '../../environments/environment';
 import {HttpClient} from '@angular/common/http';
+
+import {Observable} from 'rxjs';
+
+import {environment} from '../../environments/environment';
 import {SessionService} from './session.service';
-import {Observable} from 'rxjs/index';
 import {AppRelease} from '../models/app-release';
+import {BaseService} from './base.service';
 
 @Injectable()
 export class AppService extends BaseService<any> {

@@ -32,7 +32,7 @@ const DataAttrNames = {
   mean: 'mean',
   forPhraseGroup: 'fpg',
   note: 'note',
-  assoc: 'assoc',//关联组
+  assoc: 'assoc', // 关联组
   wordFamiliarity: 'uwf'
 };
 

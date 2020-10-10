@@ -41,6 +41,7 @@ export class BookComponent extends AccountSupportComponent {
   }
 
 
+  // tslint:disable-next-line:use-life-cycle-interface
   ngOnInit(): void {
     super.ngOnInit();
     this.checkLoginAndLoad();
@@ -83,19 +84,6 @@ export class BookComponent extends AccountSupportComponent {
   showDetail() {
     this.modalService.open(new BookInfoModal(this.book));
   }
-
-
-  /*
-  const WX_CONFIG = {
-  appid: '',
-  oauth2_base: 'https://open.weixin.qq.com/connect/oauth2'
-};
-
-  tryWxLogin() {
-    let redirect_uri = '';
-    let scope = 'snsapi_base';// snsapi_base, snsapi_userinfo
-    let url = `${WX_CONFIG.oauth2_base}/authorize?appid=${WX_CONFIG.appid}&redirect_uri=${redirect_uri}&response_type=code&scope=${scope}&state=12#wechat_redirect`;
-  }*/
 
   goBack(): void {
     this.location.back();

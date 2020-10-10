@@ -1,4 +1,5 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 
 import {SuiModalService} from 'ng2-semantic-ui';
 
@@ -9,7 +10,6 @@ import {BookInfoModal} from './book-info.component';
 import {AccountSupportComponent} from '../account/account-support.component';
 import {WxAuthService} from '../services/wx-auth.service';
 import {SessionService} from '../services/session.service';
-import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'book-list',
@@ -37,6 +37,7 @@ export class BookListComponent extends AccountSupportComponent {
     super(sessionService, wxAuthService, modalService, route);
   }
 
+  // tslint:disable-next-line:use-life-cycle-interface
   ngOnInit(): void {
     super.ngOnInit();
     this.checkLoginAndLoad();

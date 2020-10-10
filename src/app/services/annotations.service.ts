@@ -35,9 +35,9 @@ export class AnnotationsService extends BaseService<AnnotationFamily> {
           return null;
         }
         let groups = family.groups;
-        let anns = new AnnotationSet(groups);
-        this.annotationsMap.set(familyId, anns);
-        return anns;
+        let anns2 = new AnnotationSet(groups);
+        this.annotationsMap.set(familyId, anns2);
+        return anns2;
       })
     );
   }

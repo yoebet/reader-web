@@ -11,6 +11,7 @@ import {WordCategory} from '../models/word-category';
   templateUrl: './word-tags.component.html'
 })
 export class WordTagsComponent implements OnInit {
+  // tslint:disable-next-line:variable-name
   private _categories: any;
   @Input() set categories(categories: any) {
     if (isEqual(this._categories, categories)) {
@@ -20,6 +21,7 @@ export class WordTagsComponent implements OnInit {
     this.tryEvaluateTags(1);
   }
 
+  // tslint:disable-next-line:variable-name
   private _userWordTags: string[];
   @Input() set userWordTags(codes: string[]) {
     if (isEqual(this._userWordTags, codes)) {

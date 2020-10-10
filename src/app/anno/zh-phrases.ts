@@ -1,4 +1,3 @@
-
 export class ZhPhrases {
 
   private phraseSet: Set<string> = new Set<string>();

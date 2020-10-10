@@ -1,10 +1,10 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {environment} from '../../environments/environment';
 
 import {of as observableOf, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
+import {environment} from '../../environments/environment';
 import {UserPreference} from '../models/user-preference';
 import {BaseService} from './base.service';
 import {SessionService} from './session.service';

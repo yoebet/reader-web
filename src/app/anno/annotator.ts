@@ -26,6 +26,30 @@ export class Annotator {
     }
   }
 
+
+  static getRangeFromEvent(event) {
+    // Firefox
+    if (event.rangeParent && document.createRange) {
+      let range = document.createRange();
+      range.setStart(event.rangeParent, event.rangeOffset);
+      range.setEnd(event.rangeParent, event.rangeOffset);
+      return range;
+    }
+    // Webkit
+    if (document.caretRangeFromPoint) {
+      return document.caretRangeFromPoint(event.clientX, event.clientY);
+    }
+    // Firefox for events without rangeParent
+    if (document.caretPositionFromPoint) {
+      let caret = document.caretPositionFromPoint(event.clientX, event.clientY);
+      let range = document.createRange();
+      range.setStart(caret.offsetNode, caret.offset);
+      range.setEnd(caret.offsetNode, caret.offset);
+      return range;
+    }
+    return null;
+  }
+
   switchAnnotation(annotation: Annotation): Annotator {
     this.current = annotation;
     return this;
@@ -79,7 +103,7 @@ export class Annotator {
   }
 
   private resetAnnotation(element, type, match?) {
-    //type: add, remove, toggle
+    // type: add, remove, toggle
     if (element.nodeType !== Node.ELEMENT_NODE) {
       return;
     }
@@ -108,7 +132,7 @@ export class Annotator {
         let wrapping = document.createElement(UIConstants.annotationTagName);
         wrapping.className = element.className;
 
-        //for (let item of element.childNodes)
+        // for (let item of element.childNodes)
         while (element.firstChild) {
           wrapping.appendChild(element.firstChild);
         }
@@ -266,14 +290,15 @@ export class Annotator {
     }
 
     let [wordStart1, wordEnd2] = [offset1, offset2];
-    let text1 = textNode1.textContent, text2 = textNode2.textContent;
+    let text1 = textNode1.textContent;
+    let text2 = textNode2.textContent;
 
     if (this.isExtendWholeWord) {
       if (this.lang === Book.LangCodeEn) {
-        [wordStart1,] = AnnotatorHelper.extendWholeWord(text1, this.charPattern, wordStart1, text1.length);
+        [wordStart1, ] = AnnotatorHelper.extendWholeWord(text1, this.charPattern, wordStart1, text1.length);
         [, wordEnd2] = AnnotatorHelper.extendWholeWord(text2, this.charPattern, 0, wordEnd2);
       } else if (Book.isChineseText(this.lang)) {
-        [wordStart1,] = AnnotatorHelper.extendZhPhrases(text1, this.charPattern, wordStart1, text1.length, this.zhPhrases);
+        [wordStart1, ] = AnnotatorHelper.extendZhPhrases(text1, this.charPattern, wordStart1, text1.length, this.zhPhrases);
         [, wordEnd2] = AnnotatorHelper.extendZhPhrases(text2, this.charPattern, 0, wordEnd2, this.zhPhrases);
       }
     }
@@ -302,29 +327,6 @@ export class Annotator {
     return ar;
   }
 
-  static getRangeFromEvent(event) {
-    // Firefox
-    if (event.rangeParent && document.createRange) {
-      let range = document.createRange();
-      range.setStart(event.rangeParent, event.rangeOffset);
-      range.setEnd(event.rangeParent, event.rangeOffset);
-      return range;
-    }
-    // Webkit
-    if (document.caretRangeFromPoint) {
-      return document.caretRangeFromPoint(event.clientX, event.clientY);
-    }
-    // Firefox for events without rangeParent
-    if (document['caretPositionFromPoint']) {
-      let caret = document['caretPositionFromPoint'](event.clientX, event.clientY);
-      let range = document.createRange();
-      range.setStart(caret.offsetNode, caret.offset);
-      range.setEnd(caret.offsetNode, caret.offset);
-      return range;
-    }
-    return null;
-  }
-
 
   annotate(event?): AnnotateResult {
     if (!this.current) {
@@ -350,7 +352,9 @@ export class Annotator {
 
   private doAnnotate(selection: Selection | Range): AnnotateResult {
 
+    // tslint:disable-next-line:one-variable-per-declaration
     let node1, node2;
+    // tslint:disable-next-line:one-variable-per-declaration
     let offset1, offset2;
 
     if (selection instanceof Selection) {

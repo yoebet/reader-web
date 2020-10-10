@@ -56,8 +56,8 @@ export class ParaContentComponent implements OnInit, OnChanges {
 
   lookupDictSimple = false;
 
-  _contentAnnotator: Annotator;
-  _transAnnotator: Annotator;
+  contentAnnotator: Annotator;
+  transAnnotator: Annotator;
   transRendered = false;
   sentenceHoverSetup = false;
   associationsHoverSetup = false;
@@ -108,7 +108,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
 
     if (this.activeAlways) {
       this.setupAssociationHover();
-      //TODO: if (!this.annotationSet)
+      // TODO: if (!this.annotationSet)
       this.setupAnnotationsPopup();
     }
   }
@@ -121,20 +121,20 @@ export class ParaContentComponent implements OnInit, OnChanges {
   getAnnotator(side: Side, annotation = null): Annotator {
     let annt;
     if (side === SideContent) {
-      annt = this._contentAnnotator;
+      annt = this.contentAnnotator;
       if (!annt) {
         let el = this.contentText.element.nativeElement;
         let lang = this.getTextLang(side);
         annt = new Annotator(el, lang);
-        this._contentAnnotator = annt;
+        this.contentAnnotator = annt;
       }
     } else {
-      annt = this._transAnnotator;
+      annt = this.transAnnotator;
       if (!annt) {
         let el = this.transText.element.nativeElement;
         let lang = this.getTextLang(side);
         annt = new Annotator(el, lang);
-        this._transAnnotator = annt;
+        this.transAnnotator = annt;
       }
     }
     if (Book.isChineseText(annt.lang) && !annt.zhPhrases) {
@@ -443,7 +443,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
 
     let component = this;
 
-    let sentenceMouseover = function (event) {
+    let sentenceMouseover = function(event) {
       if (!component.highlightSentence) {
         return;
       }
@@ -488,11 +488,12 @@ export class ParaContentComponent implements OnInit, OnChanges {
 
     let component = this;
 
-    let wordsMouseleave = function (event) {
+    // tslint:disable-next-line:only-arrow-functions
+    let wordsMouseleave = function(event) {
       component.clearWordHighlights();
     };
 
-    let wordsMouseover = function (event) {
+    let wordsMouseover = function(event) {
       component.clearWordHighlights();
 
       let el = this;
@@ -582,7 +583,8 @@ export class ParaContentComponent implements OnInit, OnChanges {
 
     let component = this;
 
-    let content = function () {
+    // tslint:disable-next-line:only-arrow-functions
+    let content = function() {
       wacr.instance.paraTextEl = textEl;
       wacr.instance.annotationSet = component.annotationSet;
       wacr.instance.enabled = component.wordsHover;
@@ -591,13 +593,13 @@ export class ParaContentComponent implements OnInit, OnChanges {
     };
     let drop = new Drop({
       target: wordEl,
-      content: content,
+      content,
       classes: `${UIConstants.dropClassPrefix}anno`,
       // position: 'bottom center',
       constrainToScrollParent: false,
       remove: true,
       hoverOpenDelay: 100,
-      openOn: 'hover',//click,hover,always
+      openOn: 'hover', // click,hover,always
       tetherOptions: {
         attachment: 'top center',
         constraints: [
@@ -653,6 +655,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
     let textNodes = [];
 
     let tn;
+    // tslint:disable-next-line:no-conditional-assignment
     while (tn = nodeIterator.nextNode()) {
       textNodes.push(tn);
     }
@@ -672,6 +675,7 @@ export class ParaContentComponent implements OnInit, OnChanges {
       let baseOffset = 0;
 
       let matcher;
+      // tslint:disable-next-line:no-conditional-assignment
       while (matcher = text.match(wordPattern)) {
         let word = matcher[0];
         let offset = matcher.index;

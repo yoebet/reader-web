@@ -180,8 +180,8 @@ export abstract class AccountSupportComponent implements OnInit, OnDestroy {
     }
 
     this.sessionService.checkLogin()
-      .subscribe(cu => {
-        if (cu) {
+      .subscribe(cu2 => {
+        if (cu2) {
           if (!this.contentLoaded) {
             this.loadContent();
           }

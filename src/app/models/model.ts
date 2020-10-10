@@ -1,25 +1,26 @@
 import * as moment from 'moment';
 
 export class Model {
+  // tslint:disable-next-line:variable-name
   _id: string;
   createdAt: string;
   updatedAt: string;
   version: number;
 
 
-  static sequenceNo(_id: string, bytes: number = 3): number {
-    if (!_id) {
+  static sequenceNo(id: string, bytes: number = 3): number {
+    if (!id) {
       return parseInt('' + (1 << bytes * 8) * Math.random());
     }
     let hexChars = bytes * 2;
-    return parseInt(_id.substr(_id.length - hexChars, hexChars), 16);
+    return parseInt(id.substr(id.length - hexChars, hexChars), 16);
   }
 
-  static timestampOfObjectId(_id: string): Date {
-    if (!_id) {
+  static timestampOfObjectId(id: string): Date {
+    if (!id) {
       return null;
     }
-    let seconds = parseInt(_id.substr(0, 8), 16);
+    let seconds = parseInt(id.substr(0, 8), 16);
     return new Date(seconds * 1000);
   }
 

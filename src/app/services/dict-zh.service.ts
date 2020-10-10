@@ -13,7 +13,7 @@ import {SessionService} from './session.service';
 
 @Injectable()
 export class DictZhService extends BaseService<DictZh> {
-  private _entryHistory: DictZh[] = [];
+  private entryHistory0: DictZh[] = [];
   private entryCache: Map<string, DictZh> = new Map();
   private phrases: ZhPhrases;
 
@@ -29,15 +29,15 @@ export class DictZhService extends BaseService<DictZh> {
 
   clearCache() {
     this.entryCache.clear();
-    this._entryHistory = [];
+    this.entryHistory0 = [];
   }
 
   get entryHistory(): DictZh[] {
-    return this._entryHistory;
+    return this.entryHistory0;
   }
 
   private pushHistory(entry) {
-    let eh = this._entryHistory;
+    let eh = this.entryHistory0;
     let inHistory = eh.find(e => e.word === entry.word);
     if (!inHistory) {
       eh.push(entry);

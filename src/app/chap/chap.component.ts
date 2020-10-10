@@ -80,6 +80,7 @@ export class ChapComponent extends AccountSupportComponent {
   simpleDictDrop: Drop;
   simpleDictComponentRef: ComponentRef<DictSimpleComponent>;
 
+  lastWordDrop = null;
 
   constructor(protected sessionService: SessionService,
               protected wxAuthService: WxAuthService,
@@ -127,6 +128,7 @@ export class ChapComponent extends AccountSupportComponent {
     return value === '1';
   }
 
+  // tslint:disable-next-line:use-life-cycle-interface
   ngOnInit(): void {
     super.ngOnInit();
 
@@ -156,6 +158,7 @@ export class ChapComponent extends AccountSupportComponent {
   }
 
 
+  // tslint:disable-next-line:use-life-cycle-interface
   ngOnDestroy(): void {
     super.ngOnDestroy();
 
@@ -242,7 +245,7 @@ export class ChapComponent extends AccountSupportComponent {
 
     let pns = this.queryParams.get('pn');
     if (pns) {
-      let pn = parseInt(pns);// 1 based
+      let pn = parseInt(pns); // 1 based
       if (!isNaN(pn) && pn > 0) {
         if (pn > paras.length) {
           pn = paras.length;
@@ -577,7 +580,8 @@ export class ChapComponent extends AccountSupportComponent {
 
     let {dictEntry, wordElement} = dictRequest;
     let dscr = this.getSimpleDictComponentRef();
-    let content = function () {
+    // tslint:disable-next-line:only-arrow-functions
+    let content = function() {
       dscr.instance.entry = dictEntry as DictEntry;
       return dscr.location.nativeElement;
     };
@@ -589,11 +593,11 @@ export class ChapComponent extends AccountSupportComponent {
       }
       let drop = new Drop({
         target: wordElement,
-        content: content,
+        content,
         classes: `${UIConstants.dropClassPrefix}dict`,
         constrainToScrollParent: false,
         remove: true,
-        openOn: 'click',//click,hover,always
+        openOn: 'click', // click,hover,always
         tetherOptions: {
           attachment: 'top center',
           constraints: [
@@ -618,25 +622,24 @@ export class ChapComponent extends AccountSupportComponent {
     }, 10);
   }
 
-  lastWordDrop = null;
-
   showDictSimplePopup(el, entry) {
     if (this.lastWordDrop) {
       this.lastWordDrop.destroy();
       this.lastWordDrop = null;
     }
     let dscr = this.getSimpleDictComponentRef();
-    let content = function () {
+    // tslint:disable-next-line:only-arrow-functions
+    let content = function() {
       dscr.instance.entry = entry;
       return dscr.location.nativeElement;
     };
     let drop = new Drop({
       target: el,
-      content: content,
+      content,
       classes: `${UIConstants.dropClassPrefix}dict`,
       constrainToScrollParent: false,
       remove: true,
-      openOn: 'click',//click,hover,always
+      openOn: 'click', // click,hover,always
       tetherOptions: {
         attachment: 'top center',
         constraints: [

@@ -4,7 +4,7 @@ import {Para} from './para';
 
 export class Chap extends Model {
   name: string;
-  zhName: string = '';
+  zhName = '';
   bookId: string;
   no: number;
 

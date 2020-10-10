@@ -8,6 +8,7 @@ import {DictService} from '../services/dict.service';
   templateUrl: './dict-simple.component.html'
 })
 export class DictSimpleComponent {
+  // tslint:disable-next-line:variable-name
   private _entry: DictEntry;
   @Input() set entry(entry: DictEntry) {
     this._entry = entry;
@@ -18,6 +19,7 @@ export class DictSimpleComponent {
     return this._entry;
   }
 
+  // tslint:disable-next-line:variable-name
   private _word: string;
 
   get word() {

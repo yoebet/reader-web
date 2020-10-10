@@ -1,11 +1,11 @@
 import {Model} from './model';
 import {Book} from './book';
 import {Chap} from './chap';
-import {ParaComment} from "./para-comment";
+import {ParaComment} from './para-comment';
 
 export class Para extends Model {
-  content: string = '';
-  trans: string = '';
+  content = '';
+  trans = '';
   chapId: string;
   bookId: string;
   originalId: string;

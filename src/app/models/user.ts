@@ -13,6 +13,7 @@ export class User extends Model {
 }
 
 export class UserIdName {
+  // tslint:disable-next-line:variable-name
   _id: string;
   name: string;
   nickName: string;

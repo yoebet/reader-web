@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {environment} from '../../environments/environment';
 
 import {of as observableOf, Observable} from 'rxjs';
 import {catchError, map, tap, share} from 'rxjs/operators';
 
 import {sortedIndexBy} from 'lodash';
 
+import {environment} from '../../environments/environment';
 import {UserWord} from '../models/user-word';
 import {OpResult} from '../models/op-result';
 import {BaseService} from './base.service';
@@ -17,7 +17,7 @@ export class UserWordService extends BaseService<UserWord> {
 
   allWords: UserWord[];
   userWordsMap: Map<string, UserWord>;
-  private _latestAdded: UserWord[] = [];
+  private latestAdded0: UserWord[] = [];
   latestAddedCapacity = 10;
 
   private allWords$: Observable<UserWord[]>;
@@ -47,18 +47,18 @@ export class UserWordService extends BaseService<UserWord> {
     this.allWords = null;
     this.allWords$ = null;
     this.userWordsMap = null;
-    this._latestAdded = [];
+    this.latestAdded0 = [];
   }
 
   get latestAdded() {
-    return this._latestAdded;
+    return this.latestAdded0;
   }
 
   private pushLatest(userWord) {
     if (userWord.familiarity === UserWord.FamiliarityHighest) {
       return;
     }
-    let la = this._latestAdded;
+    let la = this.latestAdded0;
     let inLatestAdded = la.find(uw => uw.word === userWord.word);
     if (!inLatestAdded) {
       la.push(userWord);
@@ -69,7 +69,7 @@ export class UserWordService extends BaseService<UserWord> {
   }
 
   private removeFromLatest(userWord) {
-    let la = this._latestAdded;
+    let la = this.latestAdded0;
     let index = la.indexOf(userWord);
     if (index >= 0) {
       la.splice(index, 1);
@@ -78,7 +78,7 @@ export class UserWordService extends BaseService<UserWord> {
 
 
   private updateLatest(uw, firstSetup = false) {
-    let la = this._latestAdded;
+    let la = this.latestAdded0;
     if (!firstSetup && uw.familiarity === UserWord.FamiliarityHighest) {
       let idx = la.indexOf(uw);
       if (idx >= 0) {
@@ -144,7 +144,7 @@ export class UserWordService extends BaseService<UserWord> {
         } else {
           this.userWordsMap = new Map();
         }
-        this._latestAdded = [];
+        this.latestAdded0 = [];
         for (let uw of userWords) {
           this.userWordsMap.set(uw.word, uw);
           UserWord.ensureCreatedDate(uw);

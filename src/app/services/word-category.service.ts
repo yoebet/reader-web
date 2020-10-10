@@ -83,7 +83,7 @@ export class WordCategoryService extends BaseService<WordCategory> {
     return this.http.get<WordBook>(url, this.getHttpOptions())
       .pipe(
         map(wordBook => wordBook.words),
-        tap(words => this.allWordsMap.set(code, words)),
+        tap(words2 => this.allWordsMap.set(code, words2)),
         catchError(this.handleErrorGET)
       );
   }
