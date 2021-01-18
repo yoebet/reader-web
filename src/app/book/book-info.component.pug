@@ -23,7 +23,7 @@
           | {{book.code}}
         .prop
           span.prop-name 类别
-          | {{categoryNames[book.category]}}
+          | {{book.categoryName||categoryNames[book.category]}}
         .prop
           span.prop-name 状态
           | {{statusNames[book.status]}}

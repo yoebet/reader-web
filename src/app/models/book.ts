@@ -51,6 +51,7 @@ export class Book extends Model {
   contentLang = Book.LangCodeEn;
   transLang = Book.LangCodeZh;
   category: string;
+  categoryName: string;
   description: string;
 
   status = 'E';

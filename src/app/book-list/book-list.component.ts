@@ -6,7 +6,7 @@ import {SuiModalService} from 'ng2-semantic-ui';
 import {StaticResource} from '../config';
 import {Book} from '../models/book';
 import {BookService} from '../services/book.service';
-import {BookInfoModal} from './book-info.component';
+import {BookInfoModal} from '../book/book-info.component';
 import {AccountSupportComponent} from '../account/account-support.component';
 import {WxAuthService} from '../services/wx-auth.service';
 import {SessionService} from '../services/session.service';

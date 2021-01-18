@@ -31,7 +31,7 @@ import {WordFamiliarityPipe} from './pipes/word-familiarity.pipe';
 
 import {AppComponent} from './app.component';
 import {AppFooterComponent} from './app-footer.component';
-import {BookListComponent} from './book/book-list.component';
+import {BookListComponent} from './book-list/book-list.component';
 import {BookComponent} from './book/book.component';
 import {BookInfoComponent} from './book/book-info.component';
 import {ChapComponent} from './chap/chap.component';
@@ -46,6 +46,7 @@ import {UserWordComponent} from './dict/user-word.component';
 import {DictEntryComponent} from './dict/dict-entry.component';
 import {DictZhEntrySmiComponent} from './dict-zh/dict-zh-entry-smi.component';
 import {LoginPopupComponent} from './account/login-popup.component';
+import {LatestBookListComponent} from './book-list/latest-book-list.component';
 
 @NgModule({
   imports: [
@@ -78,7 +79,8 @@ import {LoginPopupComponent} from './account/login-popup.component';
     WordTagsComponent,
     WordTextComponent,
     UserWordComponent,
-    LoginPopupComponent
+    LoginPopupComponent,
+    LatestBookListComponent
   ],
   providers: [
     AppService,
