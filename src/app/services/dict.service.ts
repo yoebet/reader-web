@@ -103,7 +103,7 @@ export class DictService extends BaseService<DictEntry> {
     }
     let url = `${this.baseUrl}/search/${key}?limit=${limit}`;
 
-    let switches = ['phrase', 'phraseOnly', 'basic', 'cet', 'gre']
+    let switches = ['phrase', 'phraseOnly', 'basic', 'cet', 'ielts', 'gre']
       .filter(name => options[name]);
     if (switches.length > 0) {
       url += '&';

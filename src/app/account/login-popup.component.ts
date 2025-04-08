@@ -7,7 +7,8 @@ import {SessionService} from '../services/session.service';
 import {OpResult} from '../models/op-result';
 
 
-const wxAppId = `wx4a226a806e99f56c`;
+// const wxAppId = `wx4a226a806e99f56c`;
+const wxAppId = `wx1234`;
 
 @Component({
   selector: 'login-popup',

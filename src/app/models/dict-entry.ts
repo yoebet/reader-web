@@ -2,20 +2,6 @@ import {Model} from './model';
 
 export class DictEntry extends Model {
 
-  static POS = [
-    {abbr: '', name: '（无）'},
-    {abbr: 'n.', name: 'n. 名词'},
-    {abbr: 'v.', name: 'v. 动词'},
-    {abbr: 'vt.', name: 'vt. 及物'},
-    {abbr: 'vi.', name: 'vi. 不及物'},
-    {abbr: 'adj.', name: 'adj. 形容词'},
-    {abbr: 'adv.', name: 'adv. 副词'},
-    {abbr: 'prep.', name: 'prep. 介词'},
-    {abbr: 'pron.', name: 'pron. 代词'},
-    {abbr: 'conj.', name: 'conj. 连词'},
-    {abbr: 'int.', name: 'int. 感叹词'}
-  ];
-
   word: string;
 
   simple: SimpleMeaning[];
@@ -40,7 +26,9 @@ export class DictEntry extends Model {
   //   }
   //   ]
   complete?: PosMeanings[] = [];
-  categories: any = {};
+  categories: {
+    [cat: string]: number;
+  } = {};
   phonetics?: any;
   forms?: any;
   baseForm?: string;
@@ -51,7 +39,7 @@ export class DictEntry extends Model {
     return /^[0-9a-z]{24}$/.test(idOrWord);
   }
 
-  static EvaluateCategoryTags(categories): string[] {
+  static EvaluateCategoryTags(categories: DictEntry['categories']): string[] {
     let tags = [];
     if (!categories) {
       return tags;
@@ -84,7 +72,8 @@ export class DictEntry extends Model {
       for (let freqName of wordFreqs) {
         let rank = categories[freqName];
         if (rank) {
-          let align3 = rank + (3 - rank % 3);
+          let mod = rank % 3;
+          let align3 = mod === 0 ? rank : rank + (3 - mod);
           tags.push(`${freqName.toUpperCase()} ${align3}000`);
         }
       }
