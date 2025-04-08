@@ -16,7 +16,7 @@ const wxAppId = `wx4a226a806e99f56c`;
 })
 export class LoginPopupComponent {
 
-  loginMethod: 'wx' | 'pass' = 'wx';
+  loginMethod: 'wx' | 'pass' = 'pass';
 
   loginMessage: string;
 

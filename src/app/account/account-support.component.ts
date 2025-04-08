@@ -133,7 +133,7 @@ export abstract class AccountSupportComponent implements OnInit, OnDestroy {
         }
         this.wxAuthService.requestAccessTokenAndLogin(code, rc)
           .subscribe(result => {
-            console.log(result);
+            // console.log(result);
             let scope = result.wxAuthScope;
             if (result.ok === 0) {
               if (rc) {

@@ -135,7 +135,7 @@ export class DictService extends BaseService<DictEntry> {
           for (let [word, base] of words) {
             this.baseFormsMap.set(word, base);
           }
-          console.log('baseFormsMap: ' + this.baseFormsMap.size);
+          // console.log('baseFormsMap: ' + this.baseFormsMap.size);
           observer.next(this.baseFormsMap);
           observer.complete();
         }

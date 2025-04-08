@@ -180,7 +180,6 @@ export class ChapComponent extends AccountSupportComponent {
     let chapId = this.pathParams.get('id');
     this.chapService.getDetail(chapId)
       .subscribe(chap => {
-        console.log(chap);
         if (!chap) {
           return;
         }
@@ -681,7 +680,7 @@ export class ChapComponent extends AccountSupportComponent {
     if (chap && !chap.paraCommentsCountLoaded) {
       this.chapService.loadCommentsCount(chap)
         .subscribe(total => {
-          console.log(`total comments: ${total}`);
+          // console.log(`total comments: ${total}`);
         });
     }
   }

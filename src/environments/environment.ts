@@ -1,7 +1,7 @@
-// const ServerRoot = 'http://localhost:3000';
-// const ServerRoot = 'http://192.168.0.104:3000';
+const ServerRoot = 'http://localhost:3000';
+// const ServerRoot = 'http://192.168.0.118:3000';
 // const ServerRoot = 'https://39.105.209.195';
-const ServerRoot = 'https://yuwen-reading.net';
+// const ServerRoot = 'https://yuwen-reading.net';
 
 export const environment = {
   production: false,

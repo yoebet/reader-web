@@ -32,12 +32,12 @@ export class UserWordService extends BaseService<UserWord> {
     this.sessionService.sessionEventEmitter
       .subscribe(event => {
         if (event === 'Login') {
-          console.log('Login: UserWordService');
+          // console.log('Login: UserWordService');
           this.clearCache();
           return;
         }
         if (event === 'Logout') {
-          console.log('Logout: UserWordService');
+          // console.log('Logout: UserWordService');
           this.clearCache();
         }
       });
