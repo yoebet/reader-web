@@ -18,8 +18,13 @@
   vertical-align: text-bottom;
 }
 
+.phonetics .pron-play {
+  cursor: pointer;
+}
+
 .phonetics {
-  padding-right: 1em;
+  /*padding-right: 1em;*/
+  display: inline-block;
 }
 
 span.pinyin {

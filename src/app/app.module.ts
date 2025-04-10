@@ -47,6 +47,7 @@ import {DictEntryComponent} from './dict/dict-entry.component';
 import {DictZhEntrySmiComponent} from './dict-zh/dict-zh-entry-smi.component';
 import {LoginPopupComponent} from './account/login-popup.component';
 import {LatestBookListComponent} from './book-list/latest-book-list.component';
+import {DictPhoneticsComponent} from './dict/dict-phonetics.component';
 
 @NgModule({
   imports: [
@@ -69,6 +70,7 @@ import {LatestBookListComponent} from './book-list/latest-book-list.component';
     WordAnnosComponent,
     DictEntryComponent,
     DictZhEntrySmiComponent,
+    DictPhoneticsComponent,
     CreatedDatePipe,
     CreatedDateStringPipe,
     PriceLabelPipe,

@@ -1,0 +1,15 @@
+.phonetics(*ngIf='entry&&entry.phonetics')
+  ng-template([ngIf]='entry.phonetics["UK"]')
+    label.ui.small.label 英
+    span
+      | &nbsp; {{entry.phonetics['UK']}} &nbsp;
+      ng-template([ngIf]='entry.pronPathUk')
+        i.icon.red.volume.up.pron-play((mouseover)='pronUk.play()', (click)='pronUk.play()')
+        audio([src]="dictService.pronsBase+'/'+entry.pronPathUk", crossorigin="anonymous", #pronUk="")
+  ng-template([ngIf]='entry.phonetics["US"]')
+    label.ui.small.label 美
+    span
+      | &nbsp; {{entry.phonetics['US']}} &nbsp;
+      ng-template([ngIf]='entry.pronPathUs')
+        i.icon.red.volume.up.pron-play((mouseover)='pronUs.play()', (click)='pronUs.play()')
+        audio([src]="dictService.pronsBase+'/'+entry.pronPathUk", crossorigin="anonymous", #pronUs="")

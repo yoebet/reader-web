@@ -13,6 +13,7 @@ import {SessionService} from './session.service';
 export class DictService extends BaseService<DictEntry> {
 
   staticBase: string;
+  readonly pronsBase: string;
 
   private entryHistory0: DictEntry[] = [];
   private entryCache: Map<string, DictEntry> = new Map();
@@ -26,6 +27,8 @@ export class DictService extends BaseService<DictEntry> {
     let apiBase = environment.apiBase || '';
     this.baseUrl = `${apiBase}/dict`;
     this.staticBase = environment.staticBase;
+    // this.pronsBase = `${staticBase}/pron`;
+    this.pronsBase = `${apiBase}/dict/pron`;
   }
 
   get entryHistory(): DictEntry[] {

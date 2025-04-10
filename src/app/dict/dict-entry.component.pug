@@ -2,11 +2,7 @@
   .ui.header.entry-header
     .ui.right.floated.sub.header
     .entry-word {{entry.word}}
-    .phonetics(*ngIf='entry.phonetics')
-      label.ui.small.label 英
-      span {{entry.phonetics['UK']}}
-      label.ui.small.label 美
-      span {{entry.phonetics['US']}}
+    dict-phonetics([entry]='entry')
 
   word-tags([categories]='entry.categories')
 
