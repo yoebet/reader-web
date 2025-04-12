@@ -55,7 +55,7 @@ export class ChapComponent extends AccountSupportComponent {
   wordsHover = true;
   markNewWords = true;
   lookupDict = false;
-  loadZhPhrases = false;
+  loadZhPhrases = true;
   showCommentsCount = true;
 
   allowSwitchChap = true;

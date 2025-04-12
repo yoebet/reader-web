@@ -207,8 +207,13 @@ export class Annotator {
         [wordStart, wordEnd] = AnnotatorHelper.extendWholeWord(
           nodeText, this.charPattern, wordStart, wordEnd);
       } else if (Book.isChineseText(this.lang)) {
-        [wordStart, wordEnd] = AnnotatorHelper.extendZhPhrases(
-          nodeText, this.charPattern, wordStart, wordEnd, this.zhPhrases);
+        if (wordStart === wordEnd) {
+          [wordStart, wordEnd] = AnnotatorHelper.extendZhPhrases(
+            nodeText, this.charPattern, wordStart, wordEnd, this.zhPhrases);
+        }
+        if (wordStart === wordEnd) {
+          wordEnd += 1;
+        }
       }
     }
     if (wordStart === wordEnd) {
@@ -295,10 +300,10 @@ export class Annotator {
 
     if (this.isExtendWholeWord) {
       if (this.lang === Book.LangCodeEn) {
-        [wordStart1, ] = AnnotatorHelper.extendWholeWord(text1, this.charPattern, wordStart1, text1.length);
+        [wordStart1,] = AnnotatorHelper.extendWholeWord(text1, this.charPattern, wordStart1, text1.length);
         [, wordEnd2] = AnnotatorHelper.extendWholeWord(text2, this.charPattern, 0, wordEnd2);
       } else if (Book.isChineseText(this.lang)) {
-        [wordStart1, ] = AnnotatorHelper.extendZhPhrases(text1, this.charPattern, wordStart1, text1.length, this.zhPhrases);
+        [wordStart1,] = AnnotatorHelper.extendZhPhrases(text1, this.charPattern, wordStart1, text1.length, this.zhPhrases);
         [, wordEnd2] = AnnotatorHelper.extendZhPhrases(text2, this.charPattern, 0, wordEnd2, this.zhPhrases);
       }
     }

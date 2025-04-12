@@ -73,6 +73,9 @@ export class DictZhService extends BaseService<DictZh> {
   }
 
   getEntry(idOrWord: string, options: any = {}): Observable<DictZh> {
+    if (!idOrWord) {
+      return of(null);
+    }
     let cachedEntry = this.entryCache.get(idOrWord);
     if (cachedEntry) {
       return of(cachedEntry);
@@ -89,8 +92,8 @@ export class DictZhService extends BaseService<DictZh> {
     if (this.phrases) {
       return of(this.phrases);
     }
-    let url = `${this.staticBase}/dict-zh/phrases_all.json`;
-    // let url = `${this.baseUrl}/phrases/all`;
+    // let url = `${this.staticBase}/dict-zh/phrases_all.json`;
+    let url = `${this.baseUrl}/phrases/all`;
     return this.http.get<string[]>(url, this.getHttpOptions()).pipe(
       map(words => {
         this.phrases = new ZhPhrases(words);
