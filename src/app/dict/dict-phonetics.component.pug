@@ -12,4 +12,4 @@
       | &nbsp; {{entry.phonetics['US']}} &nbsp;
       ng-template([ngIf]='entry.pronPathUs')
         i.icon.red.volume.up.pron-play((mouseover)='pronUs.play()', (click)='pronUs.play()')
-        audio([src]="dictService.pronsBase+'/'+entry.pronPathUk", crossorigin="anonymous", #pronUs="")
+        audio([src]="dictService.pronsBase+'/'+entry.pronPathUs", crossorigin="anonymous", #pronUs="")

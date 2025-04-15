@@ -7,15 +7,6 @@ export class Model {
   updatedAt: string;
   version: number;
 
-
-  static sequenceNo(id: string, bytes: number = 3): number {
-    if (!id) {
-      return parseInt('' + (1 << bytes * 8) * Math.random());
-    }
-    let hexChars = bytes * 2;
-    return parseInt(id.substr(id.length - hexChars, hexChars), 16);
-  }
-
   static timestampOfObjectId(id: string): Date {
     if (!id) {
       return null;

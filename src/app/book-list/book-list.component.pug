@@ -3,8 +3,8 @@
     .right.menu
       a.item(*ngIf='!currentUser', (click)='openLoginDialog()', href='javascript:') （未登录）
       .item(*ngIf='currentUser')
-        img.ui.avatar.image(*ngIf='currentUser.avatarSetting&&currentUser.avatarSetting.imgUrl',
-        [src]='avatarsBase+"/"+currentUser.avatarSetting.imgUrl')
+        //img.ui.avatar.image(*ngIf='currentUser.avatarSetting&&currentUser.avatarSetting.imgUrl',
+        //[src]='avatarsBase+"/"+currentUser.avatarSetting.imgUrl')
         | {{currentUser.nickName}}
         a(*ngIf='currentUser', (click)='openLoginDialog()', href='javascript:') &nbsp;&nbsp;切换
         a(*ngIf='currentUser', (click)='logout()', href='javascript:') &nbsp;&nbsp;退出
@@ -18,7 +18,7 @@
   .ui.stackable.cards
     .ui.centered.card(*ngFor='let book of books; trackBy: bookTracker')
       .content
-        a([routerLink]="['/books', book._id]")
+        //a([routerLink]="['/books', book._id]")
           img.ui.image(*ngIf='book.image', [src]='bookImagesBase+"/"+book.image.file')
           img.ui.image.disabled(*ngIf='!book.image', [src]='bookImageNotSet')
         a.book-title([routerLink]="['/books', book._id]")

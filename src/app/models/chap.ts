@@ -10,9 +10,9 @@ export class Chap extends Model {
 
   status: string;
 
-  isFree: boolean;
-  price: number; // cents
-  priceLabel: string;
+  // isFree: boolean;
+  // price: number; // cents
+  // priceLabel: string;
 
   contentPack: ChapContentPack;
 

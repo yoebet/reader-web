@@ -3,16 +3,16 @@
     .right.menu
       a.item(*ngIf='!currentUser', (click)='openLoginDialog()', href='javascript:') （未登录）
       .item(*ngIf='currentUser')
-        img.ui.avatar.image(*ngIf='currentUser.avatarSetting&&currentUser.avatarSetting.imgUrl',
-        [src]='avatarsBase+"/"+currentUser.avatarSetting.imgUrl')
+        //img.ui.avatar.image(*ngIf='currentUser.avatarSetting&&currentUser.avatarSetting.imgUrl',
+        //[src]='avatarsBase+"/"+currentUser.avatarSetting.imgUrl')
         | {{currentUser.nickName}} &nbsp;&nbsp;
         a(*ngIf='currentUser', (click)='openLoginDialog()', href='javascript:') 切换
 
   .ui.stackable.cards(*ngIf='book')
     .ui.centered.card
       .content
-        img.ui.image(*ngIf='book.image', [src]='bookImagesBase+"/"+book.image.file')
-        img.ui.image.disabled(*ngIf='!book.image', [src]='bookImageNotSet')
+        //img.ui.image(*ngIf='book.image', [src]='bookImagesBase+"/"+book.image.file')
+        //img.ui.image.disabled(*ngIf='!book.image', [src]='bookImageNotSet')
         .book-title
           .enname {{book.name}}
           .zhname(*ngIf='book.zhName') {{book.zhName}}
